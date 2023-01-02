@@ -9,9 +9,13 @@ namespace GuildManagerAPI.Requests
     {
         public static WebApplication RegisterLoginEndpoints(this WebApplication app)
         {
-            app.MapGet("/api/login", LoginRequests.Login)
+            app.MapPost("/api/login", LoginRequests.Login)
                 .Accepts<LoginDto>("application/json")
                 .WithBodyValidator<LoginDto>();
+
+            app.MapPost("/api/register", LoginRequests.Register)
+                .Accepts<RegisterUserDto>("application/json")
+                .WithBodyValidator<RegisterUserDto>();
 
             return app;
         }
@@ -20,6 +24,13 @@ namespace GuildManagerAPI.Requests
             string token = service.GenerateJwt(dto);
 
             return Results.Ok(token);
+        }
+
+        public static IResult Register(ILoginService service, RegisterUserDto dto)
+        {
+            service.RegisterUser(dto);
+
+            return Results.Ok();
         }
     }
 }

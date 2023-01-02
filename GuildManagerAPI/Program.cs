@@ -32,6 +32,7 @@ builder.Services.AddAuthentication(option =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
     };
 });
+builder.Services.AddAuthorization();
 
 
 // Add services to the container.
@@ -45,6 +46,7 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(RegisterUserValidator));
 
 var app = builder.Build();
 
@@ -54,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();

@@ -61,5 +61,21 @@ namespace GuildManagerAPI.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
+
+        public void RegisterUser(RegisterUserDto dto)
+        {
+            var user = new User()
+            {
+                Email = dto.Email,
+                Nickname = dto.Nickname,
+                RoleId = dto.RoleId,
+            };
+
+            var hashedPassword = _passwordHasher.HashPassword(user, dto.Password);
+            user.PasswordHash = hashedPassword;
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+        }
     }
 }

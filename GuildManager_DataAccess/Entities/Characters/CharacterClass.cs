@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImageUrl { get; set; }
-        public List<ClassSpecializations> ClassSpecializations { get; set; }
+        public virtual List<ClassSpecialization> ClassSpecializations { get; set; } = new();
     }
 }

@@ -10,6 +10,7 @@ namespace GuildManager_DataAccess.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public CharacterClass Class { get; set; }
+        public int ClassId { get; set; }
+        public virtual CharacterClass Class { get; set; }
     }
 }

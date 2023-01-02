@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace GuildManager_DataAccess.Entities
 {
-    public class ClassSpecializations
+    public class ClassSpecialization
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public CharacterClass Class { get; set; }
+        public int ClassId { get; set; }
+        public virtual CharacterClass Class { get; set; }
     }
 }

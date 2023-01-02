@@ -15,5 +15,6 @@ namespace GuildManager_DataAccess.Entities
         public string PasswordHash { get; set; }
         public int RoleId { get; set; }
         public virtual UserRole Role { get; set; }
+        public virtual List<Character> Characters { get; set; } = new();
     }
 }

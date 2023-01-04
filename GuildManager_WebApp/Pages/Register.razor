@@ -6,25 +6,30 @@
 
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration">
-    <FluentValidationValidator />
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    
     <div class="mb-3">
         <label for="email">Email</label>
         <InputText id="email" @bind-Value="user.Email" class="form-control" />
+        <ValidationMessage For="@(()=>user.Email)"/>
     </div>
     <div class="mb-3">
         <label for="nickname">Nickname</label>
         <InputText id="email" @bind-Value="user.Nickname" class="form-control" />
+        <ValidationMessage For="@(()=>user.Nickname)" />
     </div>
     <div class="mb-3">
         <label for="password">Password</label>
         <InputText id="email" @bind-Value="user.Password" class="form-control" type="password"/>
+        <ValidationMessage For="@(()=>user.Password)" />
     </div>
     <div class="mb-3">
         <label for="confirmPassword">Confirm Password</label>
         <InputText id="email" @bind-Value="user.ConfirmPassword" class="form-control" type="password" />
+        <ValidationMessage For="@(()=>user.ConfirmPassword)" />
     </div>
     <button type="submit" class="btn btn-primary">Register</button>
-    <ValidationSummary/>
+    
 </EditForm>
 
 @code {

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildManager_DataAccess", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildManager_WebApp", "GuildManager_WebApp\GuildManager_WebApp.csproj", "{267546F4-0095-4BDA-9CF2-2A869C151AB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuildManager_Models", "GuildManager_Models\GuildManager_Models.csproj", "{186928F5-9EB7-4A4D-B59D-F1003127E43C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildManager_Models", "GuildManager_Models\GuildManager_Models.csproj", "{186928F5-9EB7-4A4D-B59D-F1003127E43C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

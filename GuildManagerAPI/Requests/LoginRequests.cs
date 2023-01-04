@@ -1,4 +1,4 @@
-﻿using GuildManagerAPI.Models.Auth;
+﻿using GuildManager_Models;
 using GuildManagerAPI.Services;
 using GuildManagerAPI.Validation;
 using Microsoft.AspNetCore.Mvc;

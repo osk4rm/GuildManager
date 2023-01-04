@@ -2,7 +2,7 @@
 using GuildManager_DataAccess.Entities;
 using GuildManagerAPI.Authentication;
 using GuildManagerAPI.Exceptions;
-using GuildManagerAPI.Models.Auth;
+using GuildManager_Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

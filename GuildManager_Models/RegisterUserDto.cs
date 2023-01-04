@@ -1,4 +1,4 @@
-﻿namespace GuildManagerAPI.Models.Auth
+﻿namespace GuildManager_Models
 {
     public class RegisterUserDto
     {

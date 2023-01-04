@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using GuildManager_DataAccess;
-using GuildManagerAPI.Models.Auth;
+using GuildManager_Models;
 
 namespace GuildManagerAPI.Validation
 {

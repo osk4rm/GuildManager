@@ -14,6 +14,18 @@ namespace GuildManager_WebApp.Services.AuthService
         {
             _httpClient = httpClient;
         }
+
+        public async Task<ServiceResponse<string>> LoginUser(LoginDto dto)
+        {
+            var content = JsonConvert.SerializeObject(dto);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/login", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<string>>(responseContent);
+
+            return result;
+        }
+
         public async Task<ServiceResponse<int?>> RegisterUser(RegisterUserDto dto)
         {
             var content = JsonConvert.SerializeObject(dto);

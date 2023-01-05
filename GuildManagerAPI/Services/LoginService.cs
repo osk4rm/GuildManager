@@ -87,7 +87,8 @@ namespace GuildManagerAPI.Services
             return new ServiceResponse<int>
             {
                 Success= true,
-                Data = user.Id
+                Data = user.Id,
+                Message = "Registration successful!"
             };
         }
     }

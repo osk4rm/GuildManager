@@ -1,5 +1,8 @@
 ﻿using GuildManager_Models;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace GuildManager_WebApp.Services.AuthService
 {
@@ -11,9 +14,14 @@ namespace GuildManager_WebApp.Services.AuthService
         {
             _httpClient = httpClient;
         }
-        public async Task<HttpResponseMessage> RegisterUser(RegisterUserDto dto)
+        public async Task<ServiceResponse<int?>> RegisterUser(RegisterUserDto dto)
         {
-            var result = await _httpClient.PostAsJsonAsync("/api/register", dto);
+            var content = JsonConvert.SerializeObject(dto);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/register", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<int?>>(responseContent);
+
             
 
             return result;

@@ -47,6 +47,15 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(RegisterUserValidator));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontEndClient", corsBuilder =>
+
+        corsBuilder.AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins(builder.Configuration["AllowedOrigins"])
+        );
+});
 
 var app = builder.Build();
 
@@ -62,6 +71,7 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.RegisterLoginEndpoints();
+app.UseCors("FrontEndClient");
 
 app.Run();
 

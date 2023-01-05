@@ -21,16 +21,16 @@ namespace GuildManagerAPI.Requests
         }
         public static IResult Login(ILoginService service, LoginDto dto)
         {
-            string token = service.GenerateJwt(dto);
+            var token = service.GenerateJwt(dto);
             
             return Results.Ok(token);
         }
 
         public static IResult Register(ILoginService service, RegisterUserDto dto)
         {
-            service.RegisterUser(dto);
+            var register = service.RegisterUser(dto);
 
-            return Results.Ok();
+            return Results.Ok(register);
         }
     }
 }

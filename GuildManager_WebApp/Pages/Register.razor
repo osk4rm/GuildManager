@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@inject IAuthService AuthService
 @using Blazored.FluentValidation;
 <PageTitle>Register</PageTitle>
 <h3>Register</h3>
@@ -7,11 +8,11 @@
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    
+
     <div class="mb-3">
         <label for="email">Email</label>
         <InputText id="email" @bind-Value="user.Email" class="form-control" />
-        <ValidationMessage For="@(()=>user.Email)"/>
+        <ValidationMessage For="@(()=>user.Email)" />
     </div>
     <div class="mb-3">
         <label for="nickname">Nickname</label>
@@ -20,7 +21,7 @@
     </div>
     <div class="mb-3">
         <label for="password">Password</label>
-        <InputText id="email" @bind-Value="user.Password" class="form-control" type="password"/>
+        <InputText id="email" @bind-Value="user.Password" class="form-control" type="password" />
         <ValidationMessage For="@(()=>user.Password)" />
     </div>
     <div class="mb-3">
@@ -29,14 +30,21 @@
         <ValidationMessage For="@(()=>user.ConfirmPassword)" />
     </div>
     <button type="submit" class="btn btn-primary">Register</button>
-    
+    <div class="text-danger">
+        <span>@errorMessage</span>
+    </div>
+
 </EditForm>
 
 @code {
     RegisterUserDto user = new RegisterUserDto();
+    string errorMessage = string.Empty;
 
-    void HandleRegistration()
+    async void HandleRegistration()
     {
-        Console.WriteLine("asd");
+        var result = await AuthService.RegisterUser(user);
+        if (!result.Success)
+            errorMessage = result.Message;
+        else errorMessage = string.Empty;
     }
 }

@@ -33,7 +33,6 @@ namespace GuildManagerAPI.Validation
                             Success = false,
                             Message = String.Join(",", 
                             validationResult.Errors.Select(e=>e.ErrorMessage).ToList()),
-                            Data = null
                         };
                         
                         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;

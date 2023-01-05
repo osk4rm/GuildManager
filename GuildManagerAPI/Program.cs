@@ -60,6 +60,7 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
+app.UseRouting();
 app.RegisterLoginEndpoints();
 
 app.Run();

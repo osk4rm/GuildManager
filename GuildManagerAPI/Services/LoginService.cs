@@ -25,7 +25,7 @@ namespace GuildManagerAPI.Services
             _authenticationSettings = authenticationSettings;
         }
 
-        public string GenerateJwt(LoginDto dto)
+        public ServiceResponse<string> GenerateJwt(LoginDto dto)
         {
             var user = _context.Users
                 .Include(u => u.Role)
@@ -59,10 +59,17 @@ namespace GuildManagerAPI.Services
                 signingCredentials: cred);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
+
+
+            return new ServiceResponse<string>
+            {
+                Data = tokenHandler.WriteToken(token),
+                Success = true,
+                Message = string.Empty
+            };
         }
 
-        public void RegisterUser(RegisterUserDto dto)
+        public ServiceResponse<int> RegisterUser(RegisterUserDto dto)
         {
             var user = new User()
             {
@@ -76,6 +83,12 @@ namespace GuildManagerAPI.Services
 
             _context.Users.Add(user);
             _context.SaveChanges();
+
+            return new ServiceResponse<int>
+            {
+                Success= true,
+                Data = user.Id
+            };
         }
     }
 }

@@ -22,7 +22,7 @@ namespace GuildManagerAPI.Requests
         public static IResult Login(ILoginService service, LoginDto dto)
         {
             string token = service.GenerateJwt(dto);
-
+            
             return Results.Ok(token);
         }
 

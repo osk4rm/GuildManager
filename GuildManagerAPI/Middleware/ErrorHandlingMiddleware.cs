@@ -1,4 +1,6 @@
-﻿using GuildManagerAPI.Exceptions;
+﻿using GuildManager_Models;
+using GuildManagerAPI.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace GuildManagerAPI.Middleware
 {
@@ -13,8 +15,13 @@ namespace GuildManagerAPI.Middleware
             
             catch (BadRequestException badRequestException)
             {
+                ServiceResponse<string> response = new ServiceResponse<string>()
+                {
+                    Success = false,
+                    Message = badRequestException.Message
+                };
                 context.Response.StatusCode = 400;
-                await context.Response.WriteAsync(badRequestException.Message);
+                await context.Response.WriteAsJsonAsync(response);
             }
         }
     }

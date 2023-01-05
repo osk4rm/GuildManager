@@ -4,7 +4,7 @@ namespace GuildManagerAPI.Services
 {
     public interface ILoginService
     {
-        string GenerateJwt(LoginDto dto);
-        void RegisterUser(RegisterUserDto dto);
+        ServiceResponse<string> GenerateJwt(LoginDto dto);
+        ServiceResponse<int> RegisterUser(RegisterUserDto dto);
     }
 }

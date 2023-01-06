@@ -1,32 +1,42 @@
 ﻿@page "/login"
+@layout LoginLayout
 @using Blazored.LocalStorage;
 @inject IAuthService AuthService
 @inject ILocalStorageService LocalStorageService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
-<h3>Login</h3>
 
-<EditForm Model="user" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator></DataAnnotationsValidator>
+<div class="card-body">
+    <EditForm Model="user" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
 
-    <div class="mb-3">
-        <label for="email">Email</label>
-        <InputText id="email" @bind-Value="user.Email" class="form-control" />
-        <ValidationMessage For="@(()=>user.Email)" />
-    </div>
-    
-    <div class="mb-3">
-        <label for="password">Password</label>
-        <InputText id="email" @bind-Value="user.Password" class="form-control" type="password" />
-        <ValidationMessage For="@(()=>user.Password)" />
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Login</button>
-    <div class="text-danger">
-        <span>@errorMsg</span>
-    </div>
+        <div class="form-outline form-white mb-4">
+            <label class="form-label" for="email">Email</label>
+            <InputText id="email" @bind-Value="user.Email" class="form-control" placeholder="Enter email" />
+            <ValidationMessage For="@(()=>user.Email)" />
+        </div>
 
-</EditForm>
+        <div class="form-outline form-white mb-4">
+            <label class="form-label" for="password">Password</label>
+            <InputText id="email" @bind-Value="user.Password" class="form-control" type="password" />
+            <ValidationMessage For="@(()=>user.Password)" />
+        </div>
+
+        <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
+        <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+        <div>
+            <p class="mb-0">
+                Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
+            </p>
+        </div>
+        <div class="text-danger">
+            <span>@errorMsg</span>
+        </div>
+
+    </EditForm>
+</div>
+
 
 @code {
     string errorMsg = string.Empty;
@@ -42,6 +52,7 @@
         {
             errorMsg = "ok";
             await LocalStorageService.SetItemAsync("authToken", result.Data);
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
         }
     }

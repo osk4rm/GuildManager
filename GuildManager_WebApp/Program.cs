@@ -1,3 +1,4 @@
+global using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using GuildManager_WebApp;
 using GuildManager_WebApp.Services.AuthService;
@@ -15,4 +16,8 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddOptions();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+
 await builder.Build().RunAsync();

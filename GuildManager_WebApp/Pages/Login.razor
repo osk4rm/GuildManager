@@ -1,5 +1,7 @@
 ﻿@page "/login"
+@using Blazored.LocalStorage;
 @inject IAuthService AuthService
+@inject ILocalStorageService LocalStorageService
 
 <PageTitle>Login</PageTitle>
 <h3>Login</h3>
@@ -39,6 +41,8 @@
         else
         {
             errorMsg = "ok";
+            await LocalStorageService.SetItemAsync("authToken", result.Data);
+
         }
     }
 }

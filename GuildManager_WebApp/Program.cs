@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using GuildManager_WebApp;
 using GuildManager_WebApp.Services.AuthService;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,4 +14,5 @@ builder.Services.AddScoped(sp => new HttpClient
     builder.Configuration.GetValue<string>("BaseAPIUrl"))
 });
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddBlazoredLocalStorage();
 await builder.Build().RunAsync();

@@ -1,14 +1,12 @@
 ﻿@page "/register"
+@layout LoginLayout
 @inject IAuthService AuthService
 @using Blazored.FluentValidation;
 <PageTitle>Register</PageTitle>
-<h3>Register</h3>
-
-
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-
+    <p class="text-white-50 mb-5">Please enter your registration data.</p>
     <div class="mb-3">
         <label for="email">Email</label>
         <InputText id="email" @bind-Value="user.Email" class="form-control" />
@@ -30,9 +28,15 @@
         <ValidationMessage For="@(()=>user.ConfirmPassword)" />
     </div>
     <button type="submit" class="btn btn-primary">Register</button>
+    <div>
+        <p class="mb-0 mt-3">
+            <NavLink href="login" class="text-white-50 fw-bold">Back to Login</NavLink>
+        </p>
+    </div>
     <div class="@messageCss">
         <span>@message</span>
     </div>
+    
 
 </EditForm>
 

@@ -10,7 +10,7 @@
 <div class="card-body">
     <EditForm Model="user" OnValidSubmit="HandleLogin">
         <DataAnnotationsValidator></DataAnnotationsValidator>
-
+        <p class="text-white-50 mb-5">Please enter your login and password!</p>
         <div class="form-outline form-white mb-4">
             <label class="form-label" for="email">Email</label>
             <InputText id="email" @bind-Value="user.Email" class="form-control" placeholder="Enter email" />
@@ -27,7 +27,7 @@
         <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
         <div>
             <p class="mb-0">
-                Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
+                Don't have an account? <NavLink href="register" class="text-white-50 fw-bold">Sign Up</NavLink>
             </p>
         </div>
         <div class="text-danger">

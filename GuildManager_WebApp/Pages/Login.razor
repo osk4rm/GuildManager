@@ -4,6 +4,7 @@
 @inject IAuthService AuthService
 @inject ILocalStorageService LocalStorageService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <PageTitle>Login</PageTitle>
 
@@ -53,6 +54,7 @@
             errorMsg = "ok";
             await LocalStorageService.SetItemAsync("authToken", result.Data);
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            NavigationManager.NavigateTo("");
 
         }
     }

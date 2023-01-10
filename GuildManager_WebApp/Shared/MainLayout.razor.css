@@ -8,7 +8,7 @@ html {
     font-size: 62.5%;
 }
 .panel {
-    width: 1600px;
+    width: 1800px;
     height: 1000px;
     border: 1px solid #4b5769;
     border-radius: 15px;
@@ -18,13 +18,30 @@ html {
     font-family: 'Montserrat', sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     height: 160px;
+    
 }
+
+.user-box p{
+    font-size: 1.6rem;
+}
+.user-box i{
+    font-size: 2rem;
+    padding: 10px;
+}
+
+
 .panel-left {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #4b5769;
+}
+.footer-box h3{
+    font-size:2rem;
+}
+.footer-box p{
+    font-size: 1.6rem;
 }

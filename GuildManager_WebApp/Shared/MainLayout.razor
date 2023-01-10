@@ -1,21 +1,30 @@
 ﻿@inherits LayoutComponentBase
 @attribute [Authorize]
 
-
 <AuthorizeView>
     <Authorized>
         <div class="panel">
             <div class="row m-0 h-100">
                 <div class="panel-left col-2 p-0 px-4 text-white text-center">
-                    <section class="user-box">
-                        <p class="mb-0 hi-text">Hi, </p>
+                    <section class="user-box mt-3">
+                        <p class="mb-0 hi-text">Hi, @context.User.Identity.Name </p>
+                        <div class="flex-column">
+                            <NavLink href="userpanel">
+                                <i class="fa-solid fa-gear"></i>
+                            </NavLink>
+                            <NavLink href="logout">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                            </NavLink>
+                            
+                        </div>
                     </section>
                     <NavMenu />
-                    <section class="footer-box mt-3">
-                        <h3>Guild Manager by J.</h3>
-                        <p class="text-muted">&copy; Copyright 2023</p>
-                    </section>
+                    
                 </div>
+                <div class="panel-right col-10 p-0 px-4 text-white text-center">
+                    @Body
+                </div>
+
             </div>
         </div>
 

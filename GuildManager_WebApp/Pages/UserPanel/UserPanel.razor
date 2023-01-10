@@ -1,0 +1,66 @@
+﻿@page "/userpanel"
+@page "/userpanel/{subPage?}"
+
+@inject NavigationManager NavManager
+<PageTitle>UserPanel</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <h1>User panel</h1>
+        <ul class="nav nav-pills nav-justified">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/userpanel/changepassword" Match="NavLinkMatch.All" onclick="SetSubPage">
+                    <span class="oi oi-home" aria-hidden="true"></span> Change password
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/userpanel/characters">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Characters
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/userpanel/something">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Something
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/userpanel/somethingelse">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Something else
+                </NavLink>
+            </li>
+        </ul>
+        <br />
+        @switch (SubPage)
+        {
+            case "changepassword":
+                <ChangePassword />
+                break;
+
+            case "characters":
+                <UserCharacters />
+                break;
+
+            default:
+                <p>nothing</p>
+                break;
+        }
+
+
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private string active = string.Empty;
+
+    [Parameter]
+    public string SubPage { get; set; } = string.Empty;
+
+    private void SetSubPage(string subpage)
+    {
+        SubPage = subpage;
+    }
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+}

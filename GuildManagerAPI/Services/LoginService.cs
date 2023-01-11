@@ -25,6 +25,27 @@ namespace GuildManagerAPI.Services
             _authenticationSettings = authenticationSettings;
         }
 
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, ChangePasswordDto dto)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if(user == null)
+            {
+                throw new NotFoundException($"User {userId} not found");
+            }
+            var hashedPassword = _passwordHasher.HashPassword(user, dto.Password);
+            user.PasswordHash = hashedPassword;
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = "Your password has been changed."
+            };
+
+        }
+
         public ServiceResponse<string> GenerateJwt(LoginDto dto)
         {
             var user = _context.Users

@@ -6,5 +6,6 @@ namespace GuildManagerAPI.Services
     {
         ServiceResponse<string> GenerateJwt(LoginDto dto);
         ServiceResponse<int> RegisterUser(RegisterUserDto dto);
+        Task<ServiceResponse<bool>> ChangePassword(int userId, ChangePasswordDto dto);
     }
 }

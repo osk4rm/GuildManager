@@ -23,6 +23,16 @@ namespace GuildManagerAPI.Middleware
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsJsonAsync(response);
             }
+            catch(NotFoundException notFoundException)
+            {
+                ServiceResponse<string> response = new ServiceResponse<string>()
+                {
+                    Success = false,
+                    Message = notFoundException.Message
+                };
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsJsonAsync(response);
+            }
         }
     }
 }

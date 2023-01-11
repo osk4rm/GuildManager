@@ -1,5 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @attribute [Authorize]
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
 
 <AuthorizeView>
     <Authorized>
@@ -12,7 +15,7 @@
                             <NavLink href="userpanel">
                                 <i class="fa-solid fa-gear"></i>
                             </NavLink>
-                            <NavLink href="logout">
+                            <NavLink href="#" @onclick="Logout">
                                 <i class="fa-solid fa-right-from-bracket"></i>
                             </NavLink>
                             
@@ -41,3 +44,14 @@
         background-color: #181d23;
     }
 </style>
+
+@code{
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthStateProvider.GetAuthenticationStateAsync();
+        NavManager.NavigateTo("login");
+    }
+
+}                   

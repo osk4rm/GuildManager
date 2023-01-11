@@ -15,11 +15,11 @@ namespace GuildManager_WebApp.Services.AuthService
             _httpClient = httpClient;
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(ChangePasswordDto dto)
+        public async Task<ServiceResponse<bool?>> ChangePassword(ChangePasswordDto dto)
         {
             var result = await _httpClient.PostAsJsonAsync("api/change-password", dto);
 
-            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            return await result.Content.ReadFromJsonAsync<ServiceResponse<bool?>>();
         }
 
         public async Task<ServiceResponse<string>> LoginUser(LoginDto dto)

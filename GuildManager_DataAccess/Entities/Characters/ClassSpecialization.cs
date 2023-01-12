@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuildManager_DataAccess.Entities.Characters.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace GuildManager_DataAccess.Entities
         public string Name { get; set; }
         public int ClassId { get; set; }
         public virtual CharacterClass Class { get; set; }
+        public ClassSpecializationRole Role { get; set; }
     }
 }

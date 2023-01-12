@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
+    <Folder Include="wwwroot\img\classes\" />
+    <Folder Include="wwwroot\img\specs\" />
   </ItemGroup>
 
 </Project>

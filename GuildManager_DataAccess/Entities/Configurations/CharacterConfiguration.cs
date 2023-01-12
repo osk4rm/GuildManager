@@ -23,6 +23,12 @@ namespace GuildManager_DataAccess.Entities.Configurations
                 .WithMany(s => s.Characters)
                 .HasForeignKey(ch => ch.ClassSpecializationId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder
+                .HasOne(c=>c.User)
+                .WithMany(u=>u.Characters)
+                .HasForeignKey(c=>c.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

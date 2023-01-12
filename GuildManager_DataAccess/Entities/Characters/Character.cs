@@ -15,5 +15,7 @@ namespace GuildManager_DataAccess.Entities
         public int ClassSpecializationId { get; set; }
         public virtual ClassSpecialization MainSpec { get; set; } = new();
         public decimal ItemLevel { get; set; }
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

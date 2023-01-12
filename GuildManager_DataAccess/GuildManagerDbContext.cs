@@ -13,7 +13,7 @@ namespace GuildManager_DataAccess
     {
         public GuildManagerDbContext(DbContextOptions<GuildManagerDbContext> options) : base(options)
         {
-
+            
         }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> Roles { get; set; }
@@ -25,8 +25,12 @@ namespace GuildManager_DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRole>()
-                .HasData(Seeder.DefaultUserRoles());
+            modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
+            
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
         }
     }
 }

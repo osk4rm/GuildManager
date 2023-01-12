@@ -40,8 +40,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GuildManagerDbContext>(
-    option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"))
-    );
+    option => {
+        option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+
+    });
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();

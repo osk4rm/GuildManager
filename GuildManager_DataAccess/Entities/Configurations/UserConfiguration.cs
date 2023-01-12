@@ -13,7 +13,7 @@ namespace GuildManager_DataAccess.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-
+            
         }
     }
 }

@@ -10,9 +10,10 @@ namespace GuildManager_DataAccess.Entities
     public class ClassSpecialization
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int ClassId { get; set; }
-        public virtual CharacterClass Class { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int CharacterClassId { get; set; }
+        public virtual CharacterClass CharacterClass { get; set; }
         public ClassSpecializationRole Role { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

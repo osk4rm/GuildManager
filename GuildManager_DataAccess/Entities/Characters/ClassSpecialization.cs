@@ -15,5 +15,8 @@ namespace GuildManager_DataAccess.Entities
         public virtual CharacterClass CharacterClass { get; set; }
         public ClassSpecializationRole Role { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
+
+        //for EF
+        public virtual List<Character> Characters { get; set; } = new();
     }
 }

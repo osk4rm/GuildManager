@@ -85,6 +85,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.RegisterLoginEndpoints();
 app.RegisterClassesEndpoints();
+app.RegisterCharactersEndpoints();
 app.UseCors("FrontEndClient");
 
 app.Run();

@@ -11,6 +11,6 @@ namespace GuildManager_Models.CharacterClassesAndSpecs
     {
         public string Name { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
-        public virtual List<ClassSpecDto> ClassSpecializations { get; set; }
+        public virtual List<ClassSpecDto> ClassSpecializations { get; set; } = new();
     }
 }

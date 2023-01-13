@@ -41,8 +41,6 @@ namespace GuildManager_WebApp.Services.AuthService
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<int?>>(responseContent);
 
-            
-
             return result;
         }
     }

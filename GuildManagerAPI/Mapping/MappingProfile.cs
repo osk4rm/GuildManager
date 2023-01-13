@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using GuildManager_DataAccess.Entities;
+using GuildManager_Models.CharacterClassesAndSpecs;
 
 namespace GuildManagerAPI.Mapping
 {
@@ -6,7 +8,8 @@ namespace GuildManagerAPI.Mapping
     {
         public MappingProfile()
         {
-
+            CreateMap<CharacterClass, CharacterClassDto>();
+            CreateMap<ClassSpecialization, ClassSpecDto>();
         }
     }
 }

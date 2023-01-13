@@ -1,5 +1,6 @@
 ﻿using GuildManager_Models;
 using GuildManagerAPI.Services;
+using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

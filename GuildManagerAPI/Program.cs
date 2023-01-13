@@ -7,11 +7,13 @@ using GuildManagerAPI.Requests;
 using GuildManagerAPI.Services;
 using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,10 +48,15 @@ builder.Services.AddDbContext<GuildManagerDbContext>(
         option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
 
     });
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
+builder.Services.AddScoped<IClassesService, ClassesService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(RegisterUserValidator));
@@ -77,6 +84,7 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.RegisterLoginEndpoints();
+app.RegisterClassesEndpoints();
 app.UseCors("FrontEndClient");
 
 app.Run();

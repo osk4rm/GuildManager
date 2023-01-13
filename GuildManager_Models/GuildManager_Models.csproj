@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GuildManager_DataAccess\GuildManager_DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

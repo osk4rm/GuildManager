@@ -24,8 +24,4 @@
     <ProjectReference Include="..\GuildManager_Models\GuildManager_Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
-
 </Project>

@@ -1,6 +1,6 @@
 ﻿using GuildManager_Models;
 
-namespace GuildManagerAPI.Services
+namespace GuildManagerAPI.Services.Interfaces
 {
     public interface ILoginService
     {

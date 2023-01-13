@@ -5,10 +5,12 @@ using GuildManagerAPI.Authentication;
 using GuildManagerAPI.Middleware;
 using GuildManagerAPI.Requests;
 using GuildManagerAPI.Services;
+using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,7 +47,9 @@ builder.Services.AddDbContext<GuildManagerDbContext>(
 
     });
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(RegisterUserValidator));

@@ -22,12 +22,24 @@ namespace GuildManagerAPI.Services
         public async Task<ServiceResponse<int>> CreateCharacter(int userId, CreateCharacterDto characterDto)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var charClass = _dbContext.CharacterClasses.FirstOrDefault(c => c.Id == characterDto.ClassId);
+            var classSpec = _dbContext.ClassSpecializations.FirstOrDefault(s => s.Id == characterDto.ClassSpecializationId);
             if (user == null)
             {
                 throw new NotFoundException("User not found.");
             }
+            if(charClass == null)
+            {
+                throw new NotFoundException("Class not found.");
+            }
+            if (classSpec == null)
+            {
+                throw new NotFoundException("Class specialization not found.");
+            }
             var character = _mapper.Map<Character>(characterDto);
             character.User = user;
+            character.Class = charClass;
+            character.MainSpec = classSpec;
             await _dbContext.Characters.AddAsync(character);
             await _dbContext.SaveChangesAsync();
 

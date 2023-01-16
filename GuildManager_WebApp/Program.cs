@@ -2,6 +2,7 @@ global using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using GuildManager_WebApp;
 using GuildManager_WebApp.Services.AuthService;
+using GuildManager_WebApp.Services.CharactersService;
 using GuildManager_WebApp.Services.ClassesService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -17,6 +18,7 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

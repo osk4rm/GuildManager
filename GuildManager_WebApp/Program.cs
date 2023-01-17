@@ -6,8 +6,12 @@ using GuildManager_WebApp.Services.CharactersService;
 using GuildManager_WebApp.Services.ClassesService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Syncfusion.Blazor;
+
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(
+    builder.Configuration.GetValue<string>("SyncfusionLicence"));
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
@@ -23,5 +27,6 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+builder.Services.AddSyncfusionBlazor();
 
 await builder.Build().RunAsync();

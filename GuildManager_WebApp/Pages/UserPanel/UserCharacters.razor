@@ -1,23 +1,37 @@
 @inject IClassService ClassService
 @inject ICharacterService CharacterService
 
-<h1>characters page</h1>
+<h1 class="mt-3">Your characters</h1>
+<div class="container w-75">
+    <SfGrid @ref="characterGrid" DataSource="@Characters" AllowPaging="true"
+            Toolbar="@(new List<string>{"Add"})">
+        <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog"></GridEditSettings>
+        <GridEvents OnActionBegin="ActionHandler" TValue="ProductPriceDTO"></GridEvents>
+        <GridColumns>
+            <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Field="Class.Name" HeaderText="Class" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Field="MainSpec.Name" HeaderText="Main spec" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Field=@nameof(CharacterDto.ItemLevel) TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn HeaderText="Manage Records" Width="150">
+                <GridCommandColumns>
+                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() {IconCss="e-icons e-edit", CssClass="e-flat" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() {IconCss="e-icons e-delete", CssClass="e-flat" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() {IconCss="e-icons e-save", CssClass="e-flat" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() {IconCss="e-icons e-cancel-icon", CssClass="e-flat" })"></GridCommandColumn>
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
 
-<SfGrid DataSource="@Characters" AllowPaging="true">
-    <GridColumns>
-        <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="TextAlign.Center"></GridColumn>
-        <GridColumn Field="Class.Name" HeaderText="Class" ></GridColumn>
-        <GridColumn Field="MainSpec.Name" HeaderText="Main spec" TextAlign="TextAlign.Center"></GridColumn>
-        <GridColumn Field=@nameof(CharacterDto.ItemLevel)></GridColumn>
-    </GridColumns>
-</SfGrid>
 
 
 @code {
     CreateCharacterDto CreateCharacterDto = new();
     List<CharacterDto> Characters = new();
     List<CharacterClassDto> CharacterClasses = new();
-    
+    public SfGrid<CharacterDto> characterGrid;
+
     string errorMessage = string.Empty;
     string createCharacterMessage = string.Empty;
     string alertCss = string.Empty;
@@ -42,6 +56,38 @@
         else
         {
             Characters = charactersResponse.Data;
+        }
+    }
+    public async void ActionHandler(ActionEventArgs<CharacterDto> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            //args.Data.ProductId = Id;
+            if (args.Action == "Add")
+            {
+                CreateCharacterDto.Name = args.Data.Name;
+                CreateCharacterDto.ClassId = args.Data.Class.Id;
+                CreateCharacterDto.ClassSpecializationId = args.Data.MainSpec.Id;
+                CreateCharacterDto.ItemLevel = args.Data.ItemLevel;
+                var result = await CharacterService.CreateCharacter(CreateCharacterDto);
+                if (!result.Success)
+                {
+                    //todo logic for unsuccessful try
+                }
+                var getCharsResponse = await CharacterService.GetUserCharacters();
+                Characters = getCharsResponse.Data;
+                characterGrid.Refresh();
+
+            }
+            if (args.Action == "Edit")
+            {
+                //logic for edit
+            }
+        }
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Delete))
+        {
+            //logic for delete
+
         }
     }
 }

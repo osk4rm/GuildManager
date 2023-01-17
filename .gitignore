@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /GuildManagerAPI/appsettings.json
 /GuildManagerAPI/appsettings.Development.json
+/GuildManager_WebApp/wwwroot/appsettings.json

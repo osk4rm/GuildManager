@@ -55,6 +55,8 @@ namespace GuildManagerAPI.Services
         {
             var characters = await _dbContext.Characters
                 .Where(u=>u.UserId == userId)
+                .Include(c=>c.Class)
+                .Include(s=>s.MainSpec)
                 .ToListAsync();
 
             var charDtos = _mapper.Map<List<CharacterDto>>(characters);

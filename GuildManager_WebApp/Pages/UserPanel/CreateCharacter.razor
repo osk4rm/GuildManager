@@ -1,0 +1,85 @@
+﻿@inject IClassService ClassService
+@inject ICharacterService CharacterService
+
+<h1>characters page</h1>
+<EditForm Model="CreateCharacterDto" OnValidSubmit="CreateCharacterx">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="d-flex flex-column justify-content-center align-items-center mt-5">
+        <div class="mb-3 w-50">
+            <label for="name">Name</label>
+            <InputText id="name" @bind-Value="CreateCharacterDto.Name" class="form-control mt-1" />
+            <ValidationMessage For="@(()=>CreateCharacterDto.Name)" />
+        </div>
+        <div class="mb-3 w-50">
+            <label for="classid">Class</label>
+            <InputNumber id="classid" @bind-Value="CreateCharacterDto.ClassId" class="form-control mt-1" />
+            <ValidationMessage For="@(()=>CreateCharacterDto.ClassId)" />
+        </div>
+        <div class="mb-3 w-50">
+            <label for="specid">Main spec</label>
+            <InputNumber id="specid" @bind-Value="CreateCharacterDto.ClassSpecializationId" class="form-control mt-1" />
+            <ValidationMessage For="@(()=>CreateCharacterDto.ClassSpecializationId)" />
+        </div>
+        <div class="mb-3 w-50">
+            <label for="ilvl">Item level</label>
+            <InputNumber id="ilvl" @bind-Value="CreateCharacterDto.ItemLevel" class="form-control mt-1" />
+            <ValidationMessage For="@(()=>CreateCharacterDto.ItemLevel)" />
+        </div>
+        <button type="submit" class="btn btn-primary">Create character</button>
+        <div>
+            <p class="mb-0 mt-3">
+                <NavLink href="userpanel" class="text-white-50 fw-bold">Back to User Panel</NavLink>
+            </p>
+        </div>
+        <div class="mt-5 alert @alertCss">
+            @createCharacterMessage
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    CreateCharacterDto CreateCharacterDto = new();
+    List<CharacterDto> Characters = new();
+    List<CharacterClassDto> CharacterClasses = new();
+    string errorMessage = string.Empty;
+    string createCharacterMessage = string.Empty;
+    string alertCss = string.Empty;
+
+
+    private async Task CreateCharacterx()
+    {
+        var result = await CharacterService.CreateCharacter(CreateCharacterDto);
+        if (!result.Success)
+        {
+            alertCss = "alert-danger";
+        }
+        else
+        {
+            alertCss = "alert-success";
+        }
+        createCharacterMessage = result.Message;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var classesResponse = await ClassService.GetClasses();
+        if (!classesResponse.Success)
+        {
+            errorMessage = classesResponse.Message;
+        }
+        else
+        {
+            CharacterClasses = classesResponse.Data;
+        }
+
+        var charactersResponse = await CharacterService.GetUserCharacters();
+        if (!charactersResponse.Success)
+        {
+            errorMessage = charactersResponse.Message;
+        }
+        else
+        {
+            Characters = charactersResponse.Data;
+        }
+    }
+}

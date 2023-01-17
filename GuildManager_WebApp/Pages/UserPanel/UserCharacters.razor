@@ -6,7 +6,7 @@
     <SfGrid @ref="characterGrid" DataSource="@Characters" AllowPaging="true"
             Toolbar="@(new List<string>{"Add"})">
         <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog"></GridEditSettings>
-        <GridEvents OnActionBegin="ActionHandler" TValue="ProductPriceDTO"></GridEvents>
+        <GridEvents OnActionBegin="ActionHandler" TValue="CharacterDto"></GridEvents>
         <GridColumns>
             <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="TextAlign.Center"></GridColumn>
             <GridColumn Field="Class.Name" HeaderText="Class" TextAlign="TextAlign.Center"></GridColumn>
@@ -62,7 +62,6 @@
     {
         if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
         {
-            //args.Data.ProductId = Id;
             if (args.Action == "Add")
             {
                 CreateCharacterDto.Name = args.Data.Name;

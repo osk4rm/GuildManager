@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GuildManager_DataAccess;
+using GuildManager_DataAccess.Entities;
 using GuildManager_Models;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManagerAPI.Services.Interfaces;
@@ -17,17 +18,17 @@ namespace GuildManagerAPI.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<List<CharacterClassDto>>> GetClasses()
+        public async Task<ServiceResponse<List<CharacterClass>>> GetClasses()
         {
             var classes = await _dbContext.CharacterClasses
                 .Include(c => c.ClassSpecializations)
                 .ToListAsync();
 
-            var dtos = _mapper.Map<List<CharacterClassDto>>(classes);
+            //var dtos = _mapper.Map<List<CharacterClass>>(classes);
 
-            return new ServiceResponse<List<CharacterClassDto>>
+            return new ServiceResponse<List<CharacterClass>>
             {
-                Data = dtos,
+                Data = classes,
                 Success = true,
                 Message = "Success"
             };

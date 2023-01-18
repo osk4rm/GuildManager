@@ -1,4 +1,5 @@
-﻿@inject IClassService ClassService
+﻿@using GuildManager_DataAccess.Entities;
+@inject IClassService ClassService
 @inject ICharacterService CharacterService
 
 <h1>characters page</h1>
@@ -41,7 +42,7 @@
 @code {
     CreateCharacterDto CreateCharacterDto = new();
     List<CharacterDto> Characters = new();
-    List<CharacterClassDto> CharacterClasses = new();
+    List<CharacterClass> CharacterClasses = new();
     string errorMessage = string.Empty;
     string createCharacterMessage = string.Empty;
     string alertCss = string.Empty;

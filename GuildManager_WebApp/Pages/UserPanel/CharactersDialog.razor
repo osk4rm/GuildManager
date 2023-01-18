@@ -1,0 +1,58 @@
+﻿@using GuildManager_DataAccess.Entities;
+@using Syncfusion.Blazor.Data;
+<div class="d-flex flex-column justify-content-center align-items-center mt-5">
+    <div class="mb-3 w-50">
+        <label for="name">Name</label>
+        <SfTextBox ID="name" @bind-Value="@(charDto.Name)" TValue="string"></SfTextBox>
+    </div>
+    <div class="mb-3 w-50">
+        <label for="classid">Class</label>
+        <SfDropDownList ID="Class" TItem="CharacterClass" @bind-Value="@(charDto.Class)" TValue="CharacterClass"
+                        DataSource="CharacterClasses" Width="100">
+            <DropDownListEvents TItem="CharacterClass" TValue="CharacterClass" ValueChange="@ReloadSpecs"></DropDownListEvents>
+            <DropDownListFieldSettings Value="CharacterClass" Text="Name"></DropDownListFieldSettings>
+        </SfDropDownList>
+    </div>
+    <div class="mb-3 w-50">
+        <label for="specid">Main spec</label>
+        <SfDropDownList ID="MainSpec" 
+            Enabled="@EnableSpecsDropDown" 
+            TItem="ClassSpecialization" 
+            @bind-Value="@(charDto.MainSpec)" 
+            TValue="ClassSpecialization" 
+            DataSource="ClassSpecializations">
+            <DropDownListFieldSettings Value="ClassSpecialization" Text="Name"></DropDownListFieldSettings>
+        </SfDropDownList>
+    </div>
+    <div class="mb-3 w-50">
+        <label for="ilvl">Item level</label>
+        <SfNumericTextBox id="ilvl" @bind-Value="charDto.ItemLevel" />
+    </div>
+    
+    
+
+</div>
+
+@code {
+    [Parameter]
+    public CharacterDto charDto { get; set; } = new();
+    [Parameter]
+    public List<CharacterClass> CharacterClasses { get; set; } = new();
+    [Parameter]
+    public List<ClassSpecialization> ClassSpecializations { get; set; } = new();
+    bool IsLoaded = false;
+
+
+    private DialogSettings DialogParams = new DialogSettings { MinHeight = "400px", Width = "450px" };
+    public bool EnableSpecsDropDown = false;
+
+    private void ReloadSpecs(ChangeEventArgs<CharacterClass, CharacterClass> args)
+    {
+        ClassSpecializations = args.Value.ClassSpecializations;
+        EnableSpecsDropDown = true;
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        IsLoaded = true;
+    }
+}

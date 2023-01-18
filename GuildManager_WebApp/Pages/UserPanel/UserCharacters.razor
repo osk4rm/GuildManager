@@ -1,3 +1,4 @@
+@using GuildManager_DataAccess.Entities;
 @inject IClassService ClassService
 @inject ICharacterService CharacterService
 
@@ -5,7 +6,15 @@
 <div class="container w-75">
     <SfGrid @ref="characterGrid" DataSource="@Characters" AllowPaging="true"
             Toolbar="@(new List<string>{"Add"})">
-        <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog"></GridEditSettings>
+        <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog" Dialog="DialogParams">
+            <Template>
+                @{
+                    var charDto = (context as CharacterDto);
+                    <CharactersDialog charDto="charDto" CharacterClasses="CharacterClasses" ClassSpecializations="ClassSpecializations"></CharactersDialog>
+                }
+                
+            </Template>
+        </GridEditSettings>
         <GridEvents OnActionBegin="ActionHandler" TValue="CharacterDto"></GridEvents>
         <GridColumns>
             <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="TextAlign.Center"></GridColumn>
@@ -29,9 +38,11 @@
 @code {
     CreateCharacterDto CreateCharacterDto = new();
     List<CharacterDto> Characters = new();
-    List<CharacterClassDto> CharacterClasses = new();
+    List<CharacterClass> CharacterClasses = new();
+    List<ClassSpecialization> ClassSpecializations = new();
     public SfGrid<CharacterDto> characterGrid;
-
+    private DialogSettings DialogParams = new DialogSettings { MinHeight = "400px", Width = "450px" };
+    public bool EnableSpecsDropDown = false;
     string errorMessage = string.Empty;
     string createCharacterMessage = string.Empty;
     string alertCss = string.Empty;
@@ -46,6 +57,10 @@
         else
         {
             CharacterClasses = classesResponse.Data;
+            foreach(var ctr in CharacterClasses)
+            {
+                ClassSpecializations.AddRange(ctr.ClassSpecializations);
+            }
         }
 
         var charactersResponse = await CharacterService.GetUserCharacters();
@@ -75,7 +90,7 @@
                 }
                 var getCharsResponse = await CharacterService.GetUserCharacters();
                 Characters = getCharsResponse.Data;
-                characterGrid.Refresh();
+                await characterGrid.Refresh();
 
             }
             if (args.Action == "Edit")
@@ -89,4 +104,5 @@
 
         }
     }
+    
 }

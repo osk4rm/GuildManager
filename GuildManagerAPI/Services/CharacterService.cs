@@ -28,7 +28,7 @@ namespace GuildManagerAPI.Services
             {
                 throw new NotFoundException("User not found.");
             }
-            if(charClass == null)
+            if (charClass == null)
             {
                 throw new NotFoundException("Class not found.");
             }
@@ -51,12 +51,17 @@ namespace GuildManagerAPI.Services
             };
         }
 
+        public Task<ServiceResponse<bool>> DeleteCharacter(int userId, string characterName)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters(int userId)
         {
             var characters = await _dbContext.Characters
-                .Where(u=>u.UserId == userId)
-                .Include(c=>c.Class)
-                .Include(s=>s.MainSpec)
+                .Where(u => u.UserId == userId)
+                .Include(c => c.Class)
+                .Include(s => s.MainSpec)
                 .ToListAsync();
 
             var charDtos = _mapper.Map<List<CharacterDto>>(characters);
@@ -65,6 +70,30 @@ namespace GuildManagerAPI.Services
             {
                 Data = charDtos,
                 Success = true
+            };
+        }
+
+        public async Task<ServiceResponse<CharacterDto>> UpdateCharacter(int charId, UpdateCharacterDto characterDto)
+        {
+            var character = await _dbContext.Characters
+                .FirstOrDefaultAsync(c => c.Id == charId);
+
+
+            if (character is null)
+            {
+                throw new NotFoundException("Character not found.");
+            }
+
+            character.ItemLevel = characterDto.ItemLevel;
+            character.MainSpec = characterDto.MainSpec;
+            var charDto = _mapper.Map<CharacterDto>(character);
+            _dbContext.Update(character);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<CharacterDto>
+            {
+                Success = true,
+                Data = charDto
             };
         }
     }

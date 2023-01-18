@@ -14,6 +14,8 @@ namespace GuildManagerAPI.Requests
             //.WithBodyValidator<CharacterDto>();
 
             app.MapGet("/api/characters/getusercharacters", CharactersRequests.GetUserCharacters);
+            app.MapPut("api/characters/updatecharacter", CharactersRequests.UpdateCharacter)
+                .Accepts<UpdateCharacterDto>("application/json");
             return app;
         }
         private static async Task<IResult> CreateCharacter(ICharacterService service, CreateCharacterDto dto, ClaimsPrincipal user)
@@ -28,6 +30,13 @@ namespace GuildManagerAPI.Requests
         {
             string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
             var response = await service.GetUserCharacters(int.Parse(userId));
+
+            return Results.Ok(response);
+        }
+
+        private static async Task<IResult> UpdateCharacter(ICharacterService service, int characterId, UpdateCharacterDto dto)
+        {
+            var response = await service.UpdateCharacter(characterId, dto);
 
             return Results.Ok(response);
         }

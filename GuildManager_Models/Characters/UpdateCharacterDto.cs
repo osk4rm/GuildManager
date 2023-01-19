@@ -9,7 +9,8 @@ namespace GuildManager_Models.Characters
 {
     public class UpdateCharacterDto
     {
-        public ClassSpecialization MainSpec { get; set; } = new();
-        public decimal ItemLevel { get; set; }
+        public int Id { get; set; }
+        public int? MainSpecId { get; set; } 
+        public decimal? ItemLevel { get; set; }
     }
 }

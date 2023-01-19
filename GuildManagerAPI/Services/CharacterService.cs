@@ -73,19 +73,27 @@ namespace GuildManagerAPI.Services
             };
         }
 
-        public async Task<ServiceResponse<CharacterDto>> UpdateCharacter(int charId, UpdateCharacterDto characterDto)
+        public async Task<ServiceResponse<CharacterDto>> UpdateCharacter(UpdateCharacterDto characterDto)
         {
             var character = await _dbContext.Characters
-                .FirstOrDefaultAsync(c => c.Id == charId);
+                .FirstOrDefaultAsync(c => c.Id == characterDto.Id);
+            var mainSpec = await _dbContext.ClassSpecializations
+                .FirstOrDefaultAsync(s => s.Id == characterDto.MainSpecId);
 
 
             if (character is null)
             {
                 throw new NotFoundException("Character not found.");
             }
+            if(characterDto.ItemLevel == null && characterDto.MainSpecId == null)
+            {
+                throw new BadRequestException("Body doesn't contain any data to update");
+            }
+            if (characterDto.ItemLevel != null)
+                character.ItemLevel = (decimal)characterDto.ItemLevel;
+            if (mainSpec != null)
+                character.MainSpec = mainSpec;
 
-            character.ItemLevel = characterDto.ItemLevel;
-            character.MainSpec = characterDto.MainSpec;
             var charDto = _mapper.Map<CharacterDto>(character);
             _dbContext.Update(character);
             await _dbContext.SaveChangesAsync();

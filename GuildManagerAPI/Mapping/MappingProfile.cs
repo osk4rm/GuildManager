@@ -14,6 +14,7 @@ namespace GuildManagerAPI.Mapping
 
             CreateMap<Character, CharacterDto>().ReverseMap();
             CreateMap<Character, CreateCharacterDto>().ReverseMap();
+            CreateMap<Character, UpdateCharacterDto>().ReverseMap();
         }
     }
 }

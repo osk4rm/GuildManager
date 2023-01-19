@@ -8,7 +8,7 @@ namespace GuildManagerAPI.Services.Interfaces
         Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters(int userId);
         Task<ServiceResponse<int>> CreateCharacter(int userId,CreateCharacterDto characterDto);
         Task<ServiceResponse<bool>> DeleteCharacter(int userId, string characterName);
-        Task<ServiceResponse<CharacterDto>> UpdateCharacter(int characterId, UpdateCharacterDto characterDto);
+        Task<ServiceResponse<CharacterDto>> UpdateCharacter(UpdateCharacterDto characterDto);
         
     }
 }

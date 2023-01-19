@@ -7,6 +7,7 @@ using GuildManagerAPI.Requests;
 using GuildManagerAPI.Services;
 using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
+using GuildManagerAPI.Validation.CharactersOperations;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,8 @@ builder.Services.AddScoped<IClassesService, ClassesService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(RegisterUserValidator));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreateCharacterDtoValidator));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(UpdateCharacterDtoValidator));
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontEndClient", corsBuilder =>

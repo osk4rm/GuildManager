@@ -1,6 +1,7 @@
 ﻿using GuildManager_Models;
 using GuildManager_Models.Characters;
 using GuildManagerAPI.Services.Interfaces;
+using GuildManagerAPI.Validation;
 using System.Security.Claims;
 
 namespace GuildManagerAPI.Requests
@@ -10,12 +11,13 @@ namespace GuildManagerAPI.Requests
         public static WebApplication RegisterCharactersEndpoints(this WebApplication app)
         {
             app.MapPost("/api/characters/create", CharactersRequests.CreateCharacter)
-                .Accepts<CreateCharacterDto>("application/json");
-            //.WithBodyValidator<CharacterDto>();
+                .Accepts<CreateCharacterDto>("application/json")
+                .WithBodyValidator<CreateCharacterDto>();
 
             app.MapGet("/api/characters/getusercharacters", CharactersRequests.GetUserCharacters);
             app.MapPut("api/characters/updatecharacter", CharactersRequests.UpdateCharacter)
-                .Accepts<UpdateCharacterDto>("application/json");
+                .Accepts<UpdateCharacterDto>("application/json")
+                .WithBodyValidator<UpdateCharacterDto>();
             return app;
         }
         private static async Task<IResult> CreateCharacter(ICharacterService service, CreateCharacterDto dto, ClaimsPrincipal user)
@@ -34,9 +36,9 @@ namespace GuildManagerAPI.Requests
             return Results.Ok(response);
         }
 
-        private static async Task<IResult> UpdateCharacter(ICharacterService service, int characterId, UpdateCharacterDto dto)
+        private static async Task<IResult> UpdateCharacter(ICharacterService service, UpdateCharacterDto dto)
         {
-            var response = await service.UpdateCharacter(characterId, dto);
+            var response = await service.UpdateCharacter(dto);
 
             return Results.Ok(response);
         }

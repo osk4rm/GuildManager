@@ -13,7 +13,7 @@ else
     <div class="container w-75">
         <SfGrid @ref="characterGrid" DataSource="@Characters" AllowPaging="true"
             Toolbar="@(new List<string>{"Add"})">
-            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog" Dialog="DialogParams">
+            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Dialog" Dialog="DialogParams" ShowDeleteConfirmDialog="true">
                 <Template>
                     @{
                         var charDto = (context as CharacterDto);
@@ -177,6 +177,35 @@ else
         if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Delete))
         {
             //logic for delete
+            var result = await CharacterService.DeleteCharacter(args.Data.Id);
+            var getCharsResponse = await CharacterService.GetUserCharacters();
+            if (!result.Success)
+            {
+                responseMsg = result.Message;
+                alertCss = "alert-danger";
+
+                Characters = getCharsResponse.Data;
+                await characterGrid.Refresh();
+
+                StateHasChanged();
+                await Task.Delay(5000);
+                responseMsg = string.Empty;
+                alertCss = string.Empty;
+                StateHasChanged();
+
+                return;
+            }
+
+            Characters = getCharsResponse.Data;
+            await characterGrid.Refresh();
+            responseMsg = result.Message;
+            alertCss = "alert-success";
+
+            StateHasChanged();
+            await Task.Delay(5000);
+            responseMsg = string.Empty;
+            alertCss = string.Empty;
+            StateHasChanged();
 
         }
     }

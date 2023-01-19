@@ -20,7 +20,7 @@ namespace GuildManagerAPI.Requests
                 .Accepts<UpdateCharacterDto>("application/json")
                 .WithBodyValidator<UpdateCharacterDto>();
 
-            app.MapDelete("/api/characters/delete", CharactersRequests.DeleteCharacter);
+            app.MapDelete("/api/characters/delete/{id}", CharactersRequests.DeleteCharacter);
 
             return app;
         }

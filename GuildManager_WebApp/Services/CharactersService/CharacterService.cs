@@ -45,5 +45,14 @@ namespace GuildManager_WebApp.Services.CharactersService
 
             return result;
         }
+
+        public async Task<ServiceResponse<bool?>> DeleteCharacter(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/characters/delete/{id}");
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<bool?>>(content);
+
+            return result;
+        }
     }
 }

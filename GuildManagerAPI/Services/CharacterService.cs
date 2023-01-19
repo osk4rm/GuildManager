@@ -51,9 +51,21 @@ namespace GuildManagerAPI.Services
             };
         }
 
-        public Task<ServiceResponse<bool>> DeleteCharacter(int userId, string characterName)
+        public async Task<ServiceResponse<bool>> DeleteCharacter(int id)
         {
-            throw new NotImplementedException();
+            var character = await _dbContext
+                .Characters
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (character == null)
+            {
+                throw new NotFoundException("Character not found");
+            }
+
+            _dbContext.Characters.Remove(character);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Success = true, Data = true, Message = $"Character {character.Name} deleted." };
         }
 
         public async Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters(int userId)
@@ -85,7 +97,7 @@ namespace GuildManagerAPI.Services
             {
                 throw new NotFoundException("Character not found.");
             }
-            if(characterDto.ItemLevel == null && characterDto.MainSpecId == null)
+            if (characterDto.ItemLevel == null && characterDto.MainSpecId == null)
             {
                 throw new BadRequestException("Body doesn't contain any data to update");
             }

@@ -19,6 +19,9 @@ namespace GuildManagerAPI.Requests
             app.MapPut("/api/characters/updatecharacter", CharactersRequests.UpdateCharacter)
                 .Accepts<UpdateCharacterDto>("application/json")
                 .WithBodyValidator<UpdateCharacterDto>();
+
+            app.MapDelete("/api/characters/delete", CharactersRequests.DeleteCharacter);
+
             return app;
         }
         private static async Task<IResult> CreateCharacter(ICharacterService service, CreateCharacterDto dto, ClaimsPrincipal user)
@@ -40,6 +43,13 @@ namespace GuildManagerAPI.Requests
         private static async Task<IResult> UpdateCharacter(ICharacterService service, UpdateCharacterDto dto)
         {
             var response = await service.UpdateCharacter(dto);
+
+            return Results.Ok(response);
+        }
+
+        private static async Task<IResult> DeleteCharacter(ICharacterService service, int id)
+        {
+            var response = await service.DeleteCharacter(id);
 
             return Results.Ok(response);
         }

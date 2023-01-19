@@ -15,7 +15,8 @@ namespace GuildManagerAPI.Requests
                 .WithBodyValidator<CreateCharacterDto>();
 
             app.MapGet("/api/characters/getusercharacters", CharactersRequests.GetUserCharacters);
-            app.MapPut("api/characters/updatecharacter", CharactersRequests.UpdateCharacter)
+
+            app.MapPut("/api/characters/updatecharacter", CharactersRequests.UpdateCharacter)
                 .Accepts<UpdateCharacterDto>("application/json")
                 .WithBodyValidator<UpdateCharacterDto>();
             return app;

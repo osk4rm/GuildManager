@@ -34,5 +34,16 @@ namespace GuildManager_WebApp.Services.CharactersService
 
             return result;
         }
+
+        public async Task<ServiceResponse<CharacterDto?>> UpdateCharacter(UpdateCharacterDto characterDto)
+        {
+            var content = JsonConvert.SerializeObject(characterDto);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync("api/characters/updatecharacter", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<CharacterDto?>>(responseContent);
+
+            return result;
+        }
     }
 }

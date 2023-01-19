@@ -7,5 +7,6 @@ namespace GuildManager_WebApp.Services.CharactersService
     {
         Task<ServiceResponse<int?>> CreateCharacter(CreateCharacterDto characterDto);
         Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters();
+        Task<ServiceResponse<CharacterDto?>> UpdateCharacter(UpdateCharacterDto characterDto);
     }
 }

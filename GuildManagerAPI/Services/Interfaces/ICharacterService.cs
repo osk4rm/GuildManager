@@ -5,8 +5,8 @@ namespace GuildManagerAPI.Services.Interfaces
 {
     public interface ICharacterService
     {
-        Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters(int userId);
-        Task<ServiceResponse<int>> CreateCharacter(int userId,CreateCharacterDto characterDto);
+        Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters();
+        Task<ServiceResponse<int>> CreateCharacter(CreateCharacterDto characterDto);
         Task<ServiceResponse<bool>> DeleteCharacter(int id);
         Task<ServiceResponse<CharacterDto>> UpdateCharacter(UpdateCharacterDto characterDto);
         

@@ -12,30 +12,35 @@ namespace GuildManagerAPI.Requests
         {
             app.MapPost("/api/characters/create", CharactersRequests.CreateCharacter)
                 .Accepts<CreateCharacterDto>("application/json")
-                .WithBodyValidator<CreateCharacterDto>();
+                .WithBodyValidator<CreateCharacterDto>()
+                .RequireAuthorization();
+            
 
-            app.MapGet("/api/characters/getusercharacters", CharactersRequests.GetUserCharacters);
+            app.MapGet("/api/characters/getusercharacters", CharactersRequests.GetUserCharacters)
+                .RequireAuthorization();
 
             app.MapPut("/api/characters/updatecharacter", CharactersRequests.UpdateCharacter)
                 .Accepts<UpdateCharacterDto>("application/json")
-                .WithBodyValidator<UpdateCharacterDto>();
+                .WithBodyValidator<UpdateCharacterDto>()
+                .RequireAuthorization();
 
-            app.MapDelete("/api/characters/delete/{id}", CharactersRequests.DeleteCharacter);
+            app.MapDelete("/api/characters/delete/{id}", CharactersRequests.DeleteCharacter)
+                .RequireAuthorization();
 
             return app;
         }
         private static async Task<IResult> CreateCharacter(ICharacterService service, CreateCharacterDto dto, ClaimsPrincipal user)
         {
-            string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            var response = await service.CreateCharacter(int.Parse(userId), dto);
+            //string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await service.CreateCharacter(dto);
 
             return Results.Ok(response);
         }
 
-        private static async Task<IResult> GetUserCharacters(ICharacterService service, ClaimsPrincipal user)
+        private static async Task<IResult> GetUserCharacters(ICharacterService service)
         {
-            string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            var response = await service.GetUserCharacters(int.Parse(userId));
+            //string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await service.GetUserCharacters();
 
             return Results.Ok(response);
         }

@@ -3,8 +3,10 @@ using GuildManager_DataAccess;
 using GuildManager_DataAccess.Entities;
 using GuildManager_Models;
 using GuildManager_Models.Characters;
+using GuildManagerAPI.Authentication.UserContext;
 using GuildManagerAPI.Exceptions;
 using GuildManagerAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuildManagerAPI.Services
@@ -13,15 +15,20 @@ namespace GuildManagerAPI.Services
     {
         private readonly GuildManagerDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IUserContextService _userContextService;
+        private readonly IAuthorizationService _authorizationService;
 
-        public CharacterService(GuildManagerDbContext dbContext, IMapper mapper)
+        public CharacterService(GuildManagerDbContext dbContext, IMapper mapper, 
+            IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _userContextService = userContextService;
+            _authorizationService = authorizationService;
         }
-        public async Task<ServiceResponse<int>> CreateCharacter(int userId, CreateCharacterDto characterDto)
+        public async Task<ServiceResponse<int>> CreateCharacter(CreateCharacterDto characterDto)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == _userContextService.Id);
             var charClass = _dbContext.CharacterClasses.FirstOrDefault(c => c.Id == characterDto.ClassId);
             var classSpec = _dbContext.ClassSpecializations.FirstOrDefault(s => s.Id == characterDto.ClassSpecializationId);
             if (user == null)
@@ -68,10 +75,10 @@ namespace GuildManagerAPI.Services
             return new ServiceResponse<bool> { Success = true, Data = true, Message = $"Character {character.Name} deleted." };
         }
 
-        public async Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters(int userId)
+        public async Task<ServiceResponse<List<CharacterDto>>> GetUserCharacters()
         {
             var characters = await _dbContext.Characters
-                .Where(u => u.UserId == userId)
+                .Where(u => u.UserId == _userContextService.Id)
                 .Include(c => c.Class)
                 .Include(s => s.MainSpec)
                 .ToListAsync();

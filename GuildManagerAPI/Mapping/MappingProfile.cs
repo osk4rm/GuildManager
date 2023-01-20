@@ -2,6 +2,7 @@
 using GuildManager_DataAccess.Entities;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManager_Models.Characters;
+using GuildManager_Models.Members;
 
 namespace GuildManagerAPI.Mapping
 {
@@ -15,6 +16,7 @@ namespace GuildManagerAPI.Mapping
             CreateMap<Character, CharacterDto>().ReverseMap();
             CreateMap<Character, CreateCharacterDto>().ReverseMap();
             CreateMap<Character, UpdateCharacterDto>().ReverseMap();
+            CreateMap<User, MemberDto>();
         }
     }
 }

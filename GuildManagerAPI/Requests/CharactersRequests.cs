@@ -31,7 +31,6 @@ namespace GuildManagerAPI.Requests
         }
         private static async Task<IResult> CreateCharacter(ICharacterService service, CreateCharacterDto dto, ClaimsPrincipal user)
         {
-            //string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
             var response = await service.CreateCharacter(dto);
 
             return Results.Ok(response);
@@ -39,7 +38,6 @@ namespace GuildManagerAPI.Requests
 
         private static async Task<IResult> GetUserCharacters(ICharacterService service)
         {
-            //string userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
             var response = await service.GetUserCharacters();
 
             return Results.Ok(response);

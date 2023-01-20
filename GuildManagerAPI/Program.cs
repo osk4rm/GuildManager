@@ -85,10 +85,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
-app.UseRouting();
 app.RegisterLoginEndpoints();
 app.RegisterClassesEndpoints();
 app.RegisterCharactersEndpoints();

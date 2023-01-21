@@ -6,6 +6,6 @@ namespace GuildManager_WebApp.Services.ClassesService
 {
     public interface IClassService
     {
-        Task<ServiceResponse<List<CharacterClass>>> GetClasses();
+        Task<ServiceResponse<List<CharacterClassDto>>> GetClasses();
     }
 }

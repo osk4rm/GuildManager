@@ -9,6 +9,7 @@ namespace GuildManager_Models.CharacterClassesAndSpecs
 {
     public class ClassSpecDto
     {
+        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public ClassSpecializationRole Role { get; set; }
         public string ImageUrl { get; set; } = string.Empty;

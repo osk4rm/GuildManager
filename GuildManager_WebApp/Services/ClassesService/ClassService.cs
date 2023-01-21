@@ -13,11 +13,11 @@ namespace GuildManager_WebApp.Services.ClassesService
         {
             _httpClient = httpClient;
         }
-        public async Task<ServiceResponse<List<CharacterClass>>> GetClasses()
+        public async Task<ServiceResponse<List<CharacterClassDto>>> GetClasses()
         {
             var response = await _httpClient.GetAsync("api/classes");
             var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ServiceResponse<List<CharacterClass>>>(responseContent);
+            var result = JsonConvert.DeserializeObject<ServiceResponse<List<CharacterClassDto>>>(responseContent);
 
             return result;
         }

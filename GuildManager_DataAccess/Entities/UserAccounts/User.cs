@@ -16,6 +16,6 @@ namespace GuildManager_DataAccess.Entities
         public int RoleId { get; set; }
         public virtual UserRole Role { get; set; }
         public virtual List<Character> Characters { get; set; } = new();
-        public byte[] Avatar { get; set; }
+        public byte[]? Avatar { get; set; }
     }
 }

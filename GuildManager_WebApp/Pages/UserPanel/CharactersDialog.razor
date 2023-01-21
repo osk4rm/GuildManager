@@ -7,21 +7,21 @@
     </div>
     <div class="mb-3 w-50">
         <label for="classid">Class</label>
-        <SfDropDownList ID="Class" TItem="CharacterClass" @bind-Value="@(charDto.Class)" TValue="CharacterClass"
+        <SfDropDownList ID="Class" TItem="CharacterClassDto" @bind-Value="@(charDto.Class)" TValue="CharacterClassDto"
                         DataSource="CharacterClasses" Width="100">
-            <DropDownListEvents TItem="CharacterClass" TValue="CharacterClass" ValueChange="@ReloadSpecs"></DropDownListEvents>
-            <DropDownListFieldSettings Value="CharacterClass" Text="Name"></DropDownListFieldSettings>
+            <DropDownListEvents TItem="CharacterClassDto" TValue="CharacterClassDto" ValueChange="@ReloadSpecs"></DropDownListEvents>
+            <DropDownListFieldSettings Value="CharacterClassDto" Text="Name"></DropDownListFieldSettings>
         </SfDropDownList>
     </div>
     <div class="mb-3 w-50">
         <label for="specid">Main spec</label>
         <SfDropDownList ID="MainSpec" 
             Enabled="@EnableSpecsDropDown" 
-            TItem="ClassSpecialization" 
-            @bind-Value="@(charDto.MainSpec)" 
-            TValue="ClassSpecialization" 
-            DataSource="ClassSpecializations">
-            <DropDownListFieldSettings Value="ClassSpecialization" Text="Name"></DropDownListFieldSettings>
+            TItem="ClassSpecDto" 
+            @bind-Value="@(charDto.MainSpec)"
+                        TValue="ClassSpecDto"
+                        DataSource="ClassSpecializations">
+            <DropDownListFieldSettings Value="ClassSpecDto" Text="Name"></DropDownListFieldSettings>
         </SfDropDownList>
     </div>
     <div class="mb-3 w-50">
@@ -37,16 +37,16 @@
     [Parameter]
     public CharacterDto charDto { get; set; } = new();
     [Parameter]
-    public List<CharacterClass> CharacterClasses { get; set; } = new();
+    public List<CharacterClassDto> CharacterClasses { get; set; } = new();
     [Parameter]
-    public List<ClassSpecialization> ClassSpecializations { get; set; } = new();
+    public List<ClassSpecDto> ClassSpecializations { get; set; } = new();
     bool IsLoaded = false;
 
 
     private DialogSettings DialogParams = new DialogSettings { MinHeight = "400px", Width = "450px" };
     public bool EnableSpecsDropDown = false;
 
-    private void ReloadSpecs(ChangeEventArgs<CharacterClass, CharacterClass> args)
+    private void ReloadSpecs(ChangeEventArgs<CharacterClassDto, CharacterClassDto> args)
     {
         ClassSpecializations = args.Value.ClassSpecializations;
         EnableSpecsDropDown = true;

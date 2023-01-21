@@ -18,17 +18,17 @@ namespace GuildManagerAPI.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<List<CharacterClass>>> GetClasses()
+        public async Task<ServiceResponse<List<CharacterClassDto>>> GetClasses()
         {
             var classes = await _dbContext.CharacterClasses
                 .Include(c => c.ClassSpecializations)
                 .ToListAsync();
 
-            //var dtos = _mapper.Map<List<CharacterClass>>(classes);
+            var dtos = _mapper.Map<List<CharacterClassDto>>(classes);
 
-            return new ServiceResponse<List<CharacterClass>>
+            return new ServiceResponse<List<CharacterClassDto>>
             {
-                Data = classes,
+                Data = dtos,
                 Success = true,
                 Message = "Success"
             };

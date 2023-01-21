@@ -1,0 +1,14 @@
+﻿@page "/members"
+@using GuildManager_Models.Members;
+@inject IMembersService _membersService
+
+<h3>Guild members</h3>
+
+@code {
+    List<MemberDto> MembersList { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var membersResponse = _membersService.GetMembers();
+    }
+}

@@ -24,7 +24,7 @@ namespace GuildManagerAPI.Services
 
         public async Task<ServiceResponse<List<MemberDto>>> GetMembers()
         {
-            var users = _dbContext
+            var users = await _dbContext
                 .Users
                 .Include(u => u.Characters).ThenInclude(c=>c.Class)
                 .Include(u => u.Characters).ThenInclude(c=>c.MainSpec)

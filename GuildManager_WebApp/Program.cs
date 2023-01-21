@@ -4,6 +4,7 @@ using GuildManager_WebApp;
 using GuildManager_WebApp.Services.AuthService;
 using GuildManager_WebApp.Services.CharactersService;
 using GuildManager_WebApp.Services.ClassesService;
+using GuildManager_WebApp.Services.MembersService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Syncfusion.Blazor;
@@ -23,6 +24,7 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
+builder.Services.AddScoped<IMembersService, MembersService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

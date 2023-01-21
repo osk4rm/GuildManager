@@ -1,7 +1,7 @@
 ﻿using GuildManager_Models;
 using GuildManager_Models.Members;
 
-namespace GuildManagerAPI.Services.Interfaces
+namespace GuildManager_WebApp.Services.MembersService
 {
     public interface IMembersService
     {

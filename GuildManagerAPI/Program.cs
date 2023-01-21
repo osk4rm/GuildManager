@@ -60,6 +60,7 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<IClassesService, ClassesService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddScoped<IMembersService, MembersService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
@@ -92,6 +93,7 @@ app.UseHttpsRedirection();
 app.RegisterLoginEndpoints();
 app.RegisterClassesEndpoints();
 app.RegisterCharactersEndpoints();
+app.RegisterMembersEndpoints();
 app.UseCors("FrontEndClient");
 
 app.Run();

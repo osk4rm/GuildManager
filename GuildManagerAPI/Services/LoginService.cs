@@ -29,7 +29,7 @@ namespace GuildManagerAPI.Services
         public async Task<ServiceResponse<bool>> ChangePassword(int userId, ChangePasswordDto dto)
         {
             var user = await _context.Users.FindAsync(userId);
-            if(user == null)
+            if (user == null)
             {
                 throw new NotFoundException($"User {userId} not found");
             }
@@ -98,7 +98,14 @@ namespace GuildManagerAPI.Services
                 Email = dto.Email,
                 Nickname = dto.Nickname,
                 RoleId = dto.RoleId,
+
             };
+            using (var stream = new FileStream(Path.Combine("wwwroot", "default_avatar.jpg"), FileMode.Open))
+            {
+                var bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, (int)stream.Length);
+                user.Avatar = bytes;
+            }
 
             var hashedPassword = _passwordHasher.HashPassword(user, dto.Password);
             user.PasswordHash = hashedPassword;
@@ -108,7 +115,7 @@ namespace GuildManagerAPI.Services
 
             return new ServiceResponse<int>
             {
-                Success= true,
+                Success = true,
                 Data = user.Id,
                 Message = "Registration successful!"
             };

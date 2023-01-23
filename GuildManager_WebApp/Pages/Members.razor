@@ -1,14 +1,109 @@
 ﻿@page "/members"
 @using GuildManager_Models.Members;
 @inject IMembersService _membersService
+@using Microsoft.AspNetCore.Components.WebAssembly.Services
 
 <h3>Guild members</h3>
 
+@if (IsLoading)
+{
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+}
+else
+{
+
+    <div class="col-lg-12 control-section mt-5">
+        <div class="content-wrapper">
+            <div class="row">
+                <SfGrid DataSource="@MembersList">
+                    <GridTemplates>
+                        <DetailTemplate>
+                            @{
+                                var member = (context as MemberDto);
+                            }
+                            <div style="padding:20px">
+                                <SfTab>
+                                    <TabItems>
+                                        @*<TabItem>
+                                    <ChildContent>
+                                    <TabHeader Text="Details"></TabHeader>
+                                    </ChildContent>
+                                    <ContentTemplate>
+                                    <div style="display:inline-flex">
+                                    <div style="float:left;padding:45px;padding-top:70px"><img class="photo" src="data:image/jpg;base64,@Convert.ToBase64String(member.Avatar)" alt="Avatar" /> /></div>
+                                    <div style="padding-top:42px">
+                                    <div style="padding-bottom:10px;padding-left:10px;">
+                                    <span style="font-size:large;font-weight: bold">@member.Nickname</span>
+                                    </div>
+                                    <div style="padding-right: 173px;padding-left:10px;">
+                                    <span class="position">@member.Nickname 1</span>
+                                    </div>
+                                    <div style="padding-top:10px;">
+                                    <table class="table">
+                                    <tr>
+                                    <th>Mail </th>
+                                    <td>@member.Nickname 2</td>
+                                    </tr>
+                                    </table>
+                                    </div>
+                                    </div>
+                                    </div>
+                                    </ContentTemplate>
+                                    </TabItem>*@
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Characters"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+                                                <div style="container w-75 padding:25px">
+                                                    <SfGrid DataSource="@member.Characters" AllowPaging="true">
+                                                        <GridPageSettings PageSize="6"></GridPageSettings>
+                                                        <GridColumns>
+                                                            <GridColumn Field=@nameof(CharacterDto.Name) HeaderText="Name"> </GridColumn>
+                                                            <GridColumn Field="Class.Name" HeaderText="Class"></GridColumn>
+                                                            <GridColumn Field="MainSpec.Name" HeaderText="Mainspec"  Format="C2"></GridColumn>
+                                                            <GridColumn Field=@nameof(CharacterDto.ItemLevel) HeaderText="Item level"></GridColumn>
+                                                        </GridColumns>
+                                                    </SfGrid>
+                                                </div>
+                                            </ContentTemplate>
+                                        </TabItem>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Raid events"></TabHeader>
+                                            </ChildContent>
+                                            <ContentTemplate>
+
+                                            </ContentTemplate>
+                                        </TabItem>
+                                    </TabItems>
+                                </SfTab>
+                            </div>
+                        </DetailTemplate>
+                    </GridTemplates>
+                    <GridColumns>
+                        <GridColumn Field=@nameof(MemberDto.Nickname) HeaderText="Nickname" Width="110"> </GridColumn>
+                    </GridColumns>
+                </SfGrid>
+            </div>
+        </div>
+    </div>
+
+}
 @code {
     List<MemberDto> MembersList { get; set; } = new();
+    private bool IsLoading { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        var membersResponse = _membersService.GetMembers();
+        IsLoading = true;
+        var membersResponse = await _membersService.GetMembers();
+        if (!membersResponse.Success)
+        {
+            //logic for unsuccessful try
+        }
+        MembersList = membersResponse.Data;
+
+        IsLoading = false;
     }
 }

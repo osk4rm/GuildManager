@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuildManager_DataAccess.Entities.Raids;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,6 @@ namespace GuildManager_DataAccess.Entities
         public decimal ItemLevel { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }
+        public virtual List<RaidEvent> RaidEvents { get; set; }
     }
 }

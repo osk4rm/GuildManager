@@ -9,11 +9,12 @@ namespace GuildManager_DataAccess.Entities.Raids
     public class RaidEvent
     {
         public int Id { get; set; }
-        public int RaidLocationId { get; set; }
-        public virtual RaidLocation RaidLocation { get; set; }
+        public int? RaidLocationId { get; set; }
+        public virtual RaidLocation? RaidLocation { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Description { get; set; }
-        public virtual List<Character> Participants { get; set; }
+        public string? Description { get; set; }
+        public virtual List<Character> Participants { get; set; } = new();
+        public bool AutoAccept { get; set; } = false;
     }
 }

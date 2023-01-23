@@ -22,6 +22,7 @@ namespace GuildManager_DataAccess
         public DbSet<ClassSpecialization> ClassSpecializations { get; set; }
         public DbSet<RaidEvent> RaidEvents { get; set; }
         public DbSet<RaidLocation> RaidLocations { get; set; }
+        public DbSet<RaidEventCharacter> RaidEventCharacter { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

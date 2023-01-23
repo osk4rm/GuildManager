@@ -4,6 +4,7 @@ using GuildManager_DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuildManagerDataAccess.Migrations
 {
     [DbContext(typeof(GuildManagerDbContext))]
-    partial class GuildManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230123140224_raideventchar")]
+    partial class raideventchar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -501,16 +504,14 @@ namespace GuildManagerDataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AutoAccept")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("RaidLocationId")
+                    b.Property<int>("RaidLocationId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -543,26 +544,6 @@ namespace GuildManagerDataAccess.Migrations
                     b.ToTable("RaidEventCharacter");
                 });
 
-            modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidExpansion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RaidExpansion");
-                });
-
             modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidLocation", b =>
                 {
                     b.Property<int>("Id")
@@ -571,8 +552,9 @@ namespace GuildManagerDataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ExpansionId")
-                        .HasColumnType("int");
+                    b.Property<string>("Expansion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -580,22 +562,9 @@ namespace GuildManagerDataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("RaidDifficulty")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int?>("RaidExpansionId")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExpansionId");
-
-                    b.HasIndex("RaidExpansionId");
 
                     b.ToTable("RaidLocations");
                 });
@@ -709,7 +678,9 @@ namespace GuildManagerDataAccess.Migrations
                 {
                     b.HasOne("GuildManager_DataAccess.Entities.Raids.RaidLocation", "RaidLocation")
                         .WithMany()
-                        .HasForeignKey("RaidLocationId");
+                        .HasForeignKey("RaidLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("RaidLocation");
                 });
@@ -733,19 +704,6 @@ namespace GuildManagerDataAccess.Migrations
                     b.Navigation("RaidEvent");
                 });
 
-            modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidLocation", b =>
-                {
-                    b.HasOne("GuildManager_DataAccess.Entities.Raids.RaidExpansion", "Expansion")
-                        .WithMany()
-                        .HasForeignKey("ExpansionId");
-
-                    b.HasOne("GuildManager_DataAccess.Entities.Raids.RaidExpansion", null)
-                        .WithMany("Raids")
-                        .HasForeignKey("RaidExpansionId");
-
-                    b.Navigation("Expansion");
-                });
-
             modelBuilder.Entity("GuildManager_DataAccess.Entities.User", b =>
                 {
                     b.HasOne("GuildManager_DataAccess.Entities.UserRole", "Role")
@@ -767,11 +725,6 @@ namespace GuildManagerDataAccess.Migrations
             modelBuilder.Entity("GuildManager_DataAccess.Entities.ClassSpecialization", b =>
                 {
                     b.Navigation("Characters");
-                });
-
-            modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidExpansion", b =>
-                {
-                    b.Navigation("Raids");
                 });
 
             modelBuilder.Entity("GuildManager_DataAccess.Entities.User", b =>

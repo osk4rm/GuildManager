@@ -17,7 +17,8 @@ namespace GuildManager_DataAccess.Entities.Configurations
             builder
                 .HasOne(r => r.RaidLocation)
                 .WithMany()
-                .HasForeignKey(r => r.RaidLocationId);
+                .HasForeignKey(r => r.RaidLocationId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .Property(l => l.RaidDifficulty)

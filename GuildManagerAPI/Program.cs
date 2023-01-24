@@ -61,6 +61,8 @@ builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<IClassesService, ClassesService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IMembersService, MembersService>();
+builder.Services.AddScoped<IRaidExpansionsService, RaidExpansionsService>();
+builder.Services.AddScoped<IRaidLocationService, RaidLocationService>();
 builder.Services.AddScoped<Seeder>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
@@ -98,6 +100,8 @@ app.RegisterLoginEndpoints();
 app.RegisterClassesEndpoints();
 app.RegisterCharactersEndpoints();
 app.RegisterMembersEndpoints();
+app.RegisterRaidExpansionsEndpoints();
+app.RegisterRaidLocationsEndpoints();
 app.UseCors("FrontEndClient");
 
 app.Run();

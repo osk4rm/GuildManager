@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using GuildManager_DataAccess.Entities;
+using GuildManager_DataAccess.Entities.Raids;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManager_Models.Characters;
 using GuildManager_Models.Members;
+using GuildManager_Models.RaidExpansionsAndLocations;
 
 namespace GuildManagerAPI.Mapping
 {
@@ -17,6 +19,9 @@ namespace GuildManagerAPI.Mapping
             CreateMap<Character, CreateCharacterDto>().ReverseMap();
             CreateMap<Character, UpdateCharacterDto>().ReverseMap();
             CreateMap<User, MemberDto>();
+
+            CreateMap<RaidLocation, RaidLocationDto>();
+            CreateMap<RaidExpansion, RaidExpansionDto>();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GuildManager_DataAccess
     {
         public GuildManagerDbContext(DbContextOptions<GuildManagerDbContext> options) : base(options)
         {
-            
+
         }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> Roles { get; set; }
@@ -22,12 +22,13 @@ namespace GuildManager_DataAccess
         public DbSet<ClassSpecialization> ClassSpecializations { get; set; }
         public DbSet<RaidEvent> RaidEvents { get; set; }
         public DbSet<RaidLocation> RaidLocations { get; set; }
+        public DbSet<RaidExpansion> RaidExpansions { get; set; }
         public DbSet<RaidEventCharacter> RaidEventCharacter { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);
-            
+
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

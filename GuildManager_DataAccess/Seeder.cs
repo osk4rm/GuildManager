@@ -26,9 +26,9 @@ namespace GuildManager_DataAccess
             {
                 SeedData(new RolesSeeder(), _dbContext.Roles);
                 SeedData(new CharacterClassesSeeder(), _dbContext.CharacterClasses);
-                SeedData(new ClassSpecSeeder(), _dbContext.ClassSpecializations);
+                //SeedData(new ClassSpecSeeder(), _dbContext.ClassSpecializations);
                 SeedData(new RaidExpansionSeeder(), _dbContext.RaidExpansions);
-                SeedData(new RaidLocationSeeder(), _dbContext.RaidLocations);
+                //SeedData(new RaidLocationSeeder(), _dbContext.RaidLocations);
 
             }
         }

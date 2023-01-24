@@ -13,7 +13,7 @@ namespace GuildManager_DataAccess.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<ClassSpecialization> builder)
         {
-
+            
             builder
                 .HasOne(s => s.CharacterClass)
                 .WithMany(c => c.ClassSpecializations)

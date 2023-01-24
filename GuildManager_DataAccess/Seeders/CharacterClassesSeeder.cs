@@ -33,9 +33,7 @@ namespace GuildManager_DataAccess.Seeders
                         },
                         new ClassSpecialization
                         {
-                            Id = 3,
                             Name = "Unholy",
-                            CharacterClassId = 1,
                             Role = ClassSpecializationRole.Melee_DPS,
                             ImageUrl = "deathknight/unholy.png"
                         },

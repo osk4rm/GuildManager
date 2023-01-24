@@ -35,9 +35,13 @@ namespace GuildManager_DataAccess
 
         private void SeedData<T>(ISeeder<T> seeder, DbSet<T> entity) where T : class
         {
-            var data = seeder.GetSeedData().ToList();
-            _dbContext.BulkInsertOrUpdate(data);
-            _dbContext.SaveChanges();
+            if (!entity.Any())
+            {
+                var data = seeder.GetSeedData().ToList();
+                _dbContext.AddRange(data);
+                _dbContext.SaveChanges();
+            }
+            
         }
 
        

@@ -6,10 +6,9 @@ namespace GuildManager_DataAccess.Entities.Raids
     public class RaidLocation
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
-        public RaidExpansion? Expansion { get; set; }
-        public int? ExpansionId { get; set; }
-        public RaidDifficulty RaidDifficulty { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+        public int RaidExpansionId { get; set; }
+        public virtual RaidExpansion Expansion { get; set; } = new();
     }
 }

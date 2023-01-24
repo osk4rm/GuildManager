@@ -13,6 +13,6 @@ namespace GuildManager_DataAccess.Entities.Raids
         [Required]
         public string Name { get; set; }
         public string? ImageUrl { get; set; }
-        public virtual List<RaidLocation> Raids { get; set; }
+        public virtual List<RaidLocation> RaidLocations { get; set; }
     }
 }

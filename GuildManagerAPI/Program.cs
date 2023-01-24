@@ -61,6 +61,7 @@ builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<IClassesService, ClassesService>();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IMembersService, MembersService>();
+builder.Services.AddScoped<Seeder>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
@@ -79,6 +80,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+var scope = app.Services.CreateScope();
+Seeder seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
+seeder.Seed();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

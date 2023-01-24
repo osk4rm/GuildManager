@@ -4,6 +4,7 @@ using GuildManager_DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuildManagerDataAccess.Migrations
 {
     [DbContext(typeof(GuildManagerDbContext))]
-    partial class GuildManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230124094836_raidsseederx")]
+    partial class raidsseederx
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -510,11 +513,6 @@ namespace GuildManagerDataAccess.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RaidDifficulty")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
                     b.Property<int?>("RaidLocationId")
                         .HasColumnType("int");
 
@@ -638,14 +636,362 @@ namespace GuildManagerDataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("RaidDifficulty")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<int>("RaidExpansionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RaidExpansionId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RaidExpansionId");
 
+                    b.HasIndex("RaidExpansionId1");
+
                     b.ToTable("RaidLocations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ImageUrl = "raids/1.png",
+                            Name = "Blackwing Lair",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ImageUrl = "raids/2.png",
+                            Name = "Molten Core",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ImageUrl = "raids/3.png",
+                            Name = "Onyxia's Lair",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImageUrl = "raids/4.png",
+                            Name = "Zul'Gurub",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ImageUrl = "raids/5.png",
+                            Name = "Aq40",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ImageUrl = "raids/6.png",
+                            Name = "Karazhan",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ImageUrl = "raids/7.png",
+                            Name = "Gruul's Lair",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ImageUrl = "raids/8.png",
+                            Name = "Magtheridon's Lair",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ImageUrl = "raids/9.png",
+                            Name = "Serpentshrine Cavern",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ImageUrl = "raids/10.png",
+                            Name = "Tempest Keep: The Eye",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ImageUrl = "raids/11.png",
+                            Name = "Black Temple",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ImageUrl = "raids/12.png",
+                            Name = "Hyjal Summit",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ImageUrl = "raids/13.png",
+                            Name = "Sunwell Plateau",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 2
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ImageUrl = "raids/14.png",
+                            Name = "Naxxramas",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ImageUrl = "raids/15.png",
+                            Name = "Ulduar",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 3
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ImageUrl = "raids/16.png",
+                            Name = "Trial of the Crusader",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 3
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ImageUrl = "raids/17.png",
+                            Name = "Icecrown Citadel",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ImageUrl = "raids/18.png",
+                            Name = "Firelands",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 4
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ImageUrl = "raids/19.png",
+                            Name = "Dragon Soul",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ImageUrl = "raids/20.png",
+                            Name = "Baradin Hold",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ImageUrl = "raids/21.png",
+                            Name = "Blackwing Descent",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 4
+                        },
+                        new
+                        {
+                            Id = 22,
+                            ImageUrl = "raids/22.png",
+                            Name = "Throne of the Four Winds",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 4
+                        },
+                        new
+                        {
+                            Id = 23,
+                            ImageUrl = "raids/23.png",
+                            Name = "Mogu'shan Vaults",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 5
+                        },
+                        new
+                        {
+                            Id = 24,
+                            ImageUrl = "raids/24.png",
+                            Name = "Heart of Fear",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 5
+                        },
+                        new
+                        {
+                            Id = 25,
+                            ImageUrl = "raids/25.png",
+                            Name = "Terrace of Endless Spring",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 5
+                        },
+                        new
+                        {
+                            Id = 26,
+                            ImageUrl = "raids/26.png",
+                            Name = "Highmaul",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 6
+                        },
+                        new
+                        {
+                            Id = 27,
+                            ImageUrl = "raids/27.png",
+                            Name = "Blackrock Foundry",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 6
+                        },
+                        new
+                        {
+                            Id = 28,
+                            ImageUrl = "raids/28.png",
+                            Name = "Hellfire Citadel",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 6
+                        },
+                        new
+                        {
+                            Id = 29,
+                            ImageUrl = "raids/29.png",
+                            Name = "The Emerald Nightmare",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 7
+                        },
+                        new
+                        {
+                            Id = 30,
+                            ImageUrl = "raids/30.png",
+                            Name = "Trial of Valor",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 7
+                        },
+                        new
+                        {
+                            Id = 31,
+                            ImageUrl = "raids/31.png",
+                            Name = "The Nighthold",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 7
+                        },
+                        new
+                        {
+                            Id = 32,
+                            ImageUrl = "raids/32.png",
+                            Name = "Tomb of Sargeras",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 7
+                        },
+                        new
+                        {
+                            Id = 33,
+                            ImageUrl = "raids/33.png",
+                            Name = "Antorus, the Burning Throne",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 7
+                        },
+                        new
+                        {
+                            Id = 34,
+                            ImageUrl = "raids/34.png",
+                            Name = "Uldir",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 8
+                        },
+                        new
+                        {
+                            Id = 35,
+                            ImageUrl = "raids/35.png",
+                            Name = "Battle of Dazar'alor",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 8
+                        },
+                        new
+                        {
+                            Id = 36,
+                            ImageUrl = "raids/36.png",
+                            Name = "Crucible of Storms",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 8
+                        },
+                        new
+                        {
+                            Id = 37,
+                            ImageUrl = "raids/37.png",
+                            Name = "The Eternal Palace",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 8
+                        },
+                        new
+                        {
+                            Id = 38,
+                            ImageUrl = "raids/38.png",
+                            Name = "Ny'alotha, the Waking City",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 8
+                        },
+                        new
+                        {
+                            Id = 39,
+                            ImageUrl = "raids/39.png",
+                            Name = "Castle Nathria",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 9
+                        },
+                        new
+                        {
+                            Id = 40,
+                            ImageUrl = "raids/40.png",
+                            Name = "Sanctum of Domination",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 9
+                        },
+                        new
+                        {
+                            Id = 41,
+                            ImageUrl = "raids/41.png",
+                            Name = "Sepulcher of the First Ones",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 9
+                        },
+                        new
+                        {
+                            Id = 42,
+                            ImageUrl = "raids/42.png",
+                            Name = "Vault of the Incarnates",
+                            RaidDifficulty = 0,
+                            RaidExpansionId = 10
+                        });
                 });
 
             modelBuilder.Entity("GuildManager_DataAccess.Entities.User", b =>
@@ -784,10 +1130,14 @@ namespace GuildManagerDataAccess.Migrations
             modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidLocation", b =>
                 {
                     b.HasOne("GuildManager_DataAccess.Entities.Raids.RaidExpansion", "Expansion")
-                        .WithMany("RaidLocations")
+                        .WithMany()
                         .HasForeignKey("RaidExpansionId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("GuildManager_DataAccess.Entities.Raids.RaidExpansion", null)
+                        .WithMany("Raids")
+                        .HasForeignKey("RaidExpansionId1");
 
                     b.Navigation("Expansion");
                 });
@@ -817,7 +1167,7 @@ namespace GuildManagerDataAccess.Migrations
 
             modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidExpansion", b =>
                 {
-                    b.Navigation("RaidLocations");
+                    b.Navigation("Raids");
                 });
 
             modelBuilder.Entity("GuildManager_DataAccess.Entities.User", b =>

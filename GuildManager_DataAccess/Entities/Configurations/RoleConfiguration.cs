@@ -13,8 +13,7 @@ namespace GuildManager_DataAccess.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            builder
-                .HasData(Seeder.DefaultUserRoles());
+           
         }
     }
 }

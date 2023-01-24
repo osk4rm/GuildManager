@@ -1,5 +1,6 @@
 ﻿using GuildManager_DataAccess.Entities.Raids;
 using GuildManager_DataAccess.Enum;
+using GuildManager_DataAccess.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -16,13 +17,11 @@ namespace GuildManager_DataAccess.Entities.Configurations
         {
             builder
                 .HasOne(l => l.Expansion)
-                .WithMany()
-                .HasForeignKey(l => l.ExpansionId);
+                .WithMany(x => x.RaidLocations)
+                .HasForeignKey(l => l.RaidExpansionId)
+                .OnDelete(DeleteBehavior.ClientCascade);
 
-            builder
-                .Property(l => l.RaidDifficulty)
-                .IsRequired()
-                .HasDefaultValue(RaidDifficulty.Normal);
+            
 
             builder
                 .Property(l => l.Name)

@@ -20,6 +20,11 @@ namespace GuildManager_DataAccess.Entities.Configurations
                 .HasForeignKey(r => r.RaidLocationId);
 
             builder
+                .Property(l => l.RaidDifficulty)
+                .IsRequired()
+                .HasDefaultValue(RaidDifficulty.Normal);
+
+            builder
                 .HasMany(r => r.Participants)
                 .WithMany(p => p.RaidEvents)
                 .UsingEntity<RaidEventCharacter>(

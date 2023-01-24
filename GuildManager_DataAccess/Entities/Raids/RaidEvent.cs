@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuildManager_DataAccess.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace GuildManager_DataAccess.Entities.Raids
         public string? Description { get; set; }
         public virtual List<Character> Participants { get; set; } = new();
         public bool AutoAccept { get; set; } = false;
+        public RaidDifficulty RaidDifficulty { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GuildManager_DataAccess.Entities;
 using GuildManager_DataAccess.Entities.Raids;
+using GuildManager_DataAccess.Seeders;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

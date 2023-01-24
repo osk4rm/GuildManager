@@ -13,8 +13,6 @@ namespace GuildManager_DataAccess.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<ClassSpecialization> builder)
         {
-            builder.HasData(Seeder.DefaultClassSpecs());
-            
 
             builder
                 .HasOne(s => s.CharacterClass)

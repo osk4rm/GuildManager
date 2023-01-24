@@ -12,9 +12,6 @@ namespace GuildManager_DataAccess.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<CharacterClass> builder)
         {
-            builder.HasData(Seeder.DefaultCharacterClasses());
-            //builder.HasData(Seeder.DefaultClassesAndSpecs());
-
             builder
                 .HasMany(x => x.ClassSpecializations)
                 .WithOne(y => y.CharacterClass)

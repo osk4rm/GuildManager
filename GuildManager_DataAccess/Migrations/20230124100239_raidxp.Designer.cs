@@ -4,6 +4,7 @@ using GuildManager_DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuildManagerDataAccess.Migrations
 {
     [DbContext(typeof(GuildManagerDbContext))]
-    partial class GuildManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230124100239_raidxp")]
+    partial class raidxp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -784,9 +787,9 @@ namespace GuildManagerDataAccess.Migrations
             modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidLocation", b =>
                 {
                     b.HasOne("GuildManager_DataAccess.Entities.Raids.RaidExpansion", "Expansion")
-                        .WithMany("RaidLocations")
+                        .WithMany("Raids")
                         .HasForeignKey("RaidExpansionId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Expansion");
@@ -817,7 +820,7 @@ namespace GuildManagerDataAccess.Migrations
 
             modelBuilder.Entity("GuildManager_DataAccess.Entities.Raids.RaidExpansion", b =>
                 {
-                    b.Navigation("RaidLocations");
+                    b.Navigation("Raids");
                 });
 
             modelBuilder.Entity("GuildManager_DataAccess.Entities.User", b =>

@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using GuildManager_DataAccess;
+using GuildManager_DataAccess.Entities.Raids;
 using GuildManager_Models;
 using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Authentication.UserContext;
+using GuildManagerAPI.Exceptions;
 using GuildManagerAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.Xml;
 
 namespace GuildManagerAPI.Services
 {
@@ -20,6 +23,30 @@ namespace GuildManagerAPI.Services
             _mapper = mapper;
             _userContextService = userContextService;
         }
+
+        public async Task<ServiceResponse<int>> CreateRaidEvent(UpsertRaidEventDto dto)
+        {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == _userContextService.Id);
+
+            if(user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var raidEvent = _mapper.Map<RaidEvent>(dto);
+            raidEvent.CreatedBy = user;
+
+            await _dbContext.RaidEvents.AddAsync(raidEvent);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<int>
+            {
+                Data = raidEvent.Id,
+                Success = true,
+                Message = "Raid event created."
+            };
+        }
+
         public async Task<ServiceResponse<List<RaidEventDto>>> GetAll()
         {
             var raidEvents = await _dbContext.RaidEvents
@@ -44,7 +71,7 @@ namespace GuildManagerAPI.Services
 
             var dto = _mapper.Map<RaidEventDto>(raidEvent);
 
-            return new ServiceResponse<RaidEventDto> { Data = dto };
+            return new ServiceResponse<RaidEventDto> { Data = dto, Success = true };
         }
 
         public async Task<ServiceResponse<List<RaidEventDto>>> GetUserRaidEvents()
@@ -52,7 +79,7 @@ namespace GuildManagerAPI.Services
             var userId = _userContextService.Id;
             if(userId == null)
             {
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedAccessException("Unauthorized.");
             }
 
             var userEvents = await _dbContext
@@ -69,5 +96,24 @@ namespace GuildManagerAPI.Services
                 Success = true
             };
         }
-    }
+
+        public async Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id)
+        {
+            var raidEvent = await _dbContext
+                .RaidEvents
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if(raidEvent == null)
+            {
+                throw new NotFoundException($"Raid event {id} not found.");
+            }
+
+            raidEvent = _mapper.Map<RaidEvent>(dto);
+            _dbContext.Update(raidEvent);
+            await _dbContext.SaveChangesAsync();
+
+            var responseDto = _mapper.Map<RaidEventDto>(raidEvent);
+
+            return new ServiceResponse<RaidEventDto> { Data = responseDto, Success = true, Message = "Raid event updated." };
+        }
 }

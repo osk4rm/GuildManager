@@ -20,9 +20,12 @@ namespace GuildManagerAPI.Requests
                 .RequireAuthorization();
 
             app.MapPost("/api/raid-events/create", RaidEventsRequests.CreateRaidEvent)
+                .Accepts<UpsertRaidEventDto>("application/json")
                 .RequireAuthorization();
 
-            app.MapPut("/api/raid-events/update", RaidEventsRequests.UpdateRaidEvent)
+            app.MapPut("/api/raid-events/update/{eventId}", RaidEventsRequests.UpdateRaidEvent)
+                .Accepts<UpsertRaidEventDto>("application/json")
+                .RequireAuthorization();
 
             return app;
         }

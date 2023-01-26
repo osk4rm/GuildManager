@@ -93,11 +93,16 @@ namespace GuildManagerAPI.Services
 
         public ServiceResponse<int> RegisterUser(RegisterUserDto dto)
         {
+            var memberRole = _context.Roles.FirstOrDefault(r => r.Name == "Member");
+            if (memberRole == null)
+            {
+                throw new NotFoundException("Member role not found. Check your database.");
+            }
             var user = new User()
             {
                 Email = dto.Email,
                 Nickname = dto.Nickname,
-                RoleId = dto.RoleId,
+                RoleId = memberRole.Id,
 
             };
             using (var stream = new FileStream(Path.Combine("wwwroot", "default_avatar.jpg"), FileMode.Open))

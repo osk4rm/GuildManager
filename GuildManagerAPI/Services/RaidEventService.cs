@@ -7,7 +7,6 @@ using GuildManagerAPI.Authentication.UserContext;
 using GuildManagerAPI.Exceptions;
 using GuildManagerAPI.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.Xml;
 
 namespace GuildManagerAPI.Services
 {
@@ -28,7 +27,7 @@ namespace GuildManagerAPI.Services
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == _userContextService.Id);
 
-            if(user == null)
+            if (user == null)
             {
                 throw new UnauthorizedAccessException("Unauthorized.");
             }
@@ -77,7 +76,7 @@ namespace GuildManagerAPI.Services
         public async Task<ServiceResponse<List<RaidEventDto>>> GetUserRaidEvents()
         {
             var userId = _userContextService.Id;
-            if(userId == null)
+            if (userId == null)
             {
                 throw new UnauthorizedAccessException("Unauthorized.");
             }
@@ -99,16 +98,28 @@ namespace GuildManagerAPI.Services
 
         public async Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id)
         {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
             var raidEvent = await _dbContext
                 .RaidEvents
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            if(raidEvent == null)
+            if (raidEvent == null)
             {
                 throw new NotFoundException($"Raid event {id} not found.");
             }
 
-            raidEvent = _mapper.Map<RaidEvent>(dto);
+            raidEvent.EndDate = dto.EndDate;
+            raidEvent.StartDate= dto.StartDate;
+            raidEvent.AutoAccept = dto.AutoAccept;
+            raidEvent.RaidDifficulty = dto.RaidDifficulty;
+            raidEvent.RaidLocationId = dto.RaidLocationId;
+            raidEvent.Description = dto.Description;
+
             _dbContext.Update(raidEvent);
             await _dbContext.SaveChangesAsync();
 
@@ -116,4 +127,5 @@ namespace GuildManagerAPI.Services
 
             return new ServiceResponse<RaidEventDto> { Data = responseDto, Success = true, Message = "Raid event updated." };
         }
+    }
 }

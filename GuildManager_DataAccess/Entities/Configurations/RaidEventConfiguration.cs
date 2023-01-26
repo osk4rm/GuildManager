@@ -21,6 +21,12 @@ namespace GuildManager_DataAccess.Entities.Configurations
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
+                .HasOne(r=>r.CreatedBy)
+                .WithMany()
+                .HasForeignKey(r=>r.CreatedById)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder
                 .Property(l => l.RaidDifficulty)
                 .IsRequired()
                 .HasDefaultValue(RaidDifficulty.Normal);

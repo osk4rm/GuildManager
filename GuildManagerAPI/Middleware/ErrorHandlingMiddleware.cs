@@ -12,7 +12,17 @@ namespace GuildManagerAPI.Middleware
             {
                 await next.Invoke(context);
             }
-            
+            catch(UnauthorizedAccessException unauthorizedAccessException)
+            {
+                ServiceResponse<string> response = new ServiceResponse<string>()
+                {
+                    Success = false,
+                    Message = unauthorizedAccessException.Message
+                };
+
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsJsonAsync(response);
+            }
             catch (BadRequestException badRequestException)
             {
                 ServiceResponse<string> response = new ServiceResponse<string>()

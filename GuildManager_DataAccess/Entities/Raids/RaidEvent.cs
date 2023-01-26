@@ -18,5 +18,8 @@ namespace GuildManager_DataAccess.Entities.Raids
         public virtual List<Character> Participants { get; set; } = new();
         public bool AutoAccept { get; set; } = false;
         public RaidDifficulty RaidDifficulty { get; set; }
+        public int CreatedById { get; set; }
+        public virtual User CreatedBy { get; set; }
+        
     }
 }

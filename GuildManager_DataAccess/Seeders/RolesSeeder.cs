@@ -14,15 +14,12 @@ namespace GuildManager_DataAccess.Seeders
             return new[]
             {
                 new UserRole{
-                    Id = 1,
                     Name= "Admin",
                 },
                 new UserRole{
-                    Id = 2,
                     Name= "Member",
                 },
                 new UserRole{
-                    Id = 3,
                     Name= "Officer",
                 },
             };

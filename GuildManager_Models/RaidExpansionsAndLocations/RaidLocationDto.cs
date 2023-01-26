@@ -12,6 +12,7 @@ namespace GuildManager_Models.RaidExpansionsAndLocations
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
-        public RaidExpansion Expansion { get; set; } = new();
+        public int ExpansionId { get; set; } = new();
+        public string ExpansionName { get; set; } = string.Empty;
     }
 }

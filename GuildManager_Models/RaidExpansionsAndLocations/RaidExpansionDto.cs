@@ -13,6 +13,6 @@ namespace GuildManager_Models.RaidExpansionsAndLocations
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
-        public List<RaidLocation> RaidLocations { get; set; } = new();
+        public List<RaidLocationDto> RaidLocations { get; set; } = new();
     }
 }

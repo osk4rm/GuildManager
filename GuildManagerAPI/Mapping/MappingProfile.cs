@@ -4,6 +4,7 @@ using GuildManager_DataAccess.Entities.Raids;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManager_Models.Characters;
 using GuildManager_Models.Members;
+using GuildManager_Models.RaidEvents;
 using GuildManager_Models.RaidExpansionsAndLocations;
 
 namespace GuildManagerAPI.Mapping
@@ -20,8 +21,15 @@ namespace GuildManagerAPI.Mapping
             CreateMap<Character, UpdateCharacterDto>().ReverseMap();
             CreateMap<User, MemberDto>();
 
-            CreateMap<RaidLocation, RaidLocationDto>();
+            CreateMap<RaidLocation, RaidLocationDto>()
+                .ForMember(d=>d.ExpansionId, a=>a.MapFrom(e=>e.Expansion.Id))
+                .ForMember(d=>d.ExpansionName, a=>a.MapFrom(e=>e.Expansion.Name));
             CreateMap<RaidExpansion, RaidExpansionDto>();
+
+            CreateMap<RaidEvent, RaidEventDto>()
+                .ForMember(d => d.LeaderId, a => a.MapFrom(e => e.CreatedBy.Id))
+                .ForMember(d => d.LeaderName, a => a.MapFrom(e => e.CreatedBy.Nickname));
+                
         }
     }
 }

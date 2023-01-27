@@ -4,8 +4,10 @@ using GuildManager_DataAccess.Entities.Raids;
 using GuildManager_Models;
 using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Authentication.UserContext;
+using GuildManagerAPI.Authorization;
 using GuildManagerAPI.Exceptions;
 using GuildManagerAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuildManagerAPI.Services
@@ -15,12 +17,14 @@ namespace GuildManagerAPI.Services
         private readonly GuildManagerDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
+        private readonly IAuthorizationService _authService;
 
-        public RaidEventService(GuildManagerDbContext dbContext, IMapper mapper, IUserContextService userContextService)
+        public RaidEventService(GuildManagerDbContext dbContext, IMapper mapper, IUserContextService userContextService, IAuthorizationService authService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _userContextService = userContextService;
+            _authService = authService;
         }
 
         public async Task<ServiceResponse<int>> CreateRaidEvent(UpsertRaidEventDto dto)
@@ -98,12 +102,6 @@ namespace GuildManagerAPI.Services
 
         public async Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
-
-            if (user == null)
-            {
-                throw new UnauthorizedAccessException("Unauthorized.");
-            }
             var raidEvent = await _dbContext
                 .RaidEvents
                 .FirstOrDefaultAsync(r => r.Id == id);
@@ -111,6 +109,13 @@ namespace GuildManagerAPI.Services
             if (raidEvent == null)
             {
                 throw new NotFoundException($"Raid event {id} not found.");
+            }
+
+            var authResult = await _authService.AuthorizeAsync(_userContextService.User, raidEvent, new ResourceOperationRequirement(ResourceOperationType.Update));
+
+            if (!authResult.Succeeded)
+            {
+                throw new UnauthorizedAccessException("You are only allowed to update your own events.");
             }
 
             raidEvent.EndDate = dto.EndDate;
@@ -126,6 +131,34 @@ namespace GuildManagerAPI.Services
             var responseDto = _mapper.Map<RaidEventDto>(raidEvent);
 
             return new ServiceResponse<RaidEventDto> { Data = responseDto, Success = true, Message = "Raid event updated." };
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteRaidEvent(int id)
+        {
+            var raidEvent = await _dbContext.RaidEvents
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if(raidEvent == null)
+            {
+                throw new NotFoundException("Raid event not found.");
+            }
+
+            var authResult = await _authService.AuthorizeAsync(_userContextService.User, raidEvent, new ResourceOperationRequirement(ResourceOperationType.Delete));
+
+            if (!authResult.Succeeded)
+            {
+                throw new UnauthorizedAccessException("You are only allowed to delete your own events.");
+            }
+
+            _dbContext.RaidEvents.Remove(raidEvent);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = $"Raid event {raidEvent.Id} deleted."
+            };
         }
     }
 }

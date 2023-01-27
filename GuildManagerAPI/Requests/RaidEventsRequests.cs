@@ -30,7 +30,17 @@ namespace GuildManagerAPI.Requests
                 .RequireAuthorization()
                 .WithBodyValidator<UpsertRaidEventDto>();
 
+            app.MapDelete("/api/raid-events/delete/{eventId}", RaidEventsRequests.DeleteRaidEvent)
+                .RequireAuthorization();
+
             return app;
+        }
+
+        private static async Task<IResult> DeleteRaidEvent(IRaidEventService service, [FromRoute]int eventId)
+        {
+            var response = await service.DeleteRaidEvent(eventId);
+
+            return Results.Ok(response);
         }
 
         private static async Task<IResult> UpdateRaidEvent(IRaidEventService service, [FromBody] UpsertRaidEventDto dto, [FromRoute] int eventId)

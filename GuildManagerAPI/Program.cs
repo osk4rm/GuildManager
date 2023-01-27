@@ -3,6 +3,7 @@ using GuildManager_DataAccess;
 using GuildManager_DataAccess.Entities;
 using GuildManagerAPI.Authentication;
 using GuildManagerAPI.Authentication.UserContext;
+using GuildManagerAPI.Authorization;
 using GuildManagerAPI.Middleware;
 using GuildManagerAPI.Requests;
 using GuildManagerAPI.Requests.Extension;
@@ -10,6 +11,7 @@ using GuildManagerAPI.Services;
 using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
 using GuildManagerAPI.Validation.CharactersOperations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +43,7 @@ builder.Services.AddAuthentication(option =>
     };
 });
 builder.Services.AddAuthorization();
-
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

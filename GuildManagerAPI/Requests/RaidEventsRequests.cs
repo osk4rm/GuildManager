@@ -1,6 +1,7 @@
 ﻿using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Services.Interfaces;
+using GuildManagerAPI.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GuildManagerAPI.Requests
@@ -21,11 +22,13 @@ namespace GuildManagerAPI.Requests
 
             app.MapPost("/api/raid-events/create", RaidEventsRequests.CreateRaidEvent)
                 .Accepts<UpsertRaidEventDto>("application/json")
-                .RequireAuthorization();
+                .RequireAuthorization()
+                .WithBodyValidator<UpsertRaidEventDto>();
 
             app.MapPut("/api/raid-events/update/{eventId}", RaidEventsRequests.UpdateRaidEvent)
                 .Accepts<UpsertRaidEventDto>("application/json")
-                .RequireAuthorization();
+                .RequireAuthorization()
+                .WithBodyValidator<UpsertRaidEventDto>();
 
             return app;
         }

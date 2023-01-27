@@ -14,7 +14,7 @@ namespace GuildManagerAPI.Requests
             app.MapGet("/api/raid-events/getall", RaidEventsRequests.GetAll)
                 .RequireAuthorization();
 
-            app.MapGet("/api/raid-events/getbyid", RaidEventsRequests.GetById)
+            app.MapGet("/api/raid-events/get/{id}", RaidEventsRequests.GetById)
                 .RequireAuthorization();
 
             app.MapGet("/api/raid-events/getmyevents", RaidEventsRequests.GetUserEvents)
@@ -64,7 +64,7 @@ namespace GuildManagerAPI.Requests
             return Results.Ok(response);
         }
 
-        private static async Task<IResult> GetById(IRaidEventService service, int id)
+        private static async Task<IResult> GetById(IRaidEventService service, [FromRoute]int id)
         {
             var response = await service.GetById(id);
 

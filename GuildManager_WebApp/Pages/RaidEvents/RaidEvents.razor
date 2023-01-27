@@ -1,0 +1,72 @@
+﻿@page "/raid-events"
+
+@inject IRaidEventService _raidEventService;
+
+<h3 class="mt-2">Raid events</h3>
+@if (IsLoading)
+{
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+}
+else
+{
+    <div class="container w-100 mt-5">
+        <table class="table table-striped table-bordered table-hover table-dark">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Start date</th>
+                    <th scope="col">Difficulty</th>
+                    <th scope="col">Leader</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var raid in _raidEvents)
+                {
+                    <tr class="text-white">
+                    <td width="75px"><img class="img-fluid" src="/img/@raid.RaidLocation.ImageUrl" alt="img" /></td>
+                    <td>@raid.RaidLocation.Name</td>
+                    <td>@raid.StartDate.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@raid.RaidDifficulty</td>
+                    <td>@raid.LeaderName</td>
+                    <td>@raid.Status</td>
+                    <td>
+                        <button class="btn btn-primary">Show Details</button>
+                    </td>
+                </tr>
+                }
+                
+            </tbody>
+
+        </table>
+
+        <div class="mt-2">
+            <p class="alert @alertCss">@responseMsg</p>
+        </div>
+    </div>
+
+}
+@code {
+    public List<RaidEventDto> _raidEvents { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+    private string alertCss { get; set; } = string.Empty;
+    private string responseMsg { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        var getAllEvents = await _raidEventService.GetAll();
+
+        if (!getAllEvents.Success)
+        {
+            return;
+        }
+
+        _raidEvents = getAllEvents.Data;
+
+        IsLoading = false;
+    }
+}

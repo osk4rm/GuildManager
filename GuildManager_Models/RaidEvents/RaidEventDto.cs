@@ -20,7 +20,8 @@ namespace GuildManager_Models.RaidEvents
         public string? Description { get; set; }
         public List<CharacterDto> Participants { get; set; } = new();
         public bool AutoAccept { get; set; } = false;
-        public RaidDifficulty RaidDifficulty { get; set; }
+        public RaidDifficulty RaidDifficulty { get; set; } = RaidDifficulty.Normal;
+        public RaidStatus Status { get; set; } = RaidStatus.Open;
         public string LeaderName { get; set; }
         public int LeaderId { get; set; }
     }

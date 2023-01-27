@@ -15,6 +15,7 @@ namespace GuildManager_Models.RaidEvents
         public string? Description { get; set; }
         public bool AutoAccept { get; set; } = false;
         public RaidDifficulty RaidDifficulty { get; set; }
+        public RaidStatus Status { get; set; }
 
     }
 }

@@ -54,6 +54,7 @@ namespace GuildManagerAPI.Services
         {
             var raidEvents = await _dbContext.RaidEvents
                 .Include(r => r.RaidLocation)
+                .Include(r=>r.CreatedBy)
                 .ToListAsync();
 
             var dtos = _mapper.Map<List<RaidEventDto>>(raidEvents);
@@ -124,6 +125,7 @@ namespace GuildManagerAPI.Services
             raidEvent.RaidDifficulty = dto.RaidDifficulty;
             raidEvent.RaidLocationId = dto.RaidLocationId;
             raidEvent.Description = dto.Description;
+            raidEvent.Status = dto.Status;
 
             _dbContext.Update(raidEvent);
             await _dbContext.SaveChangesAsync();

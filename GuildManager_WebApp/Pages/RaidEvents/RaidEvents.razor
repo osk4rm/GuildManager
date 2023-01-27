@@ -1,6 +1,7 @@
 ﻿@page "/raid-events"
-
+@inject AuthenticationStateProvider _authStateProvider;
 @inject IRaidEventService _raidEventService;
+@using System.Security.Claims;
 
 <h3 class="mt-2">Raid events</h3>
 @if (IsLoading)
@@ -24,21 +25,29 @@ else
                 </tr>
             </thead>
             <tbody>
-                @foreach(var raid in _raidEvents)
+                @foreach (var raid in _raidEvents)
                 {
-                    <tr class="text-white">
-                    <td width="75px"><img class="img-fluid" src="/img/@raid.RaidLocation.ImageUrl" alt="img" /></td>
-                    <td>@raid.RaidLocation.Name</td>
-                    <td>@raid.StartDate.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@raid.RaidDifficulty</td>
-                    <td>@raid.LeaderName</td>
-                    <td>@raid.Status</td>
-                    <td>
-                        <button class="btn btn-primary">Show Details</button>
-                    </td>
-                </tr>
+
+                    <tr class="@(raid.LeaderId != UserId ? "text-white" : "text-success")">
+                        <td width="75px"><img class="img-fluid" src="/img/@raid.RaidLocation.ImageUrl" alt="img" /></td>
+                        <td>@raid.RaidLocation.Name</td>
+                        <td>@raid.StartDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@raid.RaidDifficulty</td>
+                        <td>@raid.LeaderName</td>
+                        <td>@raid.Status</td>
+                        <td>
+                            <button class="btn btn-primary p">Details</button>
+                            @if (IsOwnRaid(raid))
+                            {
+                                <button class="btn btn-info"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn btn-danger" @onclick="()=>OpenDeleteDialog(raid.Id)"><i class=" fa-solid fa-xmark"></i>
+
+                    </button>
+                            }
+                        </td>
+                    </tr>
                 }
-                
+
             </tbody>
 
         </table>
@@ -47,26 +56,79 @@ else
             <p class="alert @alertCss">@responseMsg</p>
         </div>
     </div>
+    @if (DeleteDialogOpen)
+    {
+        <ConfirmationDialog Title="Are you sure?" Text="Do you really want to delete your raid event?" DialogType="ConfirmationDialog.ModalDialogType.DeleteCancel" 
+        OnClose="@OnDeleteDialogClose"></ConfirmationDialog>
+    }
 
 }
 @code {
+    protected Task<AuthenticationState> AuthStat { get; set; }
+    protected ClaimsPrincipal User { get; set; }
+    protected int UserId => int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
     public List<RaidEventDto> _raidEvents { get; set; } = new();
     public bool IsLoading { get; set; } = false;
     private string alertCss { get; set; } = string.Empty;
     private string responseMsg { get; set; } = string.Empty;
+    private string ownRaidCss { get; set; } = string.Empty;
+    public bool DeleteDialogOpen { get; set; } = false;
+    private int _raidEventToDelete;
+
+    private bool IsOwnRaid(RaidEventDto dto)
+    {
+        if (dto.LeaderId == UserId)
+        {
+            return true;
+        }
+        return false;
+    }
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        var getAllEvents = await _raidEventService.GetAll();
+        AuthStat = _authStateProvider.GetAuthenticationStateAsync();
+        User = (await AuthStat).User;
 
-        if (!getAllEvents.Success)
-        {
-            return;
-        }
-
-        _raidEvents = getAllEvents.Data;
+        await LoadData();
 
         IsLoading = false;
+    }
+
+    private async Task OnDeleteDialogClose(bool accepted)
+    {
+        DeleteDialogOpen = false;
+        if (accepted)
+        {
+            var isDeleted = await _raidEventService.DeleteRaidEvent(_raidEventToDelete);
+            if (!isDeleted.Success)
+            {
+                alertCss = "alert-danger";
+                responseMsg = isDeleted.Message;
+            }
+
+            await LoadData();
+            DeleteDialogOpen = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OpenDeleteDialog(int raidEventId)
+    {
+        _raidEventToDelete = raidEventId;
+        DeleteDialogOpen = true;
+        StateHasChanged();
+    }
+
+    private async Task LoadData()
+    {
+        var getAllResult = await _raidEventService.GetAll();
+        if (!getAllResult.Success)
+        {
+            //todo error handling
+            return;
+        }
+        _raidEvents = getAllResult.Data;
+
     }
 }

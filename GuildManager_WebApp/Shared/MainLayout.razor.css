@@ -8,8 +8,8 @@ html {
     font-size: 62.5%;
 }
 .panel {
-    width: 1800px;
-    height: 1000px;
+    width: 1600px;
+    height: 900px;
     border: 1px solid #4b5769;
     border-radius: 15px;
     overflow: hidden;

@@ -41,12 +41,23 @@
         height: 100vh;
         min-width: 1600px;
         font-family: 'Montserrat', sans-serif;
-        background-color: #181d23;
+        background-image: linear-gradient(to left bottom, #565459, #4a494d, #3f3d42, #343337, #29282c);
     }
 </style>
 
 @code{
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
+    protected async override Task OnInitializedAsync()
+    {
+        AuthStat = AuthStateProvider.GetAuthenticationStateAsync();
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavManager.NavigateTo("login");
+        }
+    }
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");

@@ -14,6 +14,9 @@ html {
     border-radius: 15px;
     overflow: hidden;
 }
+.panel-right {
+    background-color: #302F32;
+}
 .user-box {
     font-family: 'Montserrat', sans-serif;
     display: flex;

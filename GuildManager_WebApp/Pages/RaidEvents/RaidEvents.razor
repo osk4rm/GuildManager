@@ -1,4 +1,5 @@
 ﻿@page "/raid-events"
+@using Microsoft.AspNetCore.Components.Web.Infrastructure
 @inject AuthenticationStateProvider _authStateProvider;
 @inject IRaidEventService _raidEventService;
 @using System.Security.Claims;
@@ -11,6 +12,7 @@
 else
 {
     <div class="container w-100 mt-5">
+        <button class="btn btn-primary" @onclick="@OpenAddDialog">Add new event!</button>
         <table class="table table-striped table-bordered table-hover table-dark">
             <thead class="table-primary">
                 <tr>
@@ -61,7 +63,10 @@ else
         <ConfirmationDialog Title="Are you sure?" Text="Do you really want to delete your raid event?" DialogType="ConfirmationDialog.ModalDialogType.DeleteCancel" 
         OnClose="@OnDeleteDialogClose"></ConfirmationDialog>
     }
-
+    @if (AddDialogOpen)
+    {
+        <AddEventModal OnCancel="@OnAddDialogClose" OnAdd="@AddRaidEvent"></AddEventModal>
+    }
 }
 @code {
     protected Task<AuthenticationState> AuthStat { get; set; }
@@ -73,6 +78,7 @@ else
     private string responseMsg { get; set; } = string.Empty;
     private string ownRaidCss { get; set; } = string.Empty;
     public bool DeleteDialogOpen { get; set; } = false;
+    public bool AddDialogOpen { get; set; } = false;
     private int _raidEventToDelete;
 
     private bool IsOwnRaid(RaidEventDto dto)
@@ -94,7 +100,12 @@ else
 
         IsLoading = false;
     }
-
+    private void OnFailedCall(string message)
+    {
+        alertCss = "alert-danger";
+        responseMsg = message;
+        StateHasChanged();
+    }
     private async Task OnDeleteDialogClose(bool accepted)
     {
         DeleteDialogOpen = false;
@@ -103,8 +114,7 @@ else
             var isDeleted = await _raidEventService.DeleteRaidEvent(_raidEventToDelete);
             if (!isDeleted.Success)
             {
-                alertCss = "alert-danger";
-                responseMsg = isDeleted.Message;
+                OnFailedCall(isDeleted.Message);
             }
 
             await LoadData();
@@ -129,6 +139,39 @@ else
             return;
         }
         _raidEvents = getAllResult.Data;
+
+    }
+
+    private void OpenAddDialog()
+    {
+        AddDialogOpen = true;
+        StateHasChanged();
+    }
+
+    private void OnAddDialogClose(){
+        AddDialogOpen = false;
+        StateHasChanged();
+    }
+
+    private async Task AddRaidEvent(UpsertRaidEventDto dto)
+    {
+        var result = await _raidEventService.CreateRaidEvent(dto);
+        if (!result.Success)
+        {
+            OnFailedCall(result.Message);
+        }
+        AddDialogOpen = false;
+        responseMsg = result.Message;
+        alertCss = "alert-success";
+
+        await LoadData();
+
+        StateHasChanged();
+        await Task.Delay(5000);
+        responseMsg = string.Empty;
+        alertCss = string.Empty;
+        StateHasChanged();
+        
 
     }
 }

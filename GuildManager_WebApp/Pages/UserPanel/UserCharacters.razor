@@ -24,10 +24,10 @@ else
             </GridEditSettings>
             <GridEvents OnActionBegin="ActionHandler" TValue="CharacterDto"></GridEvents>
             <GridColumns>
-                <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field="Class.Name" HeaderText="Class" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field="MainSpec.Name" HeaderText="Main spec" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field=@nameof(CharacterDto.ItemLevel) TextAlign="TextAlign.Center"></GridColumn>
+                <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
+                <GridColumn Field="Class.Name" HeaderText="Class" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
+                <GridColumn Field="MainSpec.Name" HeaderText="Main spec" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
+                <GridColumn Field=@nameof(CharacterDto.ItemLevel) TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
                 <GridColumn HeaderText="Manage Records" Width="150">
                     <GridCommandColumns>
                         <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() {IconCss="e-icons e-edit", CssClass="e-flat" })"></GridCommandColumn>

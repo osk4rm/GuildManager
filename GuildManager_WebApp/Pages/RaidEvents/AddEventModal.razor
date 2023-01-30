@@ -1,5 +1,4 @@
-﻿
-@inject IExpansionsLocationsService _locService;
+﻿@inject IExpansionsLocationsService _locService;
 <div class="modal fade show text-black" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -9,34 +8,34 @@
             </div>
             <div class="card-body bg-dark text-white">
                 <EditForm Model="@UpsertRaidEventDto" OnValidSubmit="@AddRaidEvent">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
                     <div class="form-group mb-3">
                         <label for="RaidLocationId">Raid Location</label>
-                        <select id="RaidLocationId" class="form-control" @bind="UpsertRaidEventDto.RaidLocationId">
-                            <option value=""></option>
+                        <InputSelect id="RaidLocationId" class="form-select" @bind-Value="UpsertRaidEventDto.RaidLocationId">
                             @foreach (var location in RaidLocations)
                             {
                                 <option value="@location.Id">@location.Name</option>
                             }
-                        </select>
+                        </InputSelect>
                         <ValidationMessage For="@(() => UpsertRaidEventDto.RaidLocationId)" />
                     </div>
                     <div class="form-group mb-3">
                         <label for="StartDate">Start Date</label>
-                        <SfDateTimePicker TValue="DateTime" @bind-Value="UpsertRaidEventDto.StartDate" 
-                        Min="DateTime.Now" Placeholder='Select a date and time'></SfDateTimePicker>
+                        <SfDateTimePicker TValue="DateTime" @bind-Value="UpsertRaidEventDto.StartDate"
+                                          Min="DateTime.Now" Placeholder='Select a date and time'></SfDateTimePicker>
                         <ValidationMessage For="@(() => UpsertRaidEventDto.StartDate)" />
                     </div>
                     <div class="form-group mb-3">
                         <label for="EndDate">End Date</label>
-                        <SfDateTimePicker TValue="DateTime" @bind-Value="UpsertRaidEventDto.EndDate" 
-                        Min="DateTime.Now" Placeholder='Select a date and time'></SfDateTimePicker>
+                        <SfDateTimePicker TValue="DateTime" @bind-Value="UpsertRaidEventDto.EndDate"
+                                          Min="DateTime.Now" Placeholder='Select a date and time'></SfDateTimePicker>
                         <ValidationMessage For="@(() => UpsertRaidEventDto.EndDate)" />
                     </div>
                     <div class="form-group mb-3">
                         <label for="Description">Description</label>
-                        <InputText id="Description" class="form-control" @bind-Value="UpsertRaidEventDto.Description" />
+                        <InputTextArea id="Description" class="form-control" @bind-Value="UpsertRaidEventDto.Description" />
                     </div>
-                    
+
                     <div class="form-group mb-3">
                         <label for="RaidDifficulty">Raid Difficulty</label>
                         <select id="RaidDifficulty" class="form-control" @bind="UpsertRaidEventDto.RaidDifficulty">
@@ -53,13 +52,14 @@
                         <label for="AutoAccept">Auto Accept</label>
                         <InputCheckbox id="AutoAccept" @bind-Value="UpsertRaidEventDto.AutoAccept" />
                     </div>
+                    <ValidationSummary></ValidationSummary>
                     <div class="modal-footer">
                         <button type="button" class="btn text-white" @onclick="@OnCancel">Cancel</button>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </EditForm>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -68,10 +68,15 @@
     [Parameter]
     public EventCallback<UpsertRaidEventDto> OnAdd { get; set; }
     [Parameter]
+    public EventCallback<UpsertRaidEventDto> OnUpdate { get; set; }
+    [Parameter]
     public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public ModalOperation Operation { get; set; }
     private int SelectedExpansionId { get; set; }
     public List<RaidExpansionDto> Expansions { get; set; } = new();
     public List<RaidLocationDto> RaidLocations { get; set; } = new();
+    [Parameter]
     public UpsertRaidEventDto UpsertRaidEventDto { get; set; } = new UpsertRaidEventDto();
     private Task ModalClose()
     {
@@ -79,7 +84,10 @@
     }
     private Task AddRaidEvent()
     {
-        return OnAdd.InvokeAsync(UpsertRaidEventDto);
+        if (Operation == ModalOperation.Create)
+            return OnAdd.InvokeAsync(UpsertRaidEventDto);
+
+            return OnUpdate.InvokeAsync(UpsertRaidEventDto);
     }
 
     protected override async Task OnInitializedAsync()
@@ -94,5 +102,9 @@
 
     }
 
-
+    public enum ModalOperation
+    {
+        Update,
+        Create
+    }
 }

@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using GuildManager_Models.RaidExpansionsAndLocations;
 using GuildManager_Models.Characters;
+using System.ComponentModel.DataAnnotations;
 
 namespace GuildManager_Models.RaidEvents
 {
     public class RaidEventDto
     {
         public int Id { get; set; }
+        [Required]
         public RaidLocationDto RaidLocation { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

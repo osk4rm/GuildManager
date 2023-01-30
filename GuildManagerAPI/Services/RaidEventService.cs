@@ -54,6 +54,7 @@ namespace GuildManagerAPI.Services
         {
             var raidEvents = await _dbContext.RaidEvents
                 .Include(r => r.RaidLocation)
+                .ThenInclude(l=>l.Expansion)
                 .Include(r=>r.CreatedBy)
                 .ToListAsync();
 

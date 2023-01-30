@@ -1,0 +1,70 @@
+﻿@page "/raid-events/{RaidEventId:int}"
+@inject IRaidEventService _raidEventService
+
+@if (IsLoading)
+{
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+}
+else
+{
+    <div class="container">
+        <div class="row justify-content-start">
+            <NavLink class="btn btn-primary justify-content-start mt-2 col-2" href="raid-events">Back to list</NavLink>
+        </div>
+
+        <div class="row mt-5 justify-content-center">
+            <div class="col-5 raid-details">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <p>Location: @RaidEvent.RaidLocation.Name</p>
+                        <p>Difficulty: @RaidEvent.RaidDifficulty</p>
+                        <p>Leader: @RaidEvent.LeaderName</p>
+                        <p>Status: @RaidEvent.Status</p>
+                        <hr/>
+                        <p>Start: @RaidEvent.StartDate</p>
+                        <p>Finish: @RaidEvent.EndDate</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 raid-details">
+                <div class="card text-white bg-secondary">
+                    <div class="card-header">Description</div>
+                    <div class="card-body">
+                        <p class="card-text">@RaidEvent.Description</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2" id="raid-img">
+                <img class="img img-fluid" width="100px" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public int RaidEventId { get; set; }
+    public RaidEventDto RaidEvent { get; set; } = new();
+    private bool IsLoading { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await LoadData();
+        IsLoading = false;
+    }
+
+    private async Task LoadData()
+    {
+        var eventResult = await _raidEventService.GetById(RaidEventId);
+
+        if (!eventResult.Success)
+        {
+            //todo error handling
+        }
+
+        RaidEvent = eventResult.Data;
+    }
+}

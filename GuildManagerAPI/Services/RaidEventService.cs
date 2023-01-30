@@ -72,7 +72,13 @@ namespace GuildManagerAPI.Services
             var raidEvent = await _dbContext
                 .RaidEvents
                 .Include(r => r.RaidLocation)
-                .FirstOrDefaultAsync();
+                .Include(r=>r.CreatedBy)
+                .FirstOrDefaultAsync(r=>r.Id == id);
+
+            if(raidEvent == null)
+            {
+                throw new NotFoundException($"Raid {id} not found.");
+            }
 
             var dto = _mapper.Map<RaidEventDto>(raidEvent);
 

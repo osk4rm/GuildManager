@@ -20,7 +20,7 @@ else
                         <p>Location: @RaidEvent.RaidLocation.Name</p>
                         <p>Difficulty: @RaidEvent.RaidDifficulty</p>
                         <p>Leader: @RaidEvent.LeaderName</p>
-                        
+
                     </div>
                 </div>
             </div>
@@ -43,8 +43,8 @@ else
                 </div>
             </div>
             @*<div class="col-2" id="raid-img">
-                <img class="img img-fluid img-thumbnail" width="150" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
-            </div>*@
+        <img class="img img-fluid img-thumbnail" width="150" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
+        </div>*@
         </div>
         <div class="col-6">
             <table class="table table-sm table-hover table-bordered table-dark mt-3">
@@ -54,21 +54,28 @@ else
                         <th scope="col">Class</th>
                         <th scope="col">Spec</th>
                         <th scope="col">Item level</th>
-                        <th scope="col"></th>
+                        @if (UserId == RaidEvent.LeaderId)
+                        {
+                            <th scope="col"></th>
+                        }
+
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td colspan="6" class="bg-danger no-hover">Tanks</td>
                     </tr>
-                    @foreach (var character in Participants.Where(p=>p.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank))
+                    @foreach (var participant in Participants.Where(p => p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank))
                     {
                         <tr class="text-white">
-                            <td>@character.Name</td>
-                            <td width="50px"><img class="img-fluid" src="/img/classes/@character.Class.ImageUrl" alt="img" /></td>
-                            <td width="50px"><img class="img-fluid" src="/img/specs/@character.MainSpec.ImageUrl" alt="img" /></td>
-                            <td>@character.ItemLevel</td>
-                            <td></td>
+                            <td>@participant.Character.Name</td>
+                            <td width="50px"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
+                            <td width="50px"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
+                            <td>@participant.Character.ItemLevel</td>
+                            @if (UserId == RaidEvent.LeaderId)
+                            {
+                                <td></td>
+                            }
                         </tr>
                     }
                     <tr>
@@ -78,13 +85,18 @@ else
                     <tr>
                         <td colspan="6" class="bg-warning no-hover">DPS</td>
                     </tr>
+                    @if (UserId == RaidEvent.LeaderId)
+                    {
+                        <tr>
+                            <td colspan="6" class="bg-secondary no-hover">Pending</td>
+                        </tr>
+                    }
 
                 </tbody>
 
             </table>
         </div>
         <div class="col-6">
-
         </div>
     </div>
 }
@@ -94,7 +106,7 @@ else
     [Parameter]
     public int RaidEventId { get; set; }
     public RaidEventDto RaidEvent { get; set; } = new();
-    public List<CharacterDto> Participants = new();
+    public List<RaidEventCharacterDto> Participants = new();
     private bool IsLoading { get; set; } = false;
     protected Task<AuthenticationState> AuthStat { get; set; }
     protected ClaimsPrincipal User { get; set; }
@@ -103,6 +115,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
+        AuthStat = _authStateProvider.GetAuthenticationStateAsync();
+        User = (await AuthStat).User;
         await LoadData();
         IsLoading = false;
     }

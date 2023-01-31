@@ -204,26 +204,29 @@ namespace GuildManagerAPI.Services
             };
         }
 
-        public async Task<ServiceResponse<List<CharacterDto>>> GetParticipants(int eventId)
+        public async Task<ServiceResponse<List<RaidEventCharacterDto>>> GetParticipants(int eventId)
         {
-            var raidEvent = await _dbContext
-                .RaidEvents
-                .Include(r => r.Participants)
-                .ThenInclude(p=>p.Class)
-                .Include(r => r.Participants)
-                .ThenInclude(p=>p.MainSpec)
+            var raidEvent = await _dbContext.RaidEvents
                 .FirstOrDefaultAsync(r => r.Id == eventId);
 
             if(raidEvent == null)
             {
                 throw new NotFoundException($"Raid event {eventId} not found.");
             }
+            var participants = await _dbContext
+                .RaidEventCharacter
+                .Include(rec => rec.Character)
+                .ThenInclude(c => c.Class)
+                .Include(rec => rec.Character)
+                .ThenInclude(c => c.MainSpec)
+                .Where(rec => rec.RaidEventId == eventId)
+                .ToListAsync();
 
-            var participants = _mapper.Map<List<CharacterDto>>(raidEvent.Participants);
+            var participantsDto = _mapper.Map<List<RaidEventCharacterDto>>(participants);
 
-            return new ServiceResponse<List<CharacterDto>>
+            return new ServiceResponse<List<RaidEventCharacterDto>>
             {
-                Data = participants,
+                Data = participantsDto,
                 Success = true
             };
         }

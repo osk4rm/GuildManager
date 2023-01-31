@@ -1,4 +1,5 @@
-﻿using GuildManager_Models;
+﻿using GuildManager_DataAccess.Entities.Raids;
+using GuildManager_Models;
 using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
 
@@ -13,7 +14,7 @@ namespace GuildManagerAPI.Services.Interfaces
         Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id);
         Task<ServiceResponse<bool>> DeleteRaidEvent(int id);
         Task<ServiceResponse<bool>> JoinRaidEvent(int eventId, int characterId);
-        Task<ServiceResponse<List<CharacterDto>>> GetParticipants(int eventId);
+        Task<ServiceResponse<List<RaidEventCharacterDto>>> GetParticipants(int eventId);
 
     }
 }

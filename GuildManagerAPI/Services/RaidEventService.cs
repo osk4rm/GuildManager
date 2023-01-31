@@ -54,8 +54,8 @@ namespace GuildManagerAPI.Services
         {
             var raidEvents = await _dbContext.RaidEvents
                 .Include(r => r.RaidLocation)
-                .ThenInclude(l=>l.Expansion)
-                .Include(r=>r.CreatedBy)
+                .ThenInclude(l => l.Expansion)
+                .Include(r => r.CreatedBy)
                 .ToListAsync();
 
             var dtos = _mapper.Map<List<RaidEventDto>>(raidEvents);
@@ -72,10 +72,10 @@ namespace GuildManagerAPI.Services
             var raidEvent = await _dbContext
                 .RaidEvents
                 .Include(r => r.RaidLocation)
-                .Include(r=>r.CreatedBy)
-                .FirstOrDefaultAsync(r=>r.Id == id);
+                .Include(r => r.CreatedBy)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
-            if(raidEvent == null)
+            if (raidEvent == null)
             {
                 throw new NotFoundException($"Raid {id} not found.");
             }
@@ -127,7 +127,7 @@ namespace GuildManagerAPI.Services
             }
 
             raidEvent.EndDate = dto.EndDate;
-            raidEvent.StartDate= dto.StartDate;
+            raidEvent.StartDate = dto.StartDate;
             raidEvent.AutoAccept = dto.AutoAccept;
             raidEvent.RaidDifficulty = dto.RaidDifficulty;
             raidEvent.RaidLocationId = dto.RaidLocationId;
@@ -147,7 +147,7 @@ namespace GuildManagerAPI.Services
             var raidEvent = await _dbContext.RaidEvents
                 .FirstOrDefaultAsync(r => r.Id == id);
 
-            if(raidEvent == null)
+            if (raidEvent == null)
             {
                 throw new NotFoundException("Raid event not found.");
             }
@@ -167,6 +167,39 @@ namespace GuildManagerAPI.Services
                 Data = true,
                 Success = true,
                 Message = $"Raid event {raidEvent.Id} deleted."
+            };
+        }
+
+        public async Task<ServiceResponse<bool>> JoinRaidEvent(int eventId, int characterId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var raidEvent = _dbContext.RaidEvents.FirstOrDefaultAsync(r => r.Id == eventId);
+            var character = _dbContext.Characters.FirstOrDefaultAsync(u => u.Id == characterId);
+            if (character == null || raidEvent == null)
+            {
+                throw new NotFoundException("Character or raid event not found.");
+            }
+            RaidEventCharacter raidEventCharacter = new()
+            {
+                RaidEventId = eventId,
+                CharacterId = characterId,
+                AcceptanceStatus = GuildManager_DataAccess.Enum.AcceptanceStatus.Waiting
+            };
+
+            _dbContext.RaidEventCharacter.Add(raidEventCharacter);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = "Your request has been sent."
             };
         }
     }

@@ -14,7 +14,7 @@ else
 
         <div class="row mt-5 justify-content-center">
             <div class="col-5 raid-details">
-                <div class="card text-white bg-dark">
+                <div class="card h-100 text-white bg-dark">
                     <div class="card-body">
                         <p>Location: @RaidEvent.RaidLocation.Name</p>
                         <p>Difficulty: @RaidEvent.RaidDifficulty</p>
@@ -28,7 +28,7 @@ else
                 </div>
             </div>
             <div class="col-5 raid-details">
-                <div class="card text-white bg-secondary">
+                <div class="card h-100 text-white bg-secondary">
                     <div class="card-header">Description</div>
                     <div class="card-body">
                         <p class="card-text">@RaidEvent.Description</p>
@@ -36,8 +36,50 @@ else
                 </div>
             </div>
             <div class="col-2" id="raid-img">
-                <img class="img img-fluid" width="100px" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
+                <img class="img img-fluid img-thumbnail" width="150" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
             </div>
+        </div>
+        <div class="col-6">
+            <table class="table table-sm table-bordered table-hover table-dark mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Class</th>
+                        <th scope="col">Spec</th>
+                        <th scope="col">Item level</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6">Tanks</td>
+                    </tr>
+                    @foreach (var character in Participants.Where(p=>p.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank))
+                    {
+                        
+                        <tr class="text-white">
+                            <td></td>
+                            <td>@character.Name</td>
+                            <td width="50px"><img class="img-fluid" src="/img/@character.Class.ImageUrl" alt="img" /></td>
+                            <td width="50px"><img class="img-fluid" src="/img/@character.MainSpec.ImageUrl" alt="img" /></td>
+                            <td>@character.ItemLevel</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="6">Healers</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="6">DPS</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+        <div class="col-6">
+
         </div>
     </div>
 }
@@ -47,6 +89,7 @@ else
     [Parameter]
     public int RaidEventId { get; set; }
     public RaidEventDto RaidEvent { get; set; } = new();
+    public List<CharacterDto> Participants = new();
     private bool IsLoading { get; set; } = false;
 
     protected override async Task OnInitializedAsync()

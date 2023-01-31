@@ -2,6 +2,7 @@
 using GuildManager_DataAccess;
 using GuildManager_DataAccess.Entities.Raids;
 using GuildManager_Models;
+using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Authentication.UserContext;
 using GuildManagerAPI.Authorization;
@@ -200,6 +201,30 @@ namespace GuildManagerAPI.Services
                 Data = true,
                 Success = true,
                 Message = "Your request has been sent."
+            };
+        }
+
+        public async Task<ServiceResponse<List<CharacterDto>>> GetParticipants(int eventId)
+        {
+            var raidEvent = await _dbContext
+                .RaidEvents
+                .Include(r => r.Participants)
+                .ThenInclude(p=>p.Class)
+                .Include(r => r.Participants)
+                .ThenInclude(p=>p.MainSpec)
+                .FirstOrDefaultAsync(r => r.Id == eventId);
+
+            if(raidEvent == null)
+            {
+                throw new NotFoundException($"Raid event {eventId} not found.");
+            }
+
+            var participants = _mapper.Map<List<CharacterDto>>(raidEvent.Participants);
+
+            return new ServiceResponse<List<CharacterDto>>
+            {
+                Data = participants,
+                Success = true
             };
         }
     }

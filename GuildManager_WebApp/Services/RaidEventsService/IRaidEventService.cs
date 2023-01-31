@@ -1,5 +1,6 @@
 ﻿using GuildManager_Models.RaidEvents;
 using GuildManager_Models;
+using GuildManager_Models.Characters;
 
 namespace GuildManager_WebApp.Services.RaidEventsService
 {
@@ -11,5 +12,7 @@ namespace GuildManager_WebApp.Services.RaidEventsService
         Task<ServiceResponse<int?>> CreateRaidEvent(UpsertRaidEventDto dto);
         Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id);
         Task<ServiceResponse<bool?>> DeleteRaidEvent(int id);
+        Task<ServiceResponse<bool?>> JoinRaidEvent(int eventId, int characterId);
+        Task<ServiceResponse<List<CharacterDto>>> GetParticipants(int eventId);
     }
 }

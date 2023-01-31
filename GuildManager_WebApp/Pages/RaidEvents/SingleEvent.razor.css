@@ -1,0 +1,4 @@
+﻿.no-hover {
+    pointer-events: none;
+    background-color: inherit;
+}

@@ -53,11 +53,29 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             return result;
         }
 
+        public async Task<ServiceResponse<List<CharacterDto>>> GetParticipants(int eventId)
+        {
+            var response = await _httpClient.GetAsync($"api/raid-events/participants/{eventId}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<List<CharacterDto>>>(responseContent);
+
+            return result;
+        }
+
         public async Task<ServiceResponse<List<RaidEventDto>>> GetUserRaidEvents()
         {
             var response = await _httpClient.GetAsync("api/raid-events/getall");
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<List<RaidEventDto>>>(responseContent);
+
+            return result;
+        }
+
+        public async Task<ServiceResponse<bool?>> JoinRaidEvent(int eventId, int characterId)
+        {
+            var response = await _httpClient.PostAsync($"api/raid-events/join/{eventId}?characterId={characterId}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<bool?>>(responseContent);
 
             return result;
         }

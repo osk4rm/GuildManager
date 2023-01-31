@@ -1,5 +1,6 @@
 ﻿@page "/raid-events/{RaidEventId:int}"
 @inject IRaidEventService _raidEventService
+@inject AuthenticationStateProvider _authStateProvider;
 
 @if (IsLoading)
 {
@@ -8,26 +9,32 @@
 else
 {
     <div class="container">
-        <div class="row justify-content-start">
+        <div class="row justify-content-end">
             <NavLink class="btn btn-primary justify-content-start mt-2 col-2" href="raid-events">Back to list</NavLink>
         </div>
 
-        <div class="row mt-5 justify-content-center">
-            <div class="col-5 raid-details">
-                <div class="card h-100 text-white bg-dark">
+        <div class="row mt-2 justify-content-center">
+            <div class="col-4 raid-details">
+                <div class="card h-100 text-white bg-black">
                     <div class="card-body">
                         <p>Location: @RaidEvent.RaidLocation.Name</p>
                         <p>Difficulty: @RaidEvent.RaidDifficulty</p>
                         <p>Leader: @RaidEvent.LeaderName</p>
-                        <p>Status: @RaidEvent.Status</p>
-                        <hr/>
-                        <p>Start: @RaidEvent.StartDate</p>
-                        <p>Finish: @RaidEvent.EndDate</p>
                         
                     </div>
                 </div>
             </div>
-            <div class="col-5 raid-details">
+            <div class="col-4 raid-details">
+                <div class="card h-100 text-white bg-dark">
+                    <div class="card-body">
+                        <p>Start: @RaidEvent.StartDate</p>
+                        <p>Finish: @RaidEvent.EndDate</p>
+                        <p>Status: @RaidEvent.Status</p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 raid-details">
                 <div class="card h-100 text-white bg-secondary">
                     <div class="card-header">Description</div>
                     <div class="card-body">
@@ -35,15 +42,14 @@ else
                     </div>
                 </div>
             </div>
-            <div class="col-2" id="raid-img">
+            @*<div class="col-2" id="raid-img">
                 <img class="img img-fluid img-thumbnail" width="150" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
-            </div>
+            </div>*@
         </div>
         <div class="col-6">
-            <table class="table table-sm table-bordered table-hover table-dark mt-3">
+            <table class="table table-sm table-hover table-bordered table-dark mt-3">
                 <thead class="table-primary">
                     <tr>
-                        <th scope="col"></th>
                         <th scope="col">Name</th>
                         <th scope="col">Class</th>
                         <th scope="col">Spec</th>
@@ -53,25 +59,24 @@ else
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="6">Tanks</td>
+                        <td colspan="6" class="bg-danger no-hover">Tanks</td>
                     </tr>
                     @foreach (var character in Participants.Where(p=>p.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank))
                     {
-                        
                         <tr class="text-white">
-                            <td></td>
                             <td>@character.Name</td>
-                            <td width="50px"><img class="img-fluid" src="/img/@character.Class.ImageUrl" alt="img" /></td>
-                            <td width="50px"><img class="img-fluid" src="/img/@character.MainSpec.ImageUrl" alt="img" /></td>
+                            <td width="50px"><img class="img-fluid" src="/img/classes/@character.Class.ImageUrl" alt="img" /></td>
+                            <td width="50px"><img class="img-fluid" src="/img/specs/@character.MainSpec.ImageUrl" alt="img" /></td>
                             <td>@character.ItemLevel</td>
+                            <td></td>
                         </tr>
                     }
                     <tr>
-                        <td colspan="6">Healers</td>
+                        <td colspan="6" class="bg-success no-hover">Healers</td>
                     </tr>
 
                     <tr>
-                        <td colspan="6">DPS</td>
+                        <td colspan="6" class="bg-warning no-hover">DPS</td>
                     </tr>
 
                 </tbody>
@@ -91,6 +96,9 @@ else
     public RaidEventDto RaidEvent { get; set; } = new();
     public List<CharacterDto> Participants = new();
     private bool IsLoading { get; set; } = false;
+    protected Task<AuthenticationState> AuthStat { get; set; }
+    protected ClaimsPrincipal User { get; set; }
+    protected int UserId => int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,5 +117,14 @@ else
         }
 
         RaidEvent = eventResult.Data;
+
+        var participantsResult = await _raidEventService.GetParticipants(RaidEventId);
+
+        if (!participantsResult.Success)
+        {
+            //todo error handling
+        }
+
+        Participants = participantsResult.Data;
     }
 }

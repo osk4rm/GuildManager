@@ -1,4 +1,6 @@
-﻿<table class="table table-sm table-responsive table-hover table-bordered table-dark mt-3">
+﻿@inject IRaidEventService _raidEventService
+
+<table class="table table-sm table-responsive table-hover table-bordered table-dark mt-3">
     <thead class="table-primary">
         <tr>
             <th scope="col" colspan="3">Character</th>
@@ -24,7 +26,7 @@
                 <td>@participant.Character.ItemLevel</td>
                 @if (UserId == RaidEvent.LeaderId)
                 {
-                    <td></td>
+                    <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                 }
             </tr>
         }
@@ -41,7 +43,7 @@
                 <td>@participant.Character.ItemLevel</td>
                 @if (UserId == RaidEvent.LeaderId)
                 {
-                    <td></td>
+                    <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                 }
             </tr>
         }
@@ -59,7 +61,7 @@
                 <td>@participant.Character.ItemLevel</td>
                 @if (UserId == RaidEvent.LeaderId)
                 {
-                    <td></td>
+                    <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                 }
             </tr>
         }
@@ -79,8 +81,8 @@
                     {
                         <td>
                             <div class="col">
-                                <i class="fa-solid fa-check"></i>
-                                <i class=" fa-solid fa-xmark"></i>
+                                <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
+                                <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>
                             </div>
                         </td>
                     }
@@ -91,16 +93,60 @@
     </tbody>
 
 </table>
+@if (AcceptDialogOpen)
+{
+    <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.OkCancel" OnClose="UpdateCharacterStatus"
+    Text="Are you sure?" Title="Confirm operation"></ConfirmationDialog>
+}
+
 
 @code {
-        [Parameter]
-        public int UserId { get;set; }
-        [Parameter]
-        public ClaimsPrincipal User { get; set; } = new();
+    [Parameter]
+    public int UserId { get; set; }
+    [Parameter]
+    public ClaimsPrincipal User { get; set; } = new();
+    [Parameter]
+    public RaidEventDto RaidEvent { get; set; } = new();
+    [Parameter]
+    public List<RaidEventCharacterDto> Participants { get; set; } = new();
+    public bool AcceptDialogOpen { get; set; } = false;
+    private int charIdToUpdateStatus;
+    private AcceptanceStatus _statusToApply;
 
-        [Parameter]
-        public RaidEventDto RaidEvent { get; set; } = new();
+    [Parameter]
+    public EventCallback CharacterStatusUpdated { get; set; }
 
-        [Parameter]
-        public List<RaidEventCharacterDto> Participants { get; set; } = new();
+    private async Task UpdateCharacterStatus(bool accepted)
+    {
+        if (accepted)
+        {
+            var updateResult = await _raidEventService.UpdateCharacterAcceptanceStatus(new UpdateRaidEventCharacterDto
+                {
+                    CharacterId = charIdToUpdateStatus,
+                    RaidEventId = RaidEvent.Id,
+                    AcceptanceStatus = _statusToApply
+                });
+
+            if (!updateResult.Success)
+            {
+                //todo error
+            }
+
+            await CharacterStatusUpdated.InvokeAsync();
+        }
+
+        AcceptDialogOpen = false;
+        //StateHasChanged();
+
+
+    }
+
+    private void OpenAcceptDialog(int charId, AcceptanceStatus status)
+    {
+        charIdToUpdateStatus = charId;
+        _statusToApply = status;
+
+        AcceptDialogOpen = true;
+        StateHasChanged();
+    }
 }

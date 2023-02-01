@@ -26,6 +26,11 @@ namespace GuildManager_DataAccess.Entities.Configurations
                 .HasForeignKey(r=>r.CreatedById)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasMany(r=>r.Comments)
+                .WithOne(c=>c.RaidEvent)
+                .HasForeignKey(c=>c.RaidEventId)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
             builder
                 .Property(l => l.RaidDifficulty)
                 .IsRequired()

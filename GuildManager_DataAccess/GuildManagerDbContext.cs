@@ -25,6 +25,7 @@ namespace GuildManager_DataAccess
         public DbSet<RaidLocation> RaidLocations { get; set; }
         public DbSet<RaidExpansion> RaidExpansions { get; set; }
         public DbSet<RaidEventCharacter> RaidEventCharacter { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

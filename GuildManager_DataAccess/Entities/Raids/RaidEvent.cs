@@ -21,6 +21,7 @@ namespace GuildManager_DataAccess.Entities.Raids
         public RaidStatus Status { get; set; }
         public int CreatedById { get; set; }
         public virtual User CreatedBy { get; set; }
+        public virtual List<Comment> Comments { get; set; } = new();
         
     }
 }

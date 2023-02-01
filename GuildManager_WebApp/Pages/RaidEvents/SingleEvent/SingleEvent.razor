@@ -1,5 +1,6 @@
 ﻿@page "/raid-events/{RaidEventId:int}"
 @inject IRaidEventService _raidEventService
+@inject ICharacterService _characterService
 @inject AuthenticationStateProvider _authStateProvider;
 
 @if (IsLoading)
@@ -9,8 +10,11 @@
 else
 {
     <div class="container">
-        <div class="row justify-content-end">
-            <NavLink class="btn btn-primary justify-content-start mt-2 col-2" href="raid-events">Back to list</NavLink>
+        
+        <div class="d-flex flex-row justify-content-end">
+            
+            <button class="btn btn-outline-success mt-2 me-2" @onclick="OpenJoinEventModal">Join this event!</button>
+            <NavLink class="btn btn-primary mt-2" href="raid-events">Back to list</NavLink>
         </div>
 
         <div class="row mt-2 justify-content-center">
@@ -51,7 +55,15 @@ else
         </div>
         <div class="col-6">
         </div>
+        <div class="alert @alertCss mt-2">@alertMessage</div>
     </div>
+    
+    @if (joinModalVisible)
+    {
+        <JoinEventModal UserCharacters="UserCharacters" OnAdd="OnJoinEventModalConfirmed" OnCancel="OnJoinEventModalClosed"></JoinEventModal>
+    }
+    
+    
 }
 
 
@@ -63,13 +75,18 @@ else
     private bool IsLoading { get; set; } = false;
     protected Task<AuthenticationState> AuthStat { get; set; }
     protected ClaimsPrincipal User { get; set; }
+    public List<CharacterDto> UserCharacters { get; set; } = new();
     protected int UserId => int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+    private bool joinModalVisible = false;
+    private string alertCss = string.Empty;
+    private string alertMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
         AuthStat = _authStateProvider.GetAuthenticationStateAsync();
         User = (await AuthStat).User;
+        await LoadUserCharacters();
         await LoadData();
         IsLoading = false;
     }
@@ -93,5 +110,66 @@ else
         }
 
         Participants = participantsResult.Data;
+    }
+
+    private async Task LoadUserCharacters()
+    {
+        var userCharactersResult = await _characterService.GetUserCharacters();
+
+        if (!userCharactersResult.Success)
+        {
+            //todo error handling
+        }
+
+        UserCharacters = userCharactersResult.Data;
+    }
+
+    private async Task OnJoinEventModalClosed()
+    {
+        joinModalVisible = false;
+        StateHasChanged();
+    }
+
+    private async Task OnJoinEventModalConfirmed(int characterId)
+    {
+        var joinEventResult = await _raidEventService.JoinRaidEvent(RaidEventId, characterId);
+        if (!joinEventResult.Success)
+        {
+            OnFailedCall(joinEventResult.Message);
+        }
+        await LoadData();
+        joinModalVisible = false;
+        StateHasChanged();
+    }
+
+    private async Task OpenJoinEventModal()
+    {
+        joinModalVisible = true;
+        StateHasChanged();
+    }
+
+    private async Task OnFailedCall(string message)
+    {
+        alertCss = "alert-danger";
+        alertMessage = message;
+        StateHasChanged();
+        await Task.Delay(5000);
+        alertMessage = string.Empty;
+        alertCss = string.Empty;
+        StateHasChanged();
+    }
+
+    private async Task OnSuccessCall(string message)
+    {
+        alertMessage = message;
+        alertCss = "alert-success";
+
+        await LoadData();
+
+        StateHasChanged();
+        await Task.Delay(5000);
+        alertMessage = string.Empty;
+        alertCss = string.Empty;
+        StateHasChanged();
     }
 }

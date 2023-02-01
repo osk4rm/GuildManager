@@ -1,0 +1,55 @@
+﻿<div class="modal fade show text-black" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create new raid event</h4>
+                <button type="button" class="close" @onclick="@ModalClose">&times;</button>
+            </div>
+            <div class="card-body bg-dark text-white">
+                <EditForm Model="characterId" OnValidSubmit="@ModalConfirmed">
+                <div class="form-group mb-3">
+                    <label for="characters">Your characters</label>
+                    <InputSelect id="characters" class="form-select" @bind-Value="characterId">
+                        @foreach (var character in UserCharacters)
+                        {
+                            <option value="@character.Id">
+                                @character.Name | @character.Class.Name | @character.MainSpec.Name
+                            </option>
+                        }
+                    </InputSelect>
+                    <div class="modal-footer">
+                        <button type="button" class="btn text-white" @onclick="@OnCancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Join</button>
+                    </div>
+
+                </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public EventCallback<int> OnAdd { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public List<CharacterDto> UserCharacters { get; set; } = new();
+    public int characterId { get; set; }
+    private Task ModalClose()
+    {
+        return OnCancel.InvokeAsync();
+    }
+
+    private async Task ModalConfirmed()
+    {
+        await OnAdd.InvokeAsync(characterId);
+    }
+
+    public enum ModalOperation
+    {
+        Update,
+        Create
+    }
+    }
+

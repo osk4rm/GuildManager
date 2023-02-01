@@ -201,8 +201,11 @@ namespace GuildManagerAPI.Services
             {
                 RaidEventId = eventId,
                 CharacterId = characterId,
-                AcceptanceStatus = GuildManager_DataAccess.Enum.AcceptanceStatus.Waiting
+                AcceptanceStatus = raidEvent.AutoAccept ? GuildManager_DataAccess.Enum.AcceptanceStatus.Accepted : GuildManager_DataAccess.Enum.AcceptanceStatus.Waiting
             };
+
+            _dbContext.RaidEventCharacter.Add(raidEventCharacter);
+            await _dbContext.SaveChangesAsync();
             
 
             return new ServiceResponse<bool>

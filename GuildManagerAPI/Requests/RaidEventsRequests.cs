@@ -3,6 +3,7 @@ using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace GuildManagerAPI.Requests
 {
@@ -44,7 +45,47 @@ namespace GuildManagerAPI.Requests
                 .RequireAuthorization()
                 .WithBodyValidator<UpdateRaidEventCharacterDto>();
 
+            app.MapGet("/api/raid-events/{eventId}/comments", RaidEventsRequests.GetCommentsForRaidEvent)
+                .RequireAuthorization();
+
+            app.MapPost("/api/raid-events/{eventId}/comments/create", RaidEventsRequests.CreateCommentForRaidEvent)
+                .RequireAuthorization();
+
+            app.MapPut("/api/raid-events/comments/update/{commentId}", RaidEventsRequests.UpdateComment)
+                .RequireAuthorization();
+
+            app.MapDelete("/api/raid-events/comments/delete/{commentId}", RaidEventsRequests.DeleteComment)
+                .RequireAuthorization();
+
             return app;
+        }
+
+        private static async Task<IResult> DeleteComment(IRaidEventService service, [FromRoute] int commentId)
+        {
+            var response = await service.DeleteCommentForRaidEvent(commentId);
+
+            return Results.Ok(response);
+        }
+
+        private static async Task<IResult> UpdateComment(IRaidEventService service, [FromRoute] int commentId, [FromBody] string message)
+        {
+            var response = await service.UpdateCommentForRaidEvent(commentId, message);
+
+            return Results.Ok(response);
+        }
+
+        private static async Task<IResult> CreateCommentForRaidEvent(IRaidEventService service, [FromRoute] int eventId, [FromBody]string message)
+        {
+            var response = await service.CreateCommentForRaidEvent(eventId, message);
+
+            return Results.Ok(response);
+        }
+
+        private static async Task<IResult> GetCommentsForRaidEvent(IRaidEventService service, [FromRoute]int eventId)
+        {
+            var response = await service.GetCommentsForRaidEvent(eventId);
+
+            return Results.Ok(response);
         }
 
         private static async Task<IResult> UpdateAcceptanceStatusForEvent(IRaidEventService service, UpdateRaidEventCharacterDto dto)

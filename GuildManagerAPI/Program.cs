@@ -44,6 +44,7 @@ builder.Services.AddAuthentication(option =>
 });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, CommentOperationRequirementHandler>();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

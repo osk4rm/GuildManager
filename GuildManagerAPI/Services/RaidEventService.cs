@@ -267,5 +267,123 @@ namespace GuildManagerAPI.Services
                 Message = "Status changed."
             };
         }
+
+        public async Task<ServiceResponse<List<CommentDto>>> GetCommentsForRaidEvent(int eventId)
+        {
+            var raidEvent = await _dbContext
+                .RaidEvents
+                .FirstOrDefaultAsync(r => r.Id == eventId);
+
+            if(raidEvent is null)
+            {
+                throw new NotFoundException($"Raid event {eventId} not found.");
+            }
+
+            var comments = await _dbContext
+                .Comments
+                .Include(c => c.Author)
+                .Where(c=>c.RaidEventId == eventId)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<CommentDto>>(comments);
+
+            return new ServiceResponse<List<CommentDto>>
+            {
+                Data = dtos,
+                Success = true
+            };
+        }
+
+        public async Task<ServiceResponse<int>> CreateCommentForRaidEvent(int eventId, string message)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var raidEvent = await _dbContext
+                .RaidEvents
+                .FirstOrDefaultAsync(r => r.Id == eventId);
+
+            if (raidEvent == null)
+            {
+                throw new NotFoundException($"Raid event {eventId} not found.");
+            }
+
+            var comment = new Comment
+            {
+                RaidEvent = raidEvent,
+                Author = user,
+                Message = message
+            };
+
+            return new ServiceResponse<int>
+            {
+                Data = comment.Id,
+                Success = true,
+                Message = "Comment has been posted."
+            };
+        }
+
+        public async Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message)
+        {
+            var comment = await _dbContext
+                .Comments
+                .FirstOrDefaultAsync(r => r.Id == commentId);
+
+            if (comment == null)
+            {
+                throw new NotFoundException($"Comment not found.");
+            }
+
+            var authResult = await _authService.AuthorizeAsync(_userContextService.User, comment, new ResourceOperationRequirement(ResourceOperationType.Update));
+
+            if (!authResult.Succeeded)
+            {
+                throw new UnauthorizedAccessException("You are only allowed to update your own comments.");
+            }
+
+            comment.Message = message;
+            comment.ModifiedDate = DateTime.UtcNow;
+            
+
+            _dbContext.Update(comment);
+            await _dbContext.SaveChangesAsync();
+
+            var responseDto = _mapper.Map<CommentDto>(comment);
+
+            return new ServiceResponse<CommentDto> { Data = responseDto, Success = true, Message = "Comment updated." };
+        }
+    
+
+        public async Task<ServiceResponse<bool>> DeleteCommentForRaidEvent(int commentId)
+        {
+            var comment = await _dbContext.Comments
+                .FirstOrDefaultAsync(r => r.Id == commentId);
+
+            if (comment == null)
+            {
+                throw new NotFoundException("Comment not found.");
+            }
+
+            var authResult = await _authService.AuthorizeAsync(_userContextService.User, comment, new ResourceOperationRequirement(ResourceOperationType.Delete));
+
+            if (!authResult.Succeeded)
+            {
+                throw new UnauthorizedAccessException("You are only allowed to delete your own comments.");
+            }
+
+            _dbContext.Comments.Remove(comment);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = $"Raid event {comment.Id} deleted."
+            };
+        }
     }
 }

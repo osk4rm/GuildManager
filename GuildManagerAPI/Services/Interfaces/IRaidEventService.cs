@@ -16,6 +16,10 @@ namespace GuildManagerAPI.Services.Interfaces
         Task<ServiceResponse<bool>> JoinRaidEvent(int eventId, int characterId);
         Task<ServiceResponse<List<RaidEventCharacterDto>>> GetParticipants(int eventId);
         Task<ServiceResponse<RaidEventCharacterDto>> UpdateCharacterStatusForEvent(UpdateRaidEventCharacterDto dto);
+        Task<ServiceResponse<List<CommentDto>>> GetCommentsForRaidEvent(int eventId);
+        Task<ServiceResponse<int>> CreateCommentForRaidEvent(int eventId, string message);
+        Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message);
+        Task<ServiceResponse<bool>> DeleteCommentForRaidEvent(int commentId);
 
     }
 }

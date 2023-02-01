@@ -239,5 +239,30 @@ namespace GuildManagerAPI.Services
                 Success = true
             };
         }
+
+        public async Task<ServiceResponse<RaidEventCharacterDto>> UpdateCharacterStatusForEvent(UpdateRaidEventCharacterDto dto)
+        {
+            var raidEventCharacter = await _dbContext
+                .RaidEventCharacter
+                .FirstOrDefaultAsync(rec => rec.CharacterId == dto.CharacterId && rec.RaidEventId == dto.RaidEventId);
+
+            if(raidEventCharacter == null)
+            {
+                throw new NotFoundException($"Character not found for given event.");
+            }
+
+            raidEventCharacter.AcceptanceStatus = dto.AcceptanceStatus;
+            _dbContext.Update(raidEventCharacter);
+            await _dbContext.SaveChangesAsync();
+
+            var responseDto = _mapper.Map<RaidEventCharacterDto>(raidEventCharacter);
+
+            return new ServiceResponse<RaidEventCharacterDto>
+            {
+                Data = responseDto,
+                Success = true,
+                Message = "Status changed."
+            };
+        }
     }
 }

@@ -39,7 +39,19 @@ namespace GuildManagerAPI.Requests
             app.MapGet("/api/raid-events/participants/{eventId}", RaidEventsRequests.GetParticipants)
                 .RequireAuthorization();
 
+            app.MapPut("/api/raid-events/participants/update-status", RaidEventsRequests.UpdateAcceptanceStatusForEvent)
+                .Accepts<UpdateRaidEventCharacterDto>("application/json")
+                .RequireAuthorization()
+                .WithBodyValidator<UpdateRaidEventCharacterDto>();
+
             return app;
+        }
+
+        private static async Task<IResult> UpdateAcceptanceStatusForEvent(IRaidEventService service, UpdateRaidEventCharacterDto dto)
+        {
+            var response = await service.UpdateCharacterStatusForEvent(dto);
+
+            return Results.Ok(response);
         }
 
         private static async Task<IResult> GetParticipants(IRaidEventService service, [FromRoute] int eventId)

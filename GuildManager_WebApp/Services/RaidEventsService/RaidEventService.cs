@@ -80,6 +80,17 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             return result;
         }
 
+        public async Task<ServiceResponse<RaidEventDto>> UpdateCharacterAcceptanceStatus(UpdateRaidEventCharacterDto dto)
+        {
+            var content = JsonConvert.SerializeObject(dto);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"api/raid-events/participants/update-status", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<RaidEventDto>>(responseContent);
+
+            return result;
+        }
+
         public async Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id)
         {
             var content = JsonConvert.SerializeObject(dto);

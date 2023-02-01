@@ -33,6 +33,7 @@ namespace GuildManagerAPI.Mapping
             CreateMap<UpsertRaidEventDto, RaidEvent>();
 
             CreateMap<RaidEventCharacter, RaidEventCharacterDto>();
+            CreateMap<UpdateRaidEventCharacterDto, RaidEventCharacter>();
 
         }
     }

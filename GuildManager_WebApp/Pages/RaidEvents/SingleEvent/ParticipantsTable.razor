@@ -1,9 +1,7 @@
-﻿<table class="table table-sm table-hover table-bordered table-dark mt-3">
+﻿<table class="table table-sm table-responsive table-hover table-bordered table-dark mt-3">
     <thead class="table-primary">
         <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Class</th>
-            <th scope="col">Spec</th>
+            <th scope="col" colspan="3">Character</th>
             <th scope="col">Item level</th>
             @if (UserId == RaidEvent.LeaderId)
             {
@@ -14,14 +12,15 @@
     </thead>
     <tbody>
         <tr>
-            <td colspan="6" class="bg-danger no-hover">Tanks</td>
+            <td colspan="5" class="bg-danger no-hover">Tanks</td>
         </tr>
-        @foreach (var participant in Participants.Where(p => p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank))
+        @foreach (var participant in Participants.Where(p => (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank)
+        && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
             <tr class="text-white">
                 <td>@participant.Character.Name</td>
-                <td width="10"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
-                <td width="10"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
+                <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
+                <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
                 @if (UserId == RaidEvent.LeaderId)
                 {
@@ -32,12 +31,13 @@
         <tr>
             <td colspan="6" class="bg-success no-hover">Healers</td>
         </tr>
-        @foreach (var participant in Participants.Where(p => p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Healer))
+        @foreach (var participant in Participants.Where(p => (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Healer)
+        && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
             <tr class="text-white">
                 <td>@participant.Character.Name</td>
-                <td width="10"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
-                <td width="10"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
+                <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
+                <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
                 @if (UserId == RaidEvent.LeaderId)
                 {
@@ -49,11 +49,43 @@
         <tr>
             <td colspan="6" class="bg-warning no-hover">DPS</td>
         </tr>
+        @foreach (var participant in Participants.Where(p => (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Melee_DPS
+        || p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Ranged_DPS) && p.AcceptanceStatus == AcceptanceStatus.Accepted))
+        {
+            <tr class="text-white">
+                <td>@participant.Character.Name</td>
+                <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
+                <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
+                <td>@participant.Character.ItemLevel</td>
+                @if (UserId == RaidEvent.LeaderId)
+                {
+                    <td></td>
+                }
+            </tr>
+        }
         @if (UserId == RaidEvent.LeaderId)
         {
             <tr>
                 <td colspan="6" class="bg-secondary no-hover">Pending</td>
             </tr>
+            @foreach (var participant in Participants.Where(p => p.AcceptanceStatus == AcceptanceStatus.Waiting))
+            {
+                <tr class="text-white">
+                    <td>@participant.Character.Name</td>
+                    <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
+                    <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
+                    <td>@participant.Character.ItemLevel</td>
+                    @if (UserId == RaidEvent.LeaderId)
+                    {
+                        <td>
+                            <div class="col">
+                                <i class="fa-solid fa-check"></i>
+                                <i class=" fa-solid fa-xmark"></i>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }
         }
 
     </tbody>

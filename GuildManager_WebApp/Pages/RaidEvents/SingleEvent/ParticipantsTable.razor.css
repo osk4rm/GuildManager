@@ -2,3 +2,23 @@
     pointer-events: none;
     background-color: inherit;
 }
+i{
+    font-size: 1.6rem;
+    
+}
+i:hover{
+    cursor:pointer;
+    color:antiquewhite;
+}
+.fa-check{
+    color:green;
+    
+}
+
+.fa-xmark {
+    color:red;
+}
+
+.imagecell{
+    width: 5%;
+}

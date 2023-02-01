@@ -46,7 +46,8 @@ namespace GuildManager_DataAccess.Entities.Configurations
                     rec =>
                     {
                         rec.HasKey(x => new { x.CharacterId, x.RaidEventId });
-                        rec.Property(x => x.AcceptanceStatus).HasDefaultValue(AcceptanceStatus.Waiting);
+                        //ef resets the value if it's set to default, wtf
+                        //rec.Property(x => x.AcceptanceStatus).HasDefaultValue(AcceptanceStatus.Waiting);
                     });
         }
     }

@@ -319,6 +319,9 @@ namespace GuildManagerAPI.Services
                 Message = message
             };
 
+            await _dbContext.Comments.AddAsync(comment);
+            await _dbContext.SaveChangesAsync();
+
             return new ServiceResponse<int>
             {
                 Data = comment.Id,

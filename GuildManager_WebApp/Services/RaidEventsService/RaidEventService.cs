@@ -15,6 +15,17 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             _httpClient = httpClient;
         }
 
+        public async Task<ServiceResponse<int?>> CreateCommentForRaidEvent(int eventId, string message)
+        {
+            var content = JsonConvert.SerializeObject(message);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"api/raid-events/{eventId}/comments/create", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<int?>>(responseContent);
+
+            return result;
+        }
+
         public async Task<ServiceResponse<int?>> CreateRaidEvent(UpsertRaidEventDto dto)
         {
             var content = JsonConvert.SerializeObject(dto);
@@ -22,6 +33,15 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             var response = await _httpClient.PostAsync("api/raid-events/create", bodyContent);
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<int?>>(responseContent);
+
+            return result;
+        }
+
+        public async Task<ServiceResponse<bool?>> DeleteCommentForRaidEvent(int commentId)
+        {
+            var response = await _httpClient.DeleteAsync($"api/raid-events/comments/delete/{commentId}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<bool?>>(responseContent);
 
             return result;
         }
@@ -49,6 +69,15 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             var response = await _httpClient.GetAsync($"api/raid-events/get/{id}");
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<RaidEventDto>>(responseContent);
+
+            return result;
+        }
+
+        public async Task<ServiceResponse<List<CommentDto>>> GetCommentsForRaidEvent(int eventId)
+        {
+            var response = await _httpClient.GetAsync($"api/raid-events/{eventId}/comments");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<List<CommentDto>>>(responseContent);
 
             return result;
         }
@@ -87,6 +116,16 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             var response = await _httpClient.PutAsync($"api/raid-events/participants/update-status", bodyContent);
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<RaidEventCharacterDto>>(responseContent);
+
+            return result;
+        }
+
+        public async Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message)
+        {
+            var bodyContent = new StringContent(message, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"api/raid-events/comments/update/{commentId}", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<CommentDto>>(responseContent);
 
             return result;
         }

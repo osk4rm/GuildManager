@@ -10,9 +10,9 @@
 else
 {
     <div class="container">
-        
+
         <div class="d-flex flex-row justify-content-end">
-            
+
             <button class="btn btn-outline-success mt-2 me-2" @onclick="OpenJoinEventModal">Join this event!</button>
             <NavLink class="btn btn-primary mt-2" href="raid-events">Back to list</NavLink>
         </div>
@@ -46,24 +46,32 @@ else
                     </div>
                 </div>
             </div>
-            @*<div class="col-2" id="raid-img">
-        <img class="img img-fluid img-thumbnail" width="150" src="/img/@RaidEvent.RaidLocation.ImageUrl" alt="img" />
-        </div>*@
+            <CascadingValue Value="User" Name="User">
+                <CascadingValue Value="UserId" Name="UserId">
+                    <CascadingValue Value="RaidEvent" Name="RaidEvent">
+                        <div class="row mt-2 justify-content-center">
+                            <div class="col-6">
+                                <ParticipantsTable Participants="Participants" CharacterStatusUpdated="LoadData"></ParticipantsTable>
+                            </div>
+                            <div class="col-6">
+
+                                <CommentsComponent></CommentsComponent>
+
+                            </div>
+                        </div>
+                    </CascadingValue>
+                </CascadingValue>
+            </CascadingValue>
+            <div class="alert @alertCss mt-2">@alertMessage</div>
         </div>
-        <div class="col-6">
-            <ParticipantsTable UserId="UserId" Participants="Participants" RaidEvent="RaidEvent" User="User" CharacterStatusUpdated="LoadData"></ParticipantsTable>
-        </div>
-        <div class="col-6">
-        </div>
-        <div class="alert @alertCss mt-2">@alertMessage</div>
     </div>
-    
+
     @if (joinModalVisible)
     {
         <JoinEventModal UserCharacters="UserCharacters" OnAdd="OnJoinEventModalConfirmed" OnCancel="OnJoinEventModalClosed"></JoinEventModal>
     }
-    
-    
+
+
 }
 
 

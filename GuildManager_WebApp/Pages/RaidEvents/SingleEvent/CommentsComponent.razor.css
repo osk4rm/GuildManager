@@ -1,0 +1,7 @@
+﻿.comments-container {
+    max-height: 650px;
+    overflow-y: auto; /* add overflow-y property with value "scroll" */
+}
+.single-comment{
+    background-color:darksalmon;
+}

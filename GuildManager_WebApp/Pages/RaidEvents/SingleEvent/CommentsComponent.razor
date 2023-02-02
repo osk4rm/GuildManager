@@ -1,0 +1,133 @@
+﻿@using GuildManager_Models.Members;
+@inject IRaidEventService _eventService
+
+<section class="bg-dark">
+    <div class="container mt-3 text-dark comments-container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12 d-flex flex-column overflow-auto">
+                <div class="d-flex justify-content-center align-items-center mb-4 mt-2">
+                    <h4 class="text-white mb-0">Comments</h4>
+                    <button class="btn btn-primary ms-auto" @onclick="ShowInput"><i class="fa-solid fa-comment"></i></button>
+                </div>
+                @if (commentInputActive)
+                {
+                    <EditForm Model="message" OnValidSubmit="@(()=>SubmitComment(message))">
+                        <div class="row mb-2">
+                            <div class="col-9 d-flex h-100">
+                                <InputTextArea @bind-Value="message" style="width: 100%"></InputTextArea>
+                            </div>
+                            <div class="col-3 d-flex">
+                                <button type="submit" class="btn btn-danger" style="width: 100%">Add</button>
+                            </div>
+                        </div>
+
+                    </EditForm>
+                }
+                @if (!commentsLoaded)
+                {
+                    <div class="alert alert-danger">
+
+                    </div>
+                }
+                @foreach (var comment in Comments)
+                {
+                    <div class="card mb-3 single-comment">
+                        <div class="card-body">
+                            <div class="d-flex flex-start">
+                                <img class="rounded-circle shadow-1-strong me-3"
+                                 src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(26).webp" alt="avatar" width="40"
+                                 height="40" />
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="text-primary fw-bold mb-0">
+                                            @comment.Author.Nickname
+                                            <span class="text-dark ms-2">@comment.Message</span>
+                                        </h6>
+                                        <p class="mb-0">@comment.CreatedDate</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="small mb-0" style="color: #aaa;">
+                                            <a href="#!" class="link-grey">Remove</a> •
+                                            <a href="#!" class="link-grey">Reply</a> •
+                                            <a href="#!" class="link-grey">Translate</a>
+                                        </p>
+                                        <div class="d-flex flex-row">
+                                            <i class="fas fa-star text-warning me-2"></i>
+                                            <i class="far fa-check-circle" style="color: #aaa;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@code {
+    [CascadingParameter(Name = "User")]
+    public ClaimsPrincipal User { get; set; }
+    [CascadingParameter(Name = "UserId")]
+    public int UserId { get; set; }
+    [CascadingParameter(Name = "RaidEvent")]
+    public RaidEventDto RaidEvent { get; set; } = new();
+    private bool commentInputActive = false;
+    private string message = string.Empty;
+    private List<CommentDto> Comments = new List<CommentDto>();
+    private bool commentsLoaded = false;
+    private string resultMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        var getCommentsResult = await _eventService.GetCommentsForRaidEvent(RaidEvent.Id);
+
+        if (!getCommentsResult.Success)
+        {
+            commentsLoaded = false;
+            resultMessage = getCommentsResult.Message;
+            StateHasChanged();
+            return;
+        }
+        commentsLoaded = true;
+        Comments = getCommentsResult.Data;
+
+        StateHasChanged();
+    }
+    private async void SubmitComment(string message)
+    {
+        var postCommentResult = await _eventService.CreateCommentForRaidEvent(RaidEvent.Id, message);
+        if (!postCommentResult.Success)
+        {
+            commentsLoaded = false;
+            resultMessage = postCommentResult.Message;
+        }
+        commentInputActive = false;
+        message = string.Empty;
+        await LoadData();
+        
+    }
+
+    private async void EditComment(int id)
+    {
+        // edit comment code here
+    }
+
+    private async void DeleteComment(int id)
+    {
+        // delete comment code here
+    }
+
+    private void ShowInput()
+    {
+        commentInputActive = !commentInputActive;
+
+    }
+}

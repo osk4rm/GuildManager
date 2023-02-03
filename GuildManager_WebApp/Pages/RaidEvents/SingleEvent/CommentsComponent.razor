@@ -4,7 +4,7 @@
 <section class="bg-dark">
     <div class="container mt-3 text-dark comments-container">
         <div class="row d-flex justify-content-center">
-            <div class="col-12 d-flex flex-column overflow-auto">
+            <div class="col-12">
                 <div class="d-flex justify-content-center align-items-center mb-4 mt-2">
                     <h4 class="text-white mb-0">Comments</h4>
                     <button class="btn btn-primary ms-auto" @onclick="ShowInput"><i class="fa-solid fa-comment"></i></button>
@@ -26,42 +26,60 @@
                 @if (!commentsLoaded)
                 {
                     <div class="alert alert-danger">
-
                     </div>
                 }
                 @foreach (var comment in Comments)
                 {
-                    <div class="card mb-3 single-comment">
-                        <div class="card-body">
-                            <div class="d-flex flex-start">
-                                <img class="rounded-circle shadow-1-strong me-3"
-                                 src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(26).webp" alt="avatar" width="40"
+                    if (comment.Id == editCommentId)
+                    {
+                        <EditForm Model="message" OnValidSubmit="@(()=>EditComment(comment.Id,message))">
+                            <div class="row mb-2">
+                                <div class="col-9 d-flex h-100">
+                                    <InputTextArea @bind-Value="message" style="width: 100%"></InputTextArea>
+                                </div>
+                                <div class="col-3 d-flex">
+                                    <button type="button" @onclick="CancelEditCommentMode" 
+                                        class="btn btn-secondary me-2" style="width: 100%">
+                                        <i class=" fa-solid fa-xmark"></i>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" style="width: 100%">Edit</button>
+                                </div>
+                            </div>
+
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <div class="card mb-3 single-comment">
+                            <div class="card-body">
+                                <div class="d-flex flex-start">
+                                    <img class="rounded-circle shadow-1-strong me-3"
+                                 src="data:image/jpg;base64,@Convert.ToBase64String(comment.Author.Avatar)" alt="avatar" width="40"
                                  height="40" />
-                                <div class="w-100">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h6 class="text-primary fw-bold mb-0">
-                                            @comment.Author.Nickname
-                                            <span class="text-dark ms-2">@comment.Message</span>
-                                        </h6>
-                                        <p class="mb-0">@comment.CreatedDate</p>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <p class="small mb-0" style="color: #aaa;">
-                                            <a href="#!" class="link-grey">Remove</a> •
-                                            <a href="#!" class="link-grey">Reply</a> •
-                                            <a href="#!" class="link-grey">Translate</a>
-                                        </p>
-                                        <div class="d-flex flex-row">
-                                            <i class="fas fa-star text-warning me-2"></i>
-                                            <i class="far fa-check-circle" style="color: #aaa;"></i>
+                                    <div class="w-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="d-flex flex-start text-primary fw-bold mb-0">
+                                                @comment.Author.Nickname
+                                                <span class="text-dark ms-2">@comment.Message</span>
+                                            </h6>
+                                            <p class="mb-0">@comment.CreatedDate</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="small mb-0" style="color: #aaa;">
+                                                @if (UserId == comment.Author.Id)
+                                                {
+                                                    <a @onclick="(()=>DeleteComment(comment.Id))" class="link-grey">Remove •</a>
+                                                    <a @onclick="(()=>SetEditCommentMode(comment.Id, comment.Message))" class="link-grey">Edit</a>
+                                                }
+                                            </p>
+                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
-
             </div>
         </div>
     </div>
@@ -80,6 +98,7 @@
     private List<CommentDto> Comments = new List<CommentDto>();
     private bool commentsLoaded = false;
     private string resultMessage = string.Empty;
+    private int? editCommentId = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,17 +131,44 @@
         commentInputActive = false;
         message = string.Empty;
         await LoadData();
-        
+
     }
 
-    private async void EditComment(int id)
+    private async void EditComment(int id, string message)
     {
-        // edit comment code here
+        var editCommentResult = await _eventService.UpdateCommentForRaidEvent(id, message);
+        if (!editCommentResult.Success)
+        {
+            commentsLoaded = false;
+            resultMessage = editCommentResult.Message;
+        }
+        editCommentId = null;
+        message = string.Empty;
+        await LoadData();
     }
 
     private async void DeleteComment(int id)
     {
-        // delete comment code here
+        var deleteCommentResult = await _eventService.DeleteCommentForRaidEvent(id);
+        if (!deleteCommentResult.Success)
+        {
+            resultMessage = deleteCommentResult.Message;
+        }
+        message = string.Empty;
+        await LoadData();
+    }
+
+    private void SetEditCommentMode(int commentId, string commentMessage)
+    {
+        editCommentId = commentId;
+        message = commentMessage;
+        StateHasChanged();
+    }
+    private void CancelEditCommentMode()
+    {
+        editCommentId = null;
+        message = string.Empty;
+        StateHasChanged();
     }
 
     private void ShowInput()

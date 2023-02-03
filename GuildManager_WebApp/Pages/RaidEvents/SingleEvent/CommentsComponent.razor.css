@@ -5,3 +5,6 @@
 .single-comment{
     background-color:darksalmon;
 }
+.link-grey:hover{
+    cursor:pointer;
+}

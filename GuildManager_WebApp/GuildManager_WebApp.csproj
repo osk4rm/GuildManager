@@ -15,6 +15,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Radzen.Blazor" Version="4.6.3" />
     <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.4.0.43" />
+    <PackageReference Include="Syncfusion.Blazor.Inputs" Version="20.4.0.48" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.4.0.43" />
   </ItemGroup>
 

@@ -78,7 +78,7 @@ else
                                     var member = (context as MemberDto);
                                     <div>
                                         <img class="rounded-circle shadow-1-strong me-3"
-                                         src="data:image/jpg;base64,@Convert.ToBase64String(member.Avatar)" alt="avatar" width="40"
+                                         src="data:@ImageConverter.GetMimeType(member.Avatar);base64,@Convert.ToBase64String(member.Avatar)" alt="avatar" width="40"
                                          height="40" />
                                         <span id="Emptext">@member.Nickname</span>
                                     </div>

@@ -122,7 +122,8 @@ namespace GuildManager_WebApp.Services.RaidEventsService
 
         public async Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message)
         {
-            var bodyContent = new StringContent(message, Encoding.UTF8, "application/json");
+            var content = JsonConvert.SerializeObject(message);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync($"api/raid-events/comments/update/{commentId}", bodyContent);
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<CommentDto>>(responseContent);

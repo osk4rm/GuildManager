@@ -62,7 +62,15 @@
                                                 @comment.Author.Nickname
                                                 <span class="text-dark ms-2">@comment.Message</span>
                                             </h6>
-                                            <p class="mb-0">@comment.CreatedDate</p>
+                                            @if(comment.ModifiedDate != null)
+                                            {
+                                                <p class="mb-0">@comment.ModifiedDate (edited)</p>
+                                            }
+                                            else
+                                            {
+                                                <p class="mb-0">@comment.CreatedDate</p>
+                                            }
+                                            
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p class="small mb-0" style="color: #aaa;">

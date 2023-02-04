@@ -16,6 +16,7 @@
         <tr>
             <td colspan="5" class="bg-danger no-hover">Tanks</td>
         </tr>
+        @*NEED TO DO SEPARATE COMPONENT FOR THIS*@
         @foreach (var participant in Participants.Where(p => (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank)
         && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
@@ -24,7 +25,8 @@
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
-                @if (UserId == RaidEvent.LeaderId)
+                @*NEED TO CHANGE THIS TO REMOVE RAIDEVENTCHARACTER NOT REJECT IF USER IS OWNER*@
+                @if (UserId == RaidEvent.LeaderId || UserId == participant.Character.UserId)
                 {
                     <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                 }
@@ -41,7 +43,7 @@
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
-                @if (UserId == RaidEvent.LeaderId)
+                @if (UserId == RaidEvent.LeaderId || UserId == participant.Character.UserId)
                 {
                     <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                 }
@@ -59,7 +61,7 @@
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
-                @if (UserId == RaidEvent.LeaderId)
+                @if (UserId == RaidEvent.LeaderId || UserId == participant.Character.UserId)
                 {
                     <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                 }
@@ -82,6 +84,15 @@
                         <td>
                             <div class="col">
                                 <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
+                                <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>
+                            </div>
+                        </td>
+                    }
+                    @*NEED TO CHANGE THIS TO REMOVE RAIDEVENTCHARACTER NOT REJECT*@
+                    @if(UserId == participant.Character.UserId)
+                    {
+                        <td>
+                            <div class="col">
                                 <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>
                             </div>
                         </td>

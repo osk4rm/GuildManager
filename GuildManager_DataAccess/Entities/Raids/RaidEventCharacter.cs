@@ -14,7 +14,6 @@ namespace GuildManager_DataAccess.Entities.Raids
 
         public int CharacterId { get; set; }
         public Character Character { get; set; }
-
         public AcceptanceStatus AcceptanceStatus { get; set; }
     }
 }

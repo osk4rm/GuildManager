@@ -15,5 +15,6 @@ namespace GuildManager_Models.Characters
         public CharacterClassDto Class { get; set; } = new();
         public ClassSpecDto MainSpec { get; set; } = new();
         public decimal ItemLevel { get; set; }
+        public int UserId { get; set; }
     }
 }

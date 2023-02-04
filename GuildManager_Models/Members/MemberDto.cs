@@ -14,6 +14,7 @@ namespace GuildManager_Models.Members
         public int Id { get; set; }
         public string Nickname { get; set; }
         public byte[] Avatar { get; set; }
+        public string Rank { get; set; }
         public List<CharacterDto> Characters { get; set; } = new();
         public List<RaidEventDto> RaidEvents { get; set; } = new();
     }

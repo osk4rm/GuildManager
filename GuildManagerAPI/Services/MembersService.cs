@@ -29,6 +29,7 @@ namespace GuildManagerAPI.Services
                 .Users
                 .Include(u => u.Characters).ThenInclude(c=>c.Class)
                 .Include(u => u.Characters).ThenInclude(c=>c.MainSpec)
+                .Include(u=>u.Role)
                 .ToListAsync();
 
             var members = _mapper.Map<List<MemberDto>>(users);

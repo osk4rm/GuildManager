@@ -19,7 +19,8 @@ namespace GuildManagerAPI.Mapping
             CreateMap<Character, CharacterDto>().ReverseMap();
             CreateMap<Character, CreateCharacterDto>().ReverseMap();
             CreateMap<Character, UpdateCharacterDto>().ReverseMap();
-            CreateMap<User, MemberDto>();
+            CreateMap<User, MemberDto>()
+                .ForMember(m=>m.Rank, a=>a.MapFrom(u=>u.Role.Name));
 
             CreateMap<RaidLocation, RaidLocationDto>()
                 .ForMember(d => d.ExpansionId, a => a.MapFrom(e => e.Expansion.Id))

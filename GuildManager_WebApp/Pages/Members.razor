@@ -1,6 +1,7 @@
 ﻿@page "/members"
 @using GuildManager_Models.Members;
 @inject IMembersService _membersService
+@inject IRaidEventService _raidEventService
 @using Microsoft.AspNetCore.Components.WebAssembly.Services
 
 <h3>Guild members</h3>
@@ -20,37 +21,10 @@ else
                         <DetailTemplate>
                             @{
                                 var member = (context as MemberDto);
-
                             }
                             <div style="padding:20px">
-                                <SfTab>
+                                <SfTab Width="800">
                                     <TabItems>
-                                        @*<TabItem>
-                                    <ChildContent>
-                                    <TabHeader Text="Details"></TabHeader>
-                                    </ChildContent>
-                                    <ContentTemplate>
-                                    <div style="display:inline-flex">
-                                    <div style="float:left;padding:45px;padding-top:70px"><img class="photo" src="data:image/jpg;base64,@Convert.ToBase64String(member.Avatar)" alt="Avatar" /> /></div>
-                                    <div style="padding-top:42px">
-                                    <div style="padding-bottom:10px;padding-left:10px;">
-                                    <span style="font-size:large;font-weight: bold">@member.Nickname</span>
-                                    </div>
-                                    <div style="padding-right: 173px;padding-left:10px;">
-                                    <span class="position">@member.Nickname 1</span>
-                                    </div>
-                                    <div style="padding-top:10px;">
-                                    <table class="table">
-                                    <tr>
-                                    <th>Mail </th>
-                                    <td>@member.Nickname 2</td>
-                                    </tr>
-                                    </table>
-                                    </div>
-                                    </div>
-                                    </div>
-                                    </ContentTemplate>
-                                    </TabItem>*@
                                         <TabItem>
                                             <ChildContent>
                                                 <TabHeader Text="Characters"></TabHeader>
@@ -58,11 +32,11 @@ else
                                             <ContentTemplate>
                                                 <div style="container w-75 padding:25px">
                                                     <SfGrid DataSource="@member.Characters" AllowPaging="true">
-                                                        <GridPageSettings PageSize="6"></GridPageSettings>
+                                                        <GridPageSettings PageSize="10"></GridPageSettings>
                                                         <GridColumns>
                                                             <GridColumn Field=@nameof(CharacterDto.Name) HeaderText="Name"> </GridColumn>
                                                             <GridColumn Field="Class.Name" HeaderText="Class"></GridColumn>
-                                                            <GridColumn Field="MainSpec.Name" HeaderText="Mainspec"  Format="C2"></GridColumn>
+                                                            <GridColumn Field="MainSpec.Name" HeaderText="Mainspec" Format="C2"></GridColumn>
                                                             <GridColumn Field=@nameof(CharacterDto.ItemLevel) HeaderText="Item level"></GridColumn>
                                                         </GridColumns>
                                                     </SfGrid>
@@ -74,7 +48,15 @@ else
                                                 <TabHeader Text="Raid events"></TabHeader>
                                             </ChildContent>
                                             <ContentTemplate>
-
+                                                <SfGrid DataSource="@member.RaidEvents" AllowPaging="true">
+                                                    <GridPageSettings PageSize="10"></GridPageSettings>
+                                                    <GridColumns>
+                                                        <GridColumn Field=RaidLocation.Name HeaderText="Location"> </GridColumn>
+                                                        <GridColumn Field="@nameof(RaidEventDto.StartDate)" HeaderText="Date"></GridColumn>
+                                                        <GridColumn Field="@nameof(RaidEventDto.RaidDifficulty)" HeaderText="Difficulty"></GridColumn>
+                                                        <GridColumn Field=@nameof(RaidEventDto.Status) HeaderText="Status"></GridColumn>
+                                                    </GridColumns>
+                                                </SfGrid>
                                             </ContentTemplate>
                                         </TabItem>
                                     </TabItems>
@@ -93,6 +75,7 @@ else
 }
 @code {
     List<MemberDto> MembersList { get; set; } = new();
+    List<RaidEventDto> MemberRaidEvents { get; set; } = new();
     private bool IsLoading { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
@@ -104,7 +87,22 @@ else
             //logic for unsuccessful try
         }
         MembersList = membersResponse.Data;
+        MemberRaidEvents = await GetRaidEventsForMember(1);
 
         IsLoading = false;
+    }
+
+    private async Task<List<RaidEventDto>> GetRaidEventsForMember(int memberId)
+    {
+        var res = await _raidEventService.GetAll();
+
+        if (!res.Success)
+        {
+            //woops, error with getevents call
+            return new List<RaidEventDto>();
+        }
+
+        return res.Data;
+
     }
 }

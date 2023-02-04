@@ -36,7 +36,6 @@ namespace GuildManagerAPI.Mapping
             CreateMap<UpdateRaidEventCharacterDto, RaidEventCharacter>();
 
             CreateMap<Comment, CommentDto>();
-
         }
     }
 }

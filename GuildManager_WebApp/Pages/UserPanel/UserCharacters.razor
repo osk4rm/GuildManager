@@ -25,8 +25,32 @@ else
             <GridEvents OnActionBegin="ActionHandler" TValue="CharacterDto"></GridEvents>
             <GridColumns>
                 <GridColumn Field="@nameof(CharacterDto.Name)" HeaderText="Nickname" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
-                <GridColumn Field="Class.Name" HeaderText="Class" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
-                <GridColumn Field="MainSpec.Name" HeaderText="Main spec" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
+                <GridColumn Field="Class.Name" HeaderText="Class" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center">
+                    <Template>
+                        @{
+                            var characterDto = (context as CharacterDto);
+                            <div>
+                                <img class="rounded-circle shadow-1-strong me-3 img-fluid"
+                                style="width:15%;"
+                                 src="/img/classes/@characterDto.Class.ImageUrl" alt="class-image"/>
+                                <span id="Emptext">@characterDto.Class.Name</span>
+                            </div>
+                        }
+                    </Template>
+                </GridColumn>
+                <GridColumn Field="MainSpec.Name" HeaderText="Main spec" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center">
+                    <Template>
+                        @{
+                            var characterDto = (context as CharacterDto);
+                            <div>
+                                <img class="rounded-circle shadow-1-strong me-3 img-fluid"
+                                 style="width:15%;"
+                                 src="/img/specs/@characterDto.MainSpec.ImageUrl" alt="class-image" />
+                                <span id="Emptext">@characterDto.MainSpec.Name</span>
+                            </div>
+                        }
+                    </Template>
+                </GridColumn>
                 <GridColumn Field=@nameof(CharacterDto.ItemLevel) TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center"></GridColumn>
                 <GridColumn HeaderText="Manage Records" Width="150">
                     <GridCommandColumns>

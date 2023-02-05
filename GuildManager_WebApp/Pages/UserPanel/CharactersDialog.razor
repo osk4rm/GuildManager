@@ -40,7 +40,6 @@
     public List<CharacterClassDto> CharacterClasses { get; set; } = new();
     [Parameter]
     public List<ClassSpecDto> ClassSpecializations { get; set; } = new();
-    bool IsLoaded = false;
 
 
     private DialogSettings DialogParams = new DialogSettings { MinHeight = "400px", Width = "450px" };
@@ -50,9 +49,5 @@
     {
         ClassSpecializations = args.Value.ClassSpecializations;
         EnableSpecsDropDown = true;
-    }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        IsLoaded = true;
     }
 }

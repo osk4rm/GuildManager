@@ -53,5 +53,16 @@ namespace GuildManager_WebApp.Services.AuthService
 
             return result;
         }
+
+        public async Task<ServiceResponse<UserInfoDto>> UpdateUserAvatar(byte[] avatar)
+        {
+            var content = JsonConvert.SerializeObject(avatar);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync("/api/user/updateavatar", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<UserInfoDto>>(responseContent);
+
+            return result;
+        }
     }
 }

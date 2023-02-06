@@ -26,7 +26,18 @@ namespace GuildManagerAPI.Requests
 
             app.MapGet("/api/getuserinfo", LoginRequests.GetUserInfo)
                 .RequireAuthorization();
+
+            app.MapPut("/api/user/updateavatar", LoginRequests.UpdateUserAvatar)
+                .RequireAuthorization();
+
             return app;
+        }
+
+        private static async Task<IResult> UpdateUserAvatar(ILoginService service, byte[] avatar)
+        {
+            var result = await service.UpdateUserAvatar(avatar);
+
+            return Results.Ok(result);
         }
 
         private static async Task<IResult> GetUserInfo(ILoginService service)

@@ -9,5 +9,7 @@ namespace GuildManagerAPI.Services.Interfaces
         ServiceResponse<int> RegisterUser(RegisterUserDto dto);
         Task<ServiceResponse<bool>> ChangePassword(int userId, ChangePasswordDto dto);
         Task<ServiceResponse<UserInfoDto>> GetUserInfo();
+        Task<ServiceResponse<UserInfoDto>> UpdateUserAvatar(byte[] avatar);
+        
     }
 }

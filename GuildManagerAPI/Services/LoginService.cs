@@ -164,5 +164,39 @@ namespace GuildManagerAPI.Services
                 Message = "Registration successful!"
             };
         }
+
+        public async Task<ServiceResponse<UserInfoDto>> UpdateUserAvatar(byte[] avatar)
+        {
+            var userId = _userContextService.Id;
+
+            if (userId == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var userFromDb = await _context
+                .Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (userFromDb == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            userFromDb.Avatar = avatar;
+
+            _context.Update(userFromDb);
+            await _context.SaveChangesAsync();
+
+            var dto = _mapper.Map<UserInfoDto>(userFromDb);
+
+            return new ServiceResponse<UserInfoDto>
+            {
+                Data = dto,
+                Success = true,
+                Message = "Avatar updated."
+            };
+        }
     }
 }

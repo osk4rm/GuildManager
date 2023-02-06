@@ -1,5 +1,84 @@
-﻿<h3>UserPanelDashboard</h3>
+﻿@inject IAuthService _authService
+
+@if (!isLoaded)
+{
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-3">
+                <img class="shadow-1-strong me-3 mt-3"
+                 src="data:@mimeType;base64,@Convert.ToBase64String(UserInfo.Avatar)" alt="avatar" width="150" />
+                
+            </div>
+            <div class="col-3">
+                <h4>Your information</h4>
+                <hr/>
+                <p class="text-white">Email: @UserInfo.Email</p>
+                <p class="text-white">Nickname: @UserInfo.Nickname</p>
+                <p class="text-white">Role: @UserInfo.Role</p>
+            </div>
+            <div class="col-6">
+                <h4>Change avatar</h4>
+                <hr/>
+                <SfUploader ID="UploadAvatar" @ref="Uploader" AutoUpload="false" AllowMultiple="false" AllowedExtensions=".jpg, .bmp, .tiff, .png, .gif">
+                    <UploaderEvents OnUploadStart="OnUpload" OnFailure="OnFinish"></UploaderEvents>
+                    <UploaderAsyncSettings SaveUrl="test" RemoveUrl="test"></UploaderAsyncSettings>
+                </SfUploader>
+            </div>
+        </div>
+    </div>
+}
+
 
 @code {
+    private UserInfoDto UserInfo { get; set; } = new();
+    private string mimeType = string.Empty;
+    private bool isLoaded = false;
+    public SfUploader? Uploader;
+    private string uploaderResult = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserInfo();
+        mimeType = ImageConverter.GetMimeType(UserInfo.Avatar);
+        isLoaded = true;
+    }
+
+    private async void OnUpload(UploadingEventArgs args)
+    {
+        String[] splitStr = { ";base64," };
+        var files = args.FileData.RawFile.ToString().Split(splitStr, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+        var byteArr = System.Convert.FromBase64String(files);    // return byte array
+
+        var updateAvatarResult = await _authService.UpdateUserAvatar(byteArr);
+
+        if (!updateAvatarResult.Success)
+        {
+            uploaderResult = "Upload failed.";
+            return;
+        }
+        uploaderResult = "Success!";
+        await LoadUserInfo();
+        StateHasChanged();
+
+    }
+    private async void OnFinish(Syncfusion.Blazor.Inputs.FailureEventArgs args)
+    {
+        args.StatusText = uploaderResult;
+    }
+
+    private async Task LoadUserInfo()
+    {
+        var getInfo = await _authService.GetUserInfo();
+
+        if (!getInfo.Success)
+        {
+            //alert
+        }
+
+        UserInfo = getInfo.Data;
+    }
 }

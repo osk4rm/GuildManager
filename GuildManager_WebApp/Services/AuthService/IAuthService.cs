@@ -9,5 +9,6 @@ namespace GuildManager_WebApp.Services.AuthService
         Task<ServiceResponse<string>> LoginUser(LoginDto dto);
         Task<ServiceResponse<bool?>> ChangePassword(ChangePasswordDto dto);
         Task<ServiceResponse<UserInfoDto>> GetUserInfo();
+        Task<ServiceResponse<UserInfoDto>> UpdateUserAvatar(byte[] avatar);
     }
 }

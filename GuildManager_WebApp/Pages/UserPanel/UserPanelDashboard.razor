@@ -59,9 +59,11 @@ else
         if (!updateAvatarResult.Success)
         {
             uploaderResult = "Upload failed.";
+            await _jsRuntime.InvokeVoidAsync("ShowNotification", "error", updateAvatarResult.Message);
             return;
         }
         uploaderResult = "Success!";
+        await _jsRuntime.InvokeVoidAsync("ShowNotification", "success", updateAvatarResult.Message);
         await LoadUserInfo();
         StateHasChanged();
 

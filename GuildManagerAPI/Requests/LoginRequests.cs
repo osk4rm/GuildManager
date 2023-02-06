@@ -24,8 +24,18 @@ namespace GuildManagerAPI.Requests
                 .Accepts<ChangePasswordDto>("application/json")
                 .WithBodyValidator<ChangePasswordDto>();
 
+            app.MapGet("/api/getuserinfo", LoginRequests.GetUserInfo)
+                .RequireAuthorization();
             return app;
         }
+
+        private static async Task<IResult> GetUserInfo(ILoginService service)
+        {
+            var result = await service.GetUserInfo();
+
+            return Results.Ok(result);
+        }
+
         private static IResult Login(ILoginService service, LoginDto dto)
         {
             var token = service.GenerateJwt(dto);

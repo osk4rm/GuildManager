@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GuildManager_DataAccess.Entities;
 using GuildManager_DataAccess.Entities.Raids;
+using GuildManager_Models.Auth;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManager_Models.Characters;
 using GuildManager_Models.Members;
@@ -21,6 +22,9 @@ namespace GuildManagerAPI.Mapping
             CreateMap<Character, UpdateCharacterDto>().ReverseMap();
             CreateMap<User, MemberDto>()
                 .ForMember(m=>m.Rank, a=>a.MapFrom(u=>u.Role.Name));
+
+            CreateMap<User, UserInfoDto>()
+                .ForMember(ui => ui.Role, a => a.MapFrom(u => u.Role.Name));
 
             CreateMap<RaidLocation, RaidLocationDto>()
                 .ForMember(d => d.ExpansionId, a => a.MapFrom(e => e.Expansion.Id))

@@ -10,6 +10,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using GuildManagerAPI.Services.Interfaces;
+using GuildManager_Models.Auth;
+using GuildManagerAPI.Authentication.UserContext;
+using AutoMapper;
 
 namespace GuildManagerAPI.Services
 {
@@ -18,12 +21,20 @@ namespace GuildManagerAPI.Services
         private readonly GuildManagerDbContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly AuthenticationSettings _authenticationSettings;
+        private readonly IUserContextService _userContextService;
+        private readonly IMapper _mapper;
 
-        public LoginService(GuildManagerDbContext context, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public LoginService(GuildManagerDbContext context, 
+            IPasswordHasher<User> passwordHasher, 
+            AuthenticationSettings authenticationSettings,
+            IUserContextService userContextService,
+            IMapper mapper)
         {
             _context = context;
             _passwordHasher = passwordHasher;
             _authenticationSettings = authenticationSettings;
+            _userContextService = userContextService;
+            _mapper = mapper;
         }
 
         public async Task<ServiceResponse<bool>> ChangePassword(int userId, ChangePasswordDto dto)
@@ -88,6 +99,34 @@ namespace GuildManagerAPI.Services
                 Data = tokenHandler.WriteToken(token),
                 Success = true,
                 Message = string.Empty
+            };
+        }
+
+        public async Task<ServiceResponse<UserInfoDto>> GetUserInfo()
+        {
+            var userId = _userContextService.Id;
+
+            if(userId == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var userFromDb = await _context
+                .Users
+                .Include(u=>u.Role)
+                .FirstOrDefaultAsync(x=>x.Id== userId);
+
+            if(userFromDb == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            var userDto = _mapper.Map<UserInfoDto>(userFromDb);
+
+            return new ServiceResponse<UserInfoDto>
+            {
+                Data = userDto,
+                Success = true
             };
         }
 

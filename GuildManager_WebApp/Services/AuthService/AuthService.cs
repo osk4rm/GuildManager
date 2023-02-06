@@ -1,4 +1,5 @@
 ﻿using GuildManager_Models;
+using GuildManager_Models.Auth;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Text;
@@ -20,6 +21,15 @@ namespace GuildManager_WebApp.Services.AuthService
             var result = await _httpClient.PostAsJsonAsync("api/change-password", dto);
 
             return await result.Content.ReadFromJsonAsync<ServiceResponse<bool?>>();
+        }
+
+        public async Task<ServiceResponse<UserInfoDto>> GetUserInfo()
+        {
+            var response = await _httpClient.GetAsync("api/getuserinfo");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<UserInfoDto>>(responseContent);
+
+            return result;
         }
 
         public async Task<ServiceResponse<string>> LoginUser(LoginDto dto)

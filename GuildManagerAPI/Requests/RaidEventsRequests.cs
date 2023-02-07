@@ -37,6 +37,9 @@ namespace GuildManagerAPI.Requests
             app.MapPost("/api/raid-events/join/{eventId}", RaidEventsRequests.JoinRaidEvent)
                 .RequireAuthorization();
 
+            app.MapDelete("/api/raid-events/{eventId}/remove-application", RaidEventsRequests.CancelApplicationForRaidEvent)
+                .RequireAuthorization();
+
             app.MapGet("/api/raid-events/participants/{eventId}", RaidEventsRequests.GetParticipants)
                 .RequireAuthorization();
 
@@ -59,6 +62,8 @@ namespace GuildManagerAPI.Requests
 
             return app;
         }
+
+        
 
         private static async Task<IResult> DeleteComment(IRaidEventService service, [FromRoute] int commentId)
         {
@@ -149,6 +154,13 @@ namespace GuildManagerAPI.Requests
             var response = await service.JoinRaidEvent(eventId, characterId);
 
             return Results.Ok(response);
+        }
+
+        private static async Task<IResult> CancelApplicationForRaidEvent(IRaidEventService service, [FromRoute] int eventId, [FromQuery] int characterId)
+        {
+            var result = await service.CancelApplicationForRaidEvent(eventId, characterId);
+
+            return Results.Ok(result);
         }
     }
 }

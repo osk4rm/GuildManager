@@ -15,6 +15,15 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             _httpClient = httpClient;
         }
 
+        public async Task<ServiceResponse<bool?>> CancelApplicationForRaidEvent(int eventId, int characterId)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/raid-events/{eventId}/remove-application?characterId={characterId}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<bool?>>(responseContent);
+
+            return result;
+        }
+
         public async Task<ServiceResponse<int?>> CreateCommentForRaidEvent(int eventId, string message)
         {
             var content = JsonConvert.SerializeObject(message);

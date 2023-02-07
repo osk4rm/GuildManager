@@ -388,5 +388,41 @@ namespace GuildManagerAPI.Services
                 Message = $"Raid event {comment.Id} deleted."
             };
         }
+
+        public async Task<ServiceResponse<bool>> CancelApplicationForRaidEvent(int eventId, int characterId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var raidEvent = await _dbContext.RaidEvents.FirstOrDefaultAsync(r => r.Id == eventId);
+            var character = await _dbContext.Characters.FirstOrDefaultAsync(u => u.Id == characterId);
+            if (character == null || raidEvent == null)
+            {
+                throw new NotFoundException("Character or raid event not found.");
+            }
+
+            var raidEventCharacter = await _dbContext
+                .RaidEventCharacter
+                .FirstOrDefaultAsync(rec => rec.CharacterId == characterId && rec.RaidEventId == eventId);
+
+            if (raidEventCharacter == null)
+            {
+                throw new NotFoundException("You have not applied for this event.");
+            }
+
+            _dbContext.RaidEventCharacter.Remove(raidEventCharacter);
+            await _dbContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Success = true,
+                Data = true,
+                Message = "Application removed."
+            };
+        }
     }
 }

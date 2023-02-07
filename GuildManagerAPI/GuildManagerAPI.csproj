@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GuildManager_DataAccess\GuildManager_DataAccess.csproj" />
     <ProjectReference Include="..\GuildManager_Models\GuildManager_Models.csproj" />
+    <ProjectReference Include="..\GuildManager_UnitTests\GuildManager_UnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

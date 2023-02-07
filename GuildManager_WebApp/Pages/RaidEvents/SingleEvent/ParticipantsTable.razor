@@ -1,4 +1,5 @@
 ﻿@inject IRaidEventService _raidEventService
+@inject IJSRuntime _jsRuntime
 
 <table class="table table-sm table-responsive table-hover table-bordered table-dark mt-3">
     <thead class="table-primary">
@@ -21,15 +22,35 @@
         && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
             <tr class="text-white">
-                <td>@participant.Character.Name</td>
+                @if (UserId == participant.Character.UserId)
+                {
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <div class="me-2">@participant.Character.Name</div>
+                        <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                    </div>
+                    </td>
+                }
+                else
+                {
+                    <td>@participant.Character.Name</td>
+                }
+                
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
-                @*NEED TO CHANGE THIS TO REMOVE RAIDEVENTCHARACTER NOT REJECT IF USER IS OWNER*@
-                @if (UserId == RaidEvent.LeaderId || UserId == participant.Character.UserId)
+                @if (UserId == RaidEvent.LeaderId)
                 {
-                    <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
+                    @if (UserId != participant.Character.UserId)
+                    {
+                        <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
+                    }
+                    else
+                    {
+                        <td><i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i></td>
+                    }
                 }
+
             </tr>
         }
         <tr>
@@ -43,9 +64,25 @@
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
-                @if (UserId == RaidEvent.LeaderId || UserId == participant.Character.UserId)
+                @if (UserId == RaidEvent.LeaderId)
                 {
-                    <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
+                    @if (UserId != participant.Character.UserId)
+                    {
+                        <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
+                    }
+                    else
+                    {
+                        <td><i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i></td>
+                    }
+                }
+
+                else if (UserId == participant.Character.UserId)
+                {
+                    <td>
+                        <div class="col">
+                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                        </div>
+                    </td>
                 }
             </tr>
         }
@@ -61,45 +98,62 @@
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
-                @if (UserId == RaidEvent.LeaderId || UserId == participant.Character.UserId)
+                @if (UserId == RaidEvent.LeaderId)
                 {
-                    <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
+                    @if(UserId != participant.Character.UserId)
+                    {
+                        <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
+                    }
+                    else
+                    {
+                        <td><i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i></td>
+                    }
+                }
+
+                else if (UserId == participant.Character.UserId)
+                {
+                    <td>
+                        <div class="col">
+                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                        </div>
+                    </td>
                 }
             </tr>
         }
-        @if (UserId == RaidEvent.LeaderId)
+
+        <tr>
+            <td colspan="6" class="bg-secondary no-hover">Pending</td>
+        </tr>
+        @foreach (var participant in Participants.Where(p => p.AcceptanceStatus == AcceptanceStatus.Waiting))
         {
-            <tr>
-                <td colspan="6" class="bg-secondary no-hover">Pending</td>
+            <tr class="text-white">
+                
+                <td>@participant.Character.Name</td>
+                <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
+                <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
+                <td>@participant.Character.ItemLevel</td>
+                @if (UserId == RaidEvent.LeaderId)
+                {
+                    <td>
+                        <div class="col">
+                            <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
+                            @if (UserId != participant.Character.UserId)
+                            {
+                                <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                            }
+
+                        </div>
+                    </td>
+                }
+
+                
             </tr>
-            @foreach (var participant in Participants.Where(p => p.AcceptanceStatus == AcceptanceStatus.Waiting))
-            {
-                <tr class="text-white">
-                    <td>@participant.Character.Name</td>
-                    <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
-                    <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
-                    <td>@participant.Character.ItemLevel</td>
-                    @if (UserId == RaidEvent.LeaderId)
-                    {
-                        <td>
-                            <div class="col">
-                                <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
-                                <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>
-                            </div>
-                        </td>
-                    }
-                    @*NEED TO CHANGE THIS TO REMOVE RAIDEVENTCHARACTER NOT REJECT*@
-                    @if(UserId == participant.Character.UserId)
-                    {
-                        <td>
-                            <div class="col">
-                                <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>
-                            </div>
-                        </td>
-                    }
-                </tr>
-            }
         }
+
 
     </tbody>
 
@@ -107,7 +161,13 @@
 @if (AcceptDialogOpen)
 {
     <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.OkCancel" OnClose="UpdateCharacterStatus"
-    Text="Are you sure?" Title="Confirm operation"></ConfirmationDialog>
+                    Text="Are you sure?" Title="Confirm operation"></ConfirmationDialog>
+}
+
+@if (CancelApplicationDialogOpen)
+{
+    <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.OkCancel" OnClose="CancelApplicationForEvent"
+                    Text="Are you sure?" Title="Confirm operation"></ConfirmationDialog>
 }
 
 
@@ -121,6 +181,7 @@
     [Parameter]
     public List<RaidEventCharacterDto> Participants { get; set; } = new();
     public bool AcceptDialogOpen { get; set; } = false;
+    public bool CancelApplicationDialogOpen { get; set; } = false;
     private int charIdToUpdateStatus;
     private AcceptanceStatus _statusToApply;
 
@@ -147,9 +208,6 @@
         }
 
         AcceptDialogOpen = false;
-        //StateHasChanged();
-
-
     }
 
     private void OpenAcceptDialog(int charId, AcceptanceStatus status)
@@ -158,6 +216,32 @@
         _statusToApply = status;
 
         AcceptDialogOpen = true;
+        StateHasChanged();
+    }
+
+    private async Task CancelApplicationForEvent(bool accepted)
+    {
+        if (accepted)
+        {
+            var cancelApplicationResult =
+                await _raidEventService.CancelApplicationForRaidEvent(RaidEvent.Id, charIdToUpdateStatus);
+
+            if (!cancelApplicationResult.Success)
+            {
+                await _jsRuntime.InvokeVoidAsync("ShowNotification", "error", cancelApplicationResult.Message);
+                return;
+            }
+            await _jsRuntime.InvokeVoidAsync("ShowNotification", "success", cancelApplicationResult.Message);
+            await CharacterStatusUpdated.InvokeAsync();
+        }
+        CancelApplicationDialogOpen = false;
+    }
+
+    private void OpenCancelApplicationDialogOpen(int charId)
+    {
+        charIdToUpdateStatus = charId;
+
+        CancelApplicationDialogOpen = true;
         StateHasChanged();
     }
 }

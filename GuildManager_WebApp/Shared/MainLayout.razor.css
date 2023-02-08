@@ -16,6 +16,8 @@ html {
 }
 .panel-right {
     background-color: #302F32;
+    height: 100%;
+    overflow-y:auto;
 }
 .user-box {
     font-family: 'Montserrat', sans-serif;

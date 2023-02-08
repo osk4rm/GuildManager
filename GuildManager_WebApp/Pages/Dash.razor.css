@@ -1,0 +1,132 @@
+﻿.root-container {
+    height: 100%;
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    color:white;
+}
+
+.category-text {
+    float: left;
+    line-height: 30px;
+}
+
+.category-icon {
+    float: left;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-size: 100%;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.item-container {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    text-align: center;
+    height: 70%;
+    padding: 2rem;
+    font-size: 5rem;
+    font-weight: bold;
+    font-family: 'Indie Flower', cursive;
+}
+
+    .item-container.income {
+        color: #17a00e
+    }
+
+    .item-container.balance {
+        color: #008cff;
+    }
+
+    .item-container.transaction {
+        color: #f41127;
+    }
+
+    .item-container.expense {
+        color: #ca765a;
+    }
+
+.bottom-container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-weight: 400;
+    font-size: 1.6rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.mobile .bottom-container {
+    font-size: 30px;
+}
+
+.material .bottom-container,
+.fabric .bottom-container,
+.bootstrap .bottom-container,
+.bootstrap4 .bottom-container,
+.tailwind .bottom-container,
+.bootstrap5 .bottom-container {
+    color: #4c5258;
+}
+
+.amt-payment.expense-payment {
+    font-weight: bold;
+    color: #ff5e65;
+}
+
+.amt-payment.income-payment {
+    font-weight: bold;
+    color: #04cd93;
+}
+
+.auto-left {
+    margin-left: auto;
+}
+
+.e-panel-cotent {
+    padding: 1rem;
+}
+
+
+
+.e-headercelldiv span.e-headertext {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.e-grid .e-rowcell {
+    font-size: 13px;
+}
+
+.mobile .e-control.e-lib.e-dashboardlayout.e-responsive {
+    z-index: 0;
+    overflow: scroll;
+}
+
+.mobile .item-container {
+    padding: 40px;
+    font-size: 40px;
+}
+
+.e-control.e-lib.e-dashboardlayout.e-responsive {
+    z-index: 0;
+}
+
+.e-dashboardlayout.e-control .e-panel .e-panel-container .e-grid.sf-grid .e-gridcontent .e-content.e-yscroll {
+    overflow: auto;
+    
+}
+
+body.tailwind-dark .e-dashboardlayout.e-control .e-panel {
+    border: 1px #435266 solid;
+}
+
+.e-gridheader {
+    padding-right: 0px !important;
+}

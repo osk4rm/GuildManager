@@ -9,6 +9,7 @@ using GuildManagerAPI.Requests;
 using GuildManagerAPI.Requests.Extension;
 using GuildManagerAPI.Services;
 using GuildManagerAPI.Services.Interfaces;
+using GuildManagerAPI.Sieve;
 using GuildManagerAPI.Validation;
 using GuildManagerAPI.Validation.CharactersOperations;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Sieve.Services;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -68,6 +70,7 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
+builder.Services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ILoginService, LoginService>();

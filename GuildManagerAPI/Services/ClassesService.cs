@@ -18,6 +18,22 @@ namespace GuildManagerAPI.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
+
+        public async Task<ServiceResponse<List<ClassCountDto>>> GetClassCount()
+        {
+            var classCount = await _dbContext.Characters
+                .Include(r=>r.Class)
+                .GroupBy(x => x.Class.Name)
+                .Select(x => new ClassCountDto { Name = x.Key, Count = x.Count() })
+                .ToListAsync();
+
+            return new ServiceResponse<List<ClassCountDto>>()
+            {
+                Data = classCount,
+                Success = true
+            };
+        }
+
         public async Task<ServiceResponse<List<CharacterClassDto>>> GetClasses()
         {
             var classes = await _dbContext.CharacterClasses
@@ -31,6 +47,22 @@ namespace GuildManagerAPI.Services
                 Data = dtos,
                 Success = true,
                 Message = "Success"
+            };
+        }
+
+        public async Task<ServiceResponse<List<RoleCountDto>>> GetRoleCount()
+        {
+            var roleCount = await _dbContext
+                .Characters
+                .Include(r=>r.MainSpec)
+                .GroupBy(x=>x.MainSpec.Role)
+                .Select(c=>new RoleCountDto { Role = c.Key, RoleCount = c.Count()})
+                .ToListAsync();
+
+            return new ServiceResponse<List<RoleCountDto>>
+            {
+                Data = roleCount,
+                Success = true
             };
         }
     }

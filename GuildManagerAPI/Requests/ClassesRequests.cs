@@ -9,8 +9,24 @@ namespace GuildManagerAPI.Requests
         public static WebApplication RegisterClassesEndpoints(this WebApplication app)
         {
             app.MapGet("/api/classes", ClassesRequests.GetAllClasses);
+            app.MapGet("/api/classes/classcount", ClassesRequests.GetClassCount);
+            app.MapGet("/api/classes/rolecount", ClassesRequests.GetRoleCount);
 
             return app;
+        }
+
+        private static async Task<IResult> GetRoleCount(IClassesService service)
+        {
+            var response = await service.GetRoleCount();
+
+            return Results.Ok(response);
+        }
+
+        private static async Task<IResult> GetClassCount(IClassesService service)
+        {
+            var response = await service.GetClassCount();
+
+            return Results.Ok(response);
         }
 
         private static async Task<IResult> GetAllClasses(IClassesService service)

@@ -54,7 +54,19 @@
                     <span class="title">Class Distribution</span>
                 </HeaderTemplate>
                 <ContentTemplate>
-
+                    <SfAccumulationChart EnableAnimation="true" EnableBorderOnMouseMove="false" EnableSmartLabels="true">
+                                <AccumulationChartBorder Color="transparent"></AccumulationChartBorder>
+                                <AccumulationChartTooltipSettings Enable="true" Format="${point.x}"></AccumulationChartTooltipSettings>
+                                <AccumulationChartSeriesCollection>
+                                    <AccumulationChartSeries DataSource="@PieChartDataCollection" XName="Product" YName="Percentage" InnerRadius="40%" Palettes="@palettes">
+                                        <AccumulationChartSeriesBorder Width="3"></AccumulationChartSeriesBorder>
+                                        <AccumulationDataLabelSettings Visible="true" Name="TextMapping" Position="AccumulationLabelPosition.Outside">
+                                            <AccumulationChartConnector Length="10px" Type="ConnectorType.Curve"></AccumulationChartConnector>
+                                        </AccumulationDataLabelSettings>
+                                    </AccumulationChartSeries>
+                                </AccumulationChartSeriesCollection>
+                                <AccumulationChartLegendSettings Visible="false"></AccumulationChartLegendSettings>
+                            </SfAccumulationChart>
                 </ContentTemplate>
             </DashboardLayoutPanel>
             <DashboardLayoutPanel Column="4" Row="1" SizeX="4" SizeY="2">
@@ -81,4 +93,5 @@
     public SfDashboardLayout dashboardObject { get; set; }
     private double[] Spacing = new double[] { 15, 15 };
     private double Ratio = 160 / 100;
+    
     }

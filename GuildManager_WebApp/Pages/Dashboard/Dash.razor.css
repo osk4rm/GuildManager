@@ -1,0 +1,57 @@
+﻿.root-container {
+    height: 100%;
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    color:white;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    margin-top: 20px;
+}
+.item-container {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    text-align: center;
+    height: 70%;
+    padding: 2rem;
+    font-size: 5rem;
+    font-weight: bold;
+    font-family: 'Indie Flower', cursive;
+}
+
+    .item-container.income {
+        color: #17a00e
+    }
+
+    .item-container.balance {
+        color: #008cff;
+    }
+
+    .item-container.transaction {
+        color: #f41127;
+    }
+
+    .item-container.expense {
+        color: #ca765a;
+    }
+
+.bottom-container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-weight: 400;
+    font-size: 1.6rem;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+

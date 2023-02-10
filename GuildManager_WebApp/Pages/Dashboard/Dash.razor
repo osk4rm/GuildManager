@@ -1,0 +1,169 @@
+﻿@inject IClassService _classService
+@inject INotificationHelper _notifications
+
+@if (!IsLoaded)
+{
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+}
+else
+{
+    <div class="control-section">
+        <SfDashboardLayout Columns="8">
+            <DashboardLayoutPanels>
+                <DashboardLayoutPanel Column="0" Row="0" SizeX="2" SizeY="1">
+                    <ContentTemplate>
+                        <div class="root-container">
+                            <div class="item-container income">
+                                <p>42</p>
+                            </div>
+                            <div class="bottom-container">
+                                <p>Guild members <i class="fa-solid fa-user"></i></p>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+                <DashboardLayoutPanel Column="2" Row="0" SizeX="2" SizeY="1">
+                    <ContentTemplate>
+                        <div class="root-container">
+                            <div class="item-container expense">
+                                <p>7</p>
+                            </div>
+                            <div class="bottom-container">
+                                <p>Raids this week <i class="fa-solid fa-headphones"></i></p>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+                <DashboardLayoutPanel Column="4" Row="0" SizeX="2" SizeY="1">
+                    <ContentTemplate>
+                        <div class="root-container">
+                            <div class="item-container balance">
+                                <p>2</p>
+                            </div>
+                            <div class="bottom-container">
+                                <p>Pending invites <i class="fa-solid fa-bell"></i></p>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+                <DashboardLayoutPanel Column="6" Row="0" SizeX="2" SizeY="1">
+                    <ContentTemplate>
+                        <div class="root-container">
+                            <div class="item-container transaction">
+                                <p>3</p>
+                            </div>
+                            <div class="bottom-container">
+                                <p>Users online <i class="fa-regular fa-user"></i></p>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+                <DashboardLayoutPanel Column="0" Row="1" SizeX="4" SizeY="2">
+                    <HeaderTemplate>
+                        <span class="title">Class Distribution</span>
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        <div class="chart-container">
+                            <SfAccumulationChart EnableAnimation="true" EnableBorderOnMouseMove="false" 
+                                EnableSmartLabels="true" Background="transparent">
+                                <AccumulationChartBorder Color="transparent"></AccumulationChartBorder>
+                                <AccumulationChartTooltipSettings Enable="true" Format="${point.x}">
+                                    <AccumulationChartTooltipTextStyle Color="white" Size="10"></AccumulationChartTooltipTextStyle>
+                                </AccumulationChartTooltipSettings>
+                                <AccumulationChartSeriesCollection>
+                                    <AccumulationChartSeries DataSource="@ClassCountData" XName="Name" YName="Count" InnerRadius="40%">
+                                        <AccumulationChartSeriesBorder Width="3"></AccumulationChartSeriesBorder>
+                                        <AccumulationDataLabelSettings Visible="true" Name="TextMapping" Position="AccumulationLabelPosition.Outside">
+                                            <AccumulationChartDataLabelFont Color="white" Size="20"></AccumulationChartDataLabelFont>
+                                            <AccumulationChartConnector Length="10px" Type="ConnectorType.Curve"></AccumulationChartConnector>
+                                        </AccumulationDataLabelSettings>
+                                    </AccumulationChartSeries>
+                                </AccumulationChartSeriesCollection>
+                                <AccumulationChartLegendSettings Visible="true">
+                                    <AccumulationChartLegendFont Color="white"></AccumulationChartLegendFont>
+                                </AccumulationChartLegendSettings>
+                            </SfAccumulationChart>
+                        </div>
+
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+                <DashboardLayoutPanel Column="4" Row="1" SizeX="4" SizeY="2">
+                    <HeaderTemplate>
+                        <span class="title">Roles Distribution</span>
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        <div class="chart-container">
+                            <SfAccumulationChart EnableAnimation="true" EnableBorderOnMouseMove="false" EnableSmartLabels="true" Background="transparent">
+                                <AccumulationChartBorder Color="transparent"></AccumulationChartBorder>
+                                <AccumulationChartTooltipSettings Enable="true" Format="${point.x}">
+                                    <AccumulationChartTooltipTextStyle Color="white" Size="10"></AccumulationChartTooltipTextStyle>
+                                </AccumulationChartTooltipSettings>
+                                <AccumulationChartSeriesCollection>
+                                    <AccumulationChartSeries DataSource="@RoleCountData" XName="Role" YName="RoleCount" InnerRadius="40%">
+                                        <AccumulationChartSeriesBorder Width="3"></AccumulationChartSeriesBorder>
+                                        <AccumulationDataLabelSettings Visible="true" Name="TextMapping" Position="AccumulationLabelPosition.Outside">
+                                            <AccumulationChartDataLabelFont Color="white" Size="20"></AccumulationChartDataLabelFont>
+                                            <AccumulationChartConnector Length="10px" Type="ConnectorType.Curve"></AccumulationChartConnector>
+                                        </AccumulationDataLabelSettings>
+                                    </AccumulationChartSeries>
+                                </AccumulationChartSeriesCollection>
+                                <AccumulationChartLegendSettings Visible="true">
+                                    <AccumulationChartLegendFont Color="white"></AccumulationChartLegendFont>
+                                </AccumulationChartLegendSettings>
+                            </SfAccumulationChart>
+                        </div>
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+                <DashboardLayoutPanel Column="0" Row="4" SizeX="8" SizeY="2">
+                    <HeaderTemplate>
+                        <span class="title">Recent Raids</span>
+                    </HeaderTemplate>
+                    <ContentTemplate>
+
+                    </ContentTemplate>
+                </DashboardLayoutPanel>
+            </DashboardLayoutPanels>
+        </SfDashboardLayout>
+    </div>
+
+   
+}
+
+
+@code {
+    public SfDashboardLayout dashboardObject { get; set; }
+    private bool IsLoaded { get; set; } = false;
+    List<ClassCountDto> ClassCountData { get; set; } = new();
+    List<RoleCountDto> RoleCountData { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoaded = false;
+        await LoadData();
+        StateHasChanged();
+    }
+
+    private async Task LoadData()
+    {
+        IsLoaded = false;
+        var getClassCountResult = await _classService.GetClassCount();
+
+        if (!getClassCountResult.Success)
+        {
+            await _notifications.ShowNotification(getClassCountResult.Message);
+        }
+
+        ClassCountData = getClassCountResult.Data;
+
+        var getRoleCountResult = await _classService.GetRoleCount();
+
+        if (!getRoleCountResult.Success)
+        {
+            await _notifications.ShowNotification(getRoleCountResult.Message);
+        }
+
+        RoleCountData = getRoleCountResult.Data;
+        IsLoaded = true;
+    }
+
+}

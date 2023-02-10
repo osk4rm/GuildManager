@@ -7,5 +7,7 @@ namespace GuildManager_WebApp.Services.ClassesService
     public interface IClassService
     {
         Task<ServiceResponse<List<CharacterClassDto>>> GetClasses();
+        Task<ServiceResponse<List<ClassCountDto>>> GetClassCount();
+        Task<ServiceResponse<List<RoleCountDto>>> GetRoleCount();
     }
 }

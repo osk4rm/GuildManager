@@ -1,6 +1,7 @@
 global using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using GuildManager_WebApp;
+using GuildManager_WebApp.Helpers;
 using GuildManager_WebApp.Services.AuthService;
 using GuildManager_WebApp.Services.CharactersService;
 using GuildManager_WebApp.Services.ClassesService;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<IMembersService, MembersService>();
 builder.Services.AddScoped<IRaidEventService, RaidEventService>();
 builder.Services.AddScoped<IExpansionsLocationsService, ExpansionsLocationsService>();
+builder.Services.AddScoped<INotificationHelper, NotificationHelper>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();

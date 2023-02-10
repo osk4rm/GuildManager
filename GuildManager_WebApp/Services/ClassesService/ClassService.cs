@@ -21,5 +21,21 @@ namespace GuildManager_WebApp.Services.ClassesService
 
             return result;
         }
+        public async Task<ServiceResponse<List<ClassCountDto>>> GetClassCount()
+        {
+            var response = await _httpClient.GetAsync("api/classes/classcount");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<List<ClassCountDto>>>(responseContent);
+
+            return result;
+        }
+        public async Task<ServiceResponse<List<RoleCountDto>>> GetRoleCount()
+        {
+            var response = await _httpClient.GetAsync("api/classes/rolecount");
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<List<RoleCountDto>>>(responseContent);
+
+            return result;
+        }
     }
 }

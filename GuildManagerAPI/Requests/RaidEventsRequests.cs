@@ -4,6 +4,7 @@ using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Sieve.Models;
 
 namespace GuildManagerAPI.Requests
 {
@@ -60,10 +61,18 @@ namespace GuildManagerAPI.Requests
             app.MapDelete("/api/raid-events/comments/delete/{commentId}", RaidEventsRequests.DeleteComment)
                 .RequireAuthorization();
 
+            app.MapPost("/api/raid-events/get-paged", RaidEventsRequests.GetPagedRaidEvents)
+                .RequireAuthorization();
+
             return app;
         }
 
-        
+        private static async Task<IResult> GetPagedRaidEvents(IRaidEventService service, [FromBody]SieveModel sieveModel)
+        {
+            var response = await service.GetPagedRaidEvents(sieveModel);
+
+            return Results.Ok(response);
+        }
 
         private static async Task<IResult> DeleteComment(IRaidEventService service, [FromRoute] int commentId)
         {

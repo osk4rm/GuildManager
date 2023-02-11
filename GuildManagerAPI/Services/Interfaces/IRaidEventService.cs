@@ -2,6 +2,7 @@
 using GuildManager_Models;
 using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
+using Sieve.Models;
 
 namespace GuildManagerAPI.Services.Interfaces
 {
@@ -21,6 +22,7 @@ namespace GuildManagerAPI.Services.Interfaces
         Task<ServiceResponse<int>> CreateCommentForRaidEvent(int eventId, string message);
         Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message);
         Task<ServiceResponse<bool>> DeleteCommentForRaidEvent(int commentId);
+        Task<PagedServiceResponse<List<RaidEventDto>>> GetPagedRaidEvents(SieveModel sieveModel);
 
     }
 }

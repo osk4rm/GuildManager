@@ -10,6 +10,8 @@ using GuildManagerAPI.Exceptions;
 using GuildManagerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Sieve.Models;
+using Sieve.Services;
 
 namespace GuildManagerAPI.Services
 {
@@ -19,13 +21,16 @@ namespace GuildManagerAPI.Services
         private readonly IMapper _mapper;
         private readonly IUserContextService _userContextService;
         private readonly IAuthorizationService _authService;
+        private readonly ISieveProcessor _sieveProcessor;
 
-        public RaidEventService(GuildManagerDbContext dbContext, IMapper mapper, IUserContextService userContextService, IAuthorizationService authService)
+        public RaidEventService(GuildManagerDbContext dbContext, IMapper mapper, IUserContextService userContextService, 
+            IAuthorizationService authService, ISieveProcessor sieveProcessor)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _userContextService = userContextService;
             _authService = authService;
+            _sieveProcessor = sieveProcessor;
         }
 
         public async Task<ServiceResponse<int>> CreateRaidEvent(UpsertRaidEventDto dto)
@@ -423,6 +428,21 @@ namespace GuildManagerAPI.Services
                 Data = true,
                 Message = "Application removed."
             };
+        }
+
+        public async Task<PagedServiceResponse<List<RaidEventDto>>> GetPagedRaidEvents(SieveModel sieveModel)
+        {
+            var query = _dbContext.RaidEvents
+                .Include(r => r.RaidLocation)
+                .Include(r => r.Participants)
+                .AsQueryable();
+
+            var result = await _sieveProcessor.Apply(sieveModel, query).ToListAsync();
+            var total = await query.CountAsync();
+
+            var dtos = _mapper.Map<List<RaidEventDto>>(result);
+
+            return new PagedServiceResponse<List<RaidEventDto>>(dtos, total, sieveModel.PageSize.GetValueOrDefault(), sieveModel.Page.GetValueOrDefault());
         }
     }
 }

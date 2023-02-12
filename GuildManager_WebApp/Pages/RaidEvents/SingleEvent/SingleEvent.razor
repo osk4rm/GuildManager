@@ -2,6 +2,7 @@
 @inject IRaidEventService _raidEventService
 @inject ICharacterService _characterService
 @inject AuthenticationStateProvider _authStateProvider;
+@inject INotificationHelper _notificationHelper;
 
 @if (IsLoading)
 {
@@ -105,7 +106,7 @@ else
 
         if (!eventResult.Success)
         {
-            //todo error handling
+            await _notificationHelper.ShowErrorNotification(eventResult.Message);
         }
 
         RaidEvent = eventResult.Data;
@@ -114,7 +115,7 @@ else
 
         if (!participantsResult.Success)
         {
-            //todo error handling
+            await _notificationHelper.ShowErrorNotification(participantsResult.Message);
         }
 
         Participants = participantsResult.Data;
@@ -126,7 +127,7 @@ else
 
         if (!userCharactersResult.Success)
         {
-            //todo error handling
+            await _notificationHelper.ShowErrorNotification(userCharactersResult.Message);
         }
 
         UserCharacters = userCharactersResult.Data;
@@ -143,11 +144,10 @@ else
         var joinEventResult = await _raidEventService.JoinRaidEvent(RaidEventId, characterId);
         if (!joinEventResult.Success)
         {
-            OnFailedCall(joinEventResult.Message);
+            await OnFailedCall(joinEventResult.Message);
         }
-        await LoadData();
         joinModalVisible = false;
-        StateHasChanged();
+        await OnSuccessCall(joinEventResult.Message);
     }
 
     private async Task OpenJoinEventModal()
@@ -158,26 +158,13 @@ else
 
     private async Task OnFailedCall(string message)
     {
-        alertCss = "alert-danger";
-        alertMessage = message;
-        StateHasChanged();
-        await Task.Delay(5000);
-        alertMessage = string.Empty;
-        alertCss = string.Empty;
-        StateHasChanged();
+        await _notificationHelper.ShowErrorNotification(message);
     }
 
     private async Task OnSuccessCall(string message)
     {
-        alertMessage = message;
-        alertCss = "alert-success";
-
+        await _notificationHelper.ShowSuccessNotification(message);
         await LoadData();
-
-        StateHasChanged();
-        await Task.Delay(5000);
-        alertMessage = string.Empty;
-        alertCss = string.Empty;
         StateHasChanged();
     }
 }

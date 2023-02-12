@@ -150,7 +150,7 @@ else
 
         if (!getClassCountResult.Success)
         {
-            await _notifications.ShowNotification(getClassCountResult.Message);
+            await _notifications.ShowSuccessNotification(getClassCountResult.Message);
         }
 
         ClassCountData = getClassCountResult.Data;
@@ -159,7 +159,7 @@ else
 
         if (!getRoleCountResult.Success)
         {
-            await _notifications.ShowNotification(getRoleCountResult.Message);
+            await _notifications.ShowSuccessNotification(getRoleCountResult.Message);
         }
 
         RoleCountData = getRoleCountResult.Data;

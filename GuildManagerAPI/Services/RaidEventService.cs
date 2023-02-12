@@ -435,6 +435,7 @@ namespace GuildManagerAPI.Services
             var query = _dbContext.RaidEvents
                 .Include(r => r.RaidLocation)
                 .ThenInclude(l=>l.Expansion)
+                .Include(r=>r.CreatedBy)
                 .AsQueryable();
 
             var result = await _sieveProcessor.Apply(sieveModel, query).ToListAsync();

@@ -11,9 +11,13 @@ namespace GuildManager_WebApp.Helpers
             _jsRuntime = jsRuntime;
         }
 
-        public async Task ShowNotification(string message)
+        public async Task ShowSuccessNotification(string message)
         {
             await _jsRuntime.InvokeVoidAsync("ShowNotification", "success", message);
+        }
+        public async Task ShowErrorNotification(string message)
+        {
+            await _jsRuntime.InvokeVoidAsync("ShowNotification", "error", message);
         }
     }
 }

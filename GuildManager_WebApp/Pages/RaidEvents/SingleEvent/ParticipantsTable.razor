@@ -1,5 +1,5 @@
 ﻿@inject IRaidEventService _raidEventService
-@inject IJSRuntime _jsRuntime
+@inject INotificationHelper _notificationHelper;
 
 <table class="table table-sm table-responsive table-hover table-bordered table-dark mt-3">
     <thead class="table-primary">
@@ -18,7 +18,8 @@
             <td colspan="5" class="bg-danger no-hover">Tanks</td>
         </tr>
         @*NEED TO DO SEPARATE COMPONENT FOR THIS*@
-        @foreach (var participant in Participants.Where(p => (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank)
+        @foreach (var participant in Participants.Where(p => 
+        (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Tank)
         && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
             <tr class="text-white">
@@ -60,7 +61,20 @@
         && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
             <tr class="text-white">
-                <td>@participant.Character.Name</td>
+                @if (UserId == participant.Character.UserId)
+                {
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <div class="me-2">@participant.Character.Name</div>
+                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td>@participant.Character.Name</td>
+                }
+
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
@@ -76,31 +90,38 @@
                     }
                 }
 
-                else if (UserId == participant.Character.UserId)
-                {
-                    <td>
-                        <div class="col">
-                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
-                        </div>
-                    </td>
-                }
             </tr>
         }
 
         <tr>
             <td colspan="6" class="bg-warning no-hover">DPS</td>
         </tr>
-        @foreach (var participant in Participants.Where(p => (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Melee_DPS
-        || p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Ranged_DPS) && p.AcceptanceStatus == AcceptanceStatus.Accepted))
+        @foreach (var participant in Participants.Where(p => 
+        (p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Melee_DPS
+        || p.Character.MainSpec.Role == GuildManager_DataAccess.Entities.Characters.Enum.ClassSpecializationRole.Ranged_DPS) 
+        && p.AcceptanceStatus == AcceptanceStatus.Accepted))
         {
             <tr class="text-white">
-                <td>@participant.Character.Name</td>
+                @if (UserId == participant.Character.UserId)
+                {
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <div class="me-2">@participant.Character.Name</div>
+                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td>@participant.Character.Name</td>
+                }
+
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
                 @if (UserId == RaidEvent.LeaderId)
                 {
-                    @if(UserId != participant.Character.UserId)
+                    @if (UserId != participant.Character.UserId)
                     {
                         <td><i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i></td>
                     }
@@ -110,14 +131,6 @@
                     }
                 }
 
-                else if (UserId == participant.Character.UserId)
-                {
-                    <td>
-                        <div class="col">
-                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
-                        </div>
-                    </td>
-                }
             </tr>
         }
 
@@ -201,8 +214,13 @@
 
             if (!updateResult.Success)
             {
-                //todo error
+                await _notificationHelper.ShowErrorNotification(updateResult.Message);
             }
+            else
+            {
+                await _notificationHelper.ShowSuccessNotification(updateResult.Message);
+            }
+            
 
             await CharacterStatusUpdated.InvokeAsync();
         }
@@ -228,10 +246,10 @@
 
             if (!cancelApplicationResult.Success)
             {
-                await _jsRuntime.InvokeVoidAsync("ShowNotification", "error", cancelApplicationResult.Message);
+                await _notificationHelper.ShowErrorNotification(cancelApplicationResult.Message);
                 return;
             }
-            await _jsRuntime.InvokeVoidAsync("ShowNotification", "success", cancelApplicationResult.Message);
+            await _notificationHelper.ShowSuccessNotification(cancelApplicationResult.Message);
             await CharacterStatusUpdated.InvokeAsync();
         }
         CancelApplicationDialogOpen = false;

@@ -2,6 +2,7 @@
 {
     public interface INotificationHelper
     {
-        Task ShowNotification(string message);
+        Task ShowSuccessNotification(string message);
+        Task ShowErrorNotification(string message);
     }
 }

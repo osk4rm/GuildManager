@@ -2,6 +2,7 @@
 using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
 using Newtonsoft.Json;
+using Sieve.Models;
 using System.Text;
 
 namespace GuildManager_WebApp.Services.RaidEventsService
@@ -87,6 +88,17 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             var response = await _httpClient.GetAsync($"api/raid-events/{eventId}/comments");
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<List<CommentDto>>>(responseContent);
+
+            return result;
+        }
+
+        public async Task<PagedServiceResponse<List<RaidEventDto>>> GetPagedRaidEvents(SieveModel sieveModel)
+        {
+            var content = JsonConvert.SerializeObject(sieveModel);
+            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/raid-events/get-paged", bodyContent);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<PagedServiceResponse<List<RaidEventDto>>>(responseContent);
 
             return result;
         }

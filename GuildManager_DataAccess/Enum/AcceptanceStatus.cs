@@ -10,6 +10,7 @@ namespace GuildManager_DataAccess.Enum
     {
         Accepted,
         Rejected,
-        Waiting
+        Waiting,
+        Invited
     }
 }

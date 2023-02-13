@@ -445,5 +445,56 @@ namespace GuildManagerAPI.Services
 
             return new PagedServiceResponse<List<RaidEventDto>>(dtos, total, sieveModel.PageSize.GetValueOrDefault(), sieveModel.Page.GetValueOrDefault());
         }
+
+        public async Task<ServiceResponse<bool>> InviteForRaidEvent(int eventId, int characterId)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+
+            var raidEvent = await _dbContext.RaidEvents.FirstOrDefaultAsync(r => r.Id == eventId);
+            var character = await _dbContext.Characters.FirstOrDefaultAsync(u => u.Id == characterId);
+            if (character == null || raidEvent == null)
+            {
+                throw new NotFoundException("Character or raid event not found.");
+            }
+
+            //todo: maybe requirementhandler would be a better idea, but this is shorter
+            if(user != raidEvent.CreatedBy)
+            {
+                throw new UnauthorizedAccessException($"You are only allowed to invite people for your own raid events.");
+            }
+
+            var raidEventCharacter = await _dbContext
+                .RaidEventCharacter
+                .FirstOrDefaultAsync(rec => rec.CharacterId == characterId && rec.RaidEventId == eventId);
+
+            if (raidEventCharacter != null)
+            {
+                throw new AlreadyJoinedException(raidEventCharacter.AcceptanceStatus);
+
+            }
+
+            raidEventCharacter = new()
+            {
+                RaidEventId = eventId,
+                CharacterId = characterId,
+                AcceptanceStatus = GuildManager_DataAccess.Enum.AcceptanceStatus.Invited
+            };
+
+            _dbContext.RaidEventCharacter.Add(raidEventCharacter);
+            await _dbContext.SaveChangesAsync();
+
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = $"Character {character.Name} has been invited."
+            };
+        }
     }
 }

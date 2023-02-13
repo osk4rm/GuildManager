@@ -16,6 +16,8 @@ namespace GuildManagerAPI.Exceptions
                     _message = "Your character have already been rejected from this event."; break;
                 case AcceptanceStatus.Waiting:
                     _message = "Your character is already pending for this event."; break;
+                case AcceptanceStatus.Invited:
+                    _message = "This character has already been invited for this event."; break;
                 default:
                     _message = "Your character status is unknown for this event."; break;
             }

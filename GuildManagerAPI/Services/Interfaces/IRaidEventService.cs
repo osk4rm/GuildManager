@@ -15,6 +15,7 @@ namespace GuildManagerAPI.Services.Interfaces
         Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id);
         Task<ServiceResponse<bool>> DeleteRaidEvent(int id);
         Task<ServiceResponse<bool>> JoinRaidEvent(int eventId, int characterId);
+        Task<ServiceResponse<bool>> InviteForRaidEvent(int eventId, int characterId);
         Task<ServiceResponse<bool>> CancelApplicationForRaidEvent(int eventId, int characterId);
         Task<ServiceResponse<List<RaidEventCharacterDto>>> GetParticipants(int eventId);
         Task<ServiceResponse<RaidEventCharacterDto>> UpdateCharacterStatusForEvent(UpdateRaidEventCharacterDto dto);

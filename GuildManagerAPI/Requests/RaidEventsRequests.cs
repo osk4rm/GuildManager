@@ -1,4 +1,5 @@
-﻿using GuildManager_Models.Characters;
+﻿using Azure;
+using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Validation;
@@ -38,6 +39,9 @@ namespace GuildManagerAPI.Requests
             app.MapPost("/api/raid-events/join/{eventId}", RaidEventsRequests.JoinRaidEvent)
                 .RequireAuthorization();
 
+            app.MapPost("/api/raid-events/invite/{eventId}", RaidEventsRequests.InviteForRaidEvent)
+                .RequireAuthorization();
+
             app.MapDelete("/api/raid-events/{eventId}/remove-application", RaidEventsRequests.CancelApplicationForRaidEvent)
                 .RequireAuthorization();
 
@@ -65,6 +69,13 @@ namespace GuildManagerAPI.Requests
                 .RequireAuthorization();
 
             return app;
+        }
+
+        private static async Task<IResult> InviteForRaidEvent(IRaidEventService service, [FromRoute]int eventId, [FromQuery]int characterId)
+        {
+            var response = await service.InviteForRaidEvent(eventId, characterId);
+
+            return Results.Ok(response);
         }
 
         private static async Task<IResult> GetPagedRaidEvents(IRaidEventService service, [FromBody]SieveModel sieveModel)

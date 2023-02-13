@@ -78,8 +78,8 @@ else
 
         </table>
 
-        <div class="mt-2">
-            <p class="alert @alertCss">@responseMsg</p>
+        <div class="pager-container">
+            <SfPager PageSize="PageSize" NumericItemsCount="4" TotalItemsCount="TotalItems" ItemClick="PagerClick"></SfPager>
         </div>
     </div>
     @if (DeleteDialogOpen)
@@ -117,6 +117,8 @@ else
     public List<RaidExpansionDto> raidExpansions { get; set; } = new();
     private int Page { get; set; }
     private int PageSize => 10;
+    private int TotalPages { get; set; }
+    private int TotalItems { get; set; }
     private string Filters { get; set; } = string.Empty;
     private string Sorts { get; set; } = "-StartDate";
 
@@ -131,12 +133,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        Page = 1;
         IsLoading = true;
         AuthStat = _authStateProvider.GetAuthenticationStateAsync();
         User = (await AuthStat).User;
 
         await LoadData();
-
+        var expResult = await _locService.GetAllExpansions();
+        raidExpansions = expResult.Data;
         IsLoading = false;
     }
     private void OnFailedCall(string message)
@@ -182,7 +186,7 @@ else
     {
         SieveModel model = new SieveModel
         {
-            Page = 1,
+            Page = this.Page,
             PageSize = this.PageSize,
             Filters = this.Filters,
             Sorts = this.Sorts
@@ -193,9 +197,10 @@ else
             await _notificationHelper.ShowErrorNotification(getAllResult.Message);
             return;
         }
-        var expResult = await _locService.GetAllExpansions();
+
         _raidEvents = getAllResult.Data;
-        raidExpansions = expResult.Data;
+        TotalPages = getAllResult.TotalPages;
+        TotalItems = getAllResult.TotalItemsCount;
 
     }
 
@@ -264,14 +269,26 @@ else
         if (!string.IsNullOrEmpty(e.Value.ToString()))
         {
             selectedExpansion = int.Parse(e.Value.ToString());
-            
+
 
             _raidEvents = _raidEvents
             .Where(r => r.RaidLocation.ExpansionId == selectedExpansion)
             .ToList();
         }
-        
+
 
         StateHasChanged();
+    }
+
+    private async Task GetPagedData(int pageNumber)
+    {
+        Page = pageNumber;
+        await LoadData();
+        StateHasChanged();
+    }
+
+    public async void PagerClick(PagerItemClickEventArgs args)
+    {
+        await GetPagedData(args.CurrentPage);
     }
 }

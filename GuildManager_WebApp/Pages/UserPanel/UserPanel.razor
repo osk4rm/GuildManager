@@ -9,23 +9,27 @@
         <h1 class="mt-2">User panel</h1>
         <ul class="nav nav-pills nav-justified">
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="/userpanel/changepassword" Match="NavLinkMatch.All" onclick="SetSubPage">
-                    <span class="oi oi-home" aria-hidden="true"></span> Change password
+                <NavLink class="nav-link" href="/userpanel/changepassword">
+                    <i class="fa-solid fa-key"></i>
+                    Change password
                 </NavLink>
             </li>
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="/userpanel/characters">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Characters
+                    <i class="fa-solid fa-users"></i>
+                    Characters
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="/userpanel/something">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Something
+                <NavLink class="nav-link" href="/userpanel/raid-invites">
+                    <i class="fa-solid fa-bell"></i>
+                    Raid invites
                 </NavLink>
             </li>
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="/userpanel/somethingelse">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Something else
+                <NavLink class="nav-link" href="/userpanel/raid-events">
+                    <i class="fa-regular fa-clipboard"></i>
+                    Raid events
                 </NavLink>
             </li>
         </ul>
@@ -40,25 +44,27 @@
                 <UserCharacters />
                 break;
 
+            case "raid-invites":
+                <UserRaidInvites/>
+                break;
+
+            case "raid-events":
+                <UserRaidEvents />
+                break;
+
             default:
                 <UserPanelDashboard></UserPanelDashboard>
                 break;
         }
 
-        
+
 
     </Authorized>
 </AuthorizeView>
 
 @code {
-    private string active = string.Empty;
 
     [Parameter]
     public string SubPage { get; set; } = string.Empty;
-
-    private void SetSubPage(string subpage)
-    {
-        SubPage = subpage;
-    }
 
 }

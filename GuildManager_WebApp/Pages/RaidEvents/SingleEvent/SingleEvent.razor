@@ -146,8 +146,12 @@ else
         {
             await OnFailedCall(joinEventResult.Message);
         }
+        else
+        {
+            await OnSuccessCall(joinEventResult.Message);
+        }
         joinModalVisible = false;
-        await OnSuccessCall(joinEventResult.Message);
+        
     }
 
     private async Task OpenJoinEventModal()

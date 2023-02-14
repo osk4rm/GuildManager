@@ -61,15 +61,17 @@ else
                         <td>@raid.LeaderName</td>
                         <td>@raid.Status</td>
                         <td>
+                            <div class="d-flex justify-content-evenly">
                             <NavLink href="@($"raid-events/{raid.Id}")" class="btn-primary btn">Details</NavLink>
                             @if (IsOwnRaid(raid))
                             {
-                                <button class="btn btn-info" @onclick="()=>OpenUpdateDialog(raid)"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button class="btn btn-danger" @onclick="()=>OpenDeleteDialog(raid.Id)">
-                                    <i class=" fa-solid fa-xmark"></i>
+                                    <button class="btn btn-info" @onclick="()=>OpenUpdateDialog(raid)"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button class="btn btn-danger" @onclick="()=>OpenDeleteDialog(raid.Id)">
+                                        <i class=" fa-solid fa-xmark"></i>
 
-                                </button>
+                                    </button>
                             }
+                            </div>
                         </td>
                     </tr>
                 }

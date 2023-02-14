@@ -16,22 +16,25 @@ else
                     <div class="notification-list">
                         <div class="notification-list_content">
                             <div class="notification-list_img">
-                                <img src="https://i.imgur.com/zYxDCQT.jpg" alt="user">
+                                <img src="data:@ImageConverter.GetMimeType(invite.HostAvatar);base64,
+                                    @Convert.ToBase64String(invite.HostAvatar)"
+                             alt="user">
                             </div>
                             <div class="notification-list-detail-and-buttons">
                                 <div class="notification-list_detail text-black">
                                     <p><b>@invite.HostName</b> invited your character @invite.InvitedCharacterName for his @invite.RaidLocation (@invite.RaidDifficulty) event on @invite.RaidStartDate.</p>
                                 </div>
                                 <div class="confirmation-buttons">
-                                    <button class="btn btn-danger">Reject</button>
-                                    <button class="btn btn-success">Accept</button>
+                                    <button class="btn btn-success">Accept <i class="fa-solid fa-check"></i></button>
+                                    <button class="btn btn-danger">Reject <i class="fa-solid fa-xmark"></i></button>
+                                    <button class="btn btn-primary ms-3">Details</button>
                                 </div>
                             </div>
                            
                         </div>
 
                         <div class="notification-list_feature-img">
-                            <img src="https://i.imgur.com/AbZqFnR.jpg" alt="Feature image">
+                            <img src="/img/@invite.RaidLocationImg" alt="Feature image">
                         </div>
 
                     </div>

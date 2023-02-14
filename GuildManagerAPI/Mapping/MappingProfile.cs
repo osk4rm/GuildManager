@@ -46,6 +46,7 @@ namespace GuildManagerAPI.Mapping
             CreateMap<RaidEventCharacter, RaidInviteDto>()
                 .ForMember(d => d.RaidEventId, a => a.MapFrom(rec => rec.RaidEvent.Id))
                 .ForMember(d => d.RaidLocation, a => a.MapFrom(rec => rec.RaidEvent.RaidLocation.Name))
+                .ForMember(d => d.RaidLocationImg, a => a.MapFrom(rec => rec.RaidEvent.RaidLocation.ImageUrl))
                 .ForMember(d => d.RaidDifficulty, a => a.MapFrom(rec => rec.RaidEvent.RaidDifficulty))
                 .ForMember(d => d.RaidStartDate, a => a.MapFrom(rec => rec.RaidEvent.StartDate))
                 .ForMember(d => d.InvitedCharacterName, a => a.MapFrom(rec => rec.Character.Name))

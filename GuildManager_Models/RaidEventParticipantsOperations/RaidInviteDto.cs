@@ -13,6 +13,7 @@ namespace GuildManager_Models.RaidEventParticipantsOperations
     {
         public int RaidEventId { get; set; }
         public string RaidLocation { get; set; }
+        public string RaidLocationImg { get; set; }
         public RaidDifficulty RaidDifficulty { get; set; }
         public DateTime RaidStartDate { get; set; }
         public string HostName { get; set; }

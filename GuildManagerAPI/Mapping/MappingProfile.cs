@@ -5,6 +5,7 @@ using GuildManager_Models.Auth;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManager_Models.Characters;
 using GuildManager_Models.Members;
+using GuildManager_Models.RaidEventParticipantsOperations;
 using GuildManager_Models.RaidEvents;
 using GuildManager_Models.RaidExpansionsAndLocations;
 
@@ -21,7 +22,7 @@ namespace GuildManagerAPI.Mapping
             CreateMap<Character, CreateCharacterDto>().ReverseMap();
             CreateMap<Character, UpdateCharacterDto>().ReverseMap();
             CreateMap<User, MemberDto>()
-                .ForMember(m=>m.Rank, a=>a.MapFrom(u=>u.Role.Name));
+                .ForMember(m => m.Rank, a => a.MapFrom(u => u.Role.Name));
 
             CreateMap<User, UserInfoDto>()
                 .ForMember(ui => ui.Role, a => a.MapFrom(u => u.Role.Name));
@@ -41,6 +42,14 @@ namespace GuildManagerAPI.Mapping
             CreateMap<UpdateRaidEventCharacterDto, RaidEventCharacter>();
 
             CreateMap<Comment, CommentDto>();
+
+            CreateMap<RaidEventCharacter, RaidInviteDto>()
+                .ForMember(d => d.RaidEventId, a => a.MapFrom(rec => rec.RaidEvent.Id))
+                .ForMember(d => d.RaidLocation, a => a.MapFrom(rec => rec.RaidEvent.RaidLocation.Name))
+                .ForMember(d => d.RaidDifficulty, a => a.MapFrom(rec => rec.RaidEvent.RaidDifficulty))
+                .ForMember(d => d.RaidStartDate, a => a.MapFrom(rec => rec.RaidEvent.StartDate))
+                .ForMember(d => d.HostName, a => a.MapFrom(rec => rec.RaidEvent.CreatedBy.Nickname))
+                .ForMember(d => d.HostAvatar, a => a.MapFrom(rec => rec.RaidEvent.CreatedBy.Avatar));
         }
     }
 }

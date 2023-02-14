@@ -13,7 +13,10 @@ else
     <div class="container">
 
         <div class="d-flex flex-row justify-content-end">
-
+            @if(RaidEvent.LeaderId == UserId)
+            {
+                <button class="btn btn-warning mt-2 me-2" @onclick="OpenInviteModal">Invite members!</button>
+            }
             <button class="btn btn-outline-success mt-2 me-2" @onclick="OpenJoinEventModal">Join this event!</button>
             <NavLink class="btn btn-primary mt-2" href="raid-events">Back to list</NavLink>
         </div>
@@ -71,6 +74,10 @@ else
     {
         <JoinEventModal UserCharacters="UserCharacters" OnAdd="OnJoinEventModalConfirmed" OnCancel="OnJoinEventModalClosed"></JoinEventModal>
     }
+    @if (inviteModalVisible)
+    {
+        <InviteMemberModal OnAdd="OnInviteModalConfirmed" OnCancel="OnInviteModalClosed"></InviteMemberModal>
+    }
 
 
 }
@@ -87,6 +94,7 @@ else
     public List<CharacterDto> UserCharacters { get; set; } = new();
     protected int UserId => int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
     private bool joinModalVisible = false;
+    private bool inviteModalVisible = false;
     private string alertCss = string.Empty;
     private string alertMessage = string.Empty;
 
@@ -139,6 +147,12 @@ else
         StateHasChanged();
     }
 
+    private void OnInviteModalClosed()
+    {
+        inviteModalVisible = false;
+        StateHasChanged();
+    }
+
     private async Task OnJoinEventModalConfirmed(int characterId)
     {
         var joinEventResult = await _raidEventService.JoinRaidEvent(RaidEventId, characterId);
@@ -151,12 +165,24 @@ else
             await OnSuccessCall(joinEventResult.Message);
         }
         joinModalVisible = false;
-        
+
+    }
+    private async Task OnInviteModalConfirmed(int characterId)
+    {
+
+
+        inviteModalVisible = false;
+        StateHasChanged();
     }
 
     private async Task OpenJoinEventModal()
     {
         joinModalVisible = true;
+        StateHasChanged();
+    }
+    private void OpenInviteModal()
+    {
+        inviteModalVisible = true;
         StateHasChanged();
     }
 

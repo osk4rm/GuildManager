@@ -1,0 +1,79 @@
+﻿@inject INotificationHelper _notificationHelper
+@inject IMembersService _membersService
+
+<div class="modal fade show text-black" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Invite member</h4>
+                <button type="button" class="close" @onclick="@ModalClose">&times;</button>
+            </div>
+            <div class="card-body bg-dark text-white">
+
+                <div class="form-group mb-3">
+                    <label for="member">Guild member</label>
+                    <SfDropDownList TValue="MemberDto" TItem="MemberDto" Placeholder="Select a member"
+                                    AllowFiltering="true" DataSource="@Members" @bind-Value="SelectedMember">
+                        <DropDownListFieldSettings Text="Nickname" Value="Id"></DropDownListFieldSettings>
+                    </SfDropDownList>
+                    @if(SelectedMember != null)
+                    {
+                        <EditForm Model="characterId" OnValidSubmit="@ModalConfirmed">
+                            
+                            <label for="character" class="mt-4">Character</label>
+                            <SfDropDownList TValue="int" TItem="CharacterDto" Placeholder="Select a character"
+                                        AllowFiltering="true" DataSource="@SelectedMember.Characters" @bind-Value="characterId">
+                                <DropDownListFieldSettings Text="Name" Value="Id"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn text-white" @onclick="@OnCancel">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Invite</button>
+                            </div>
+                        </EditForm>
+                    }
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public EventCallback<int> OnAdd { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    public int characterId { get; set; }
+    public List<MemberDto> Members { get; set; } = new();
+    public MemberDto? SelectedMember { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getMembersResult = await _membersService.GetMembers();
+        if (!getMembersResult.Success)
+        {
+            await _notificationHelper.ShowErrorNotification(getMembersResult.Message);
+            await ModalClose();
+            return;
+        }
+
+        Members = getMembersResult.Data;
+    }
+    private Task ModalClose()
+    {
+        return OnCancel.InvokeAsync();
+    }
+
+    private async Task ModalConfirmed()
+    {
+        if(characterId <= 0)
+        {
+            await _notificationHelper.ShowErrorNotification("Come on, pick a character.");
+            return;
+        }
+        await OnAdd.InvokeAsync(characterId);
+    }
+
+}
+

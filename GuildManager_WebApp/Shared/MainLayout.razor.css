@@ -10,7 +10,7 @@ html {
 .panel {
     width: 1600px;
     height: 900px;
-    border: 1px solid #4b5769;
+    border: 3px solid black;
     border-radius: 15px;
     overflow: hidden;
 }

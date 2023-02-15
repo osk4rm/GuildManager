@@ -25,14 +25,11 @@
         left: 0;
     }
 
-.notification-ui_dd-content {
-    margin-bottom: 10px;
-}
 
 .notification-list {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    padding: 15px;
     background: antiquewhite;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
 }

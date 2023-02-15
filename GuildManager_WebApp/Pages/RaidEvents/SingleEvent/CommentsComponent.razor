@@ -1,5 +1,6 @@
 ﻿@using GuildManager_Models.Members;
 @inject IRaidEventService _eventService
+@inject INotificationHelper _notificationHelper
 
 <section class="bg-dark">
     <div class="container mt-3 text-dark comments-container">
@@ -105,7 +106,6 @@
     private string message = string.Empty;
     private List<CommentDto> Comments = new List<CommentDto>();
     private bool commentsLoaded = false;
-    private string resultMessage = string.Empty;
     private int? editCommentId = null;
 
     protected override async Task OnInitializedAsync()
@@ -119,7 +119,7 @@
         if (!getCommentsResult.Success)
         {
             commentsLoaded = false;
-            resultMessage = getCommentsResult.Message;
+            await _notificationHelper.ShowErrorNotification(getCommentsResult.Message);
             StateHasChanged();
             return;
         }
@@ -134,7 +134,11 @@
         if (!postCommentResult.Success)
         {
             commentsLoaded = false;
-            resultMessage = postCommentResult.Message;
+            await _notificationHelper.ShowErrorNotification(postCommentResult.Message);
+        }
+        else
+        {
+            await _notificationHelper.ShowSuccessNotification(postCommentResult.Message);
         }
         commentInputActive = false;
         message = string.Empty;
@@ -148,7 +152,11 @@
         if (!editCommentResult.Success)
         {
             commentsLoaded = false;
-            resultMessage = editCommentResult.Message;
+            await _notificationHelper.ShowErrorNotification(editCommentResult.Message);
+        }
+        else
+        {
+            await _notificationHelper.ShowSuccessNotification(editCommentResult.Message);
         }
         editCommentId = null;
         message = string.Empty;
@@ -160,7 +168,11 @@
         var deleteCommentResult = await _eventService.DeleteCommentForRaidEvent(id);
         if (!deleteCommentResult.Success)
         {
-            resultMessage = deleteCommentResult.Message;
+            await _notificationHelper.ShowErrorNotification(deleteCommentResult.Message);
+        }
+        else
+        {
+            await _notificationHelper.ShowSuccessNotification(deleteCommentResult.Message);
         }
         message = string.Empty;
         await LoadData();

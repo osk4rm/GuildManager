@@ -1,4 +1,5 @@
 ﻿@inject IExpansionsLocationsService _locService;
+@inject INotificationHelper _notificationHelper;
 <div class="modal fade show text-black" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -87,7 +88,7 @@
         if (Operation == ModalOperation.Create)
             return OnAdd.InvokeAsync(UpsertRaidEventDto);
 
-            return OnUpdate.InvokeAsync(UpsertRaidEventDto);
+        return OnUpdate.InvokeAsync(UpsertRaidEventDto);
     }
 
     protected override async Task OnInitializedAsync()
@@ -95,7 +96,7 @@
         var getRaidLocs = await _locService.GetAllLocations();
         if (!getRaidLocs.Success)
         {
-            //todo error handling
+            await _notificationHelper.ShowErrorNotification(getRaidLocs.Message);
         }
 
         RaidLocations = getRaidLocs.Data;

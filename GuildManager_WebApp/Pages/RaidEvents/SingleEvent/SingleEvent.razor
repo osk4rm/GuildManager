@@ -1,6 +1,7 @@
 ﻿@page "/raid-events/{RaidEventId:int}"
 @inject IRaidEventService _raidEventService
 @inject ICharacterService _characterService
+@inject IRaidEventParticipationService _participationService
 @inject AuthenticationStateProvider _authStateProvider;
 @inject INotificationHelper _notificationHelper;
 
@@ -169,8 +170,13 @@ else
     }
     private async Task OnInviteModalConfirmed(int characterId)
     {
-
-
+        var inviteResult = await _participationService.InviteForRaidEvent(RaidEventId, characterId);
+        if (!inviteResult.Success)
+        {
+            await _notificationHelper.ShowErrorNotification(inviteResult.Message);
+            return;
+        }
+        await _notificationHelper.ShowSuccessNotification(inviteResult.Message);
         inviteModalVisible = false;
         StateHasChanged();
     }

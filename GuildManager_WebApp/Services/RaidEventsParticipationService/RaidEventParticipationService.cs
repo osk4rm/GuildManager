@@ -26,5 +26,14 @@ namespace GuildManager_WebApp.Services.RaidEventsParticipationService
 
             return result;
         }
+
+        public async Task<ServiceResponse<bool>> InviteForRaidEvent(int eventId, int characterId)
+        {
+            var response = await _httpClient.PostAsync($"api/raid-events/invite/{eventId}?characterId={characterId}", null);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<ServiceResponse<bool>>(responseContent);
+
+            return result;
+        }
     }
 }

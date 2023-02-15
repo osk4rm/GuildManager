@@ -137,11 +137,28 @@
         <tr>
             <td colspan="6" class="bg-secondary no-hover">Pending</td>
         </tr>
-        @foreach (var participant in Participants.Where(p => p.AcceptanceStatus == AcceptanceStatus.Waiting))
+        @foreach (var participant in Participants.Where(p => p.AcceptanceStatus == AcceptanceStatus.Waiting
+        || p.AcceptanceStatus == AcceptanceStatus.Invited))
         {
             <tr class="text-white">
-                
-                <td>@participant.Character.Name</td>
+
+                @if (UserId == participant.Character.UserId)
+                {
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <div class="me-2">@participant.Character.Name</div>
+                            @if(participant.AcceptanceStatus == AcceptanceStatus.Invited)
+                            {
+                                <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
+                            }
+                            <i class="fa-solid fa-xmark" @onclick="()=>OpenCancelApplicationDialogOpen(participant.CharacterId)"></i>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td>@participant.Character.Name</td>
+                }
                 <td class="imagecell"><img class="img-fluid" src="/img/classes/@participant.Character.Class.ImageUrl" alt="img" /></td>
                 <td class="imagecell"><img class="img-fluid" src="/img/specs/@participant.Character.MainSpec.ImageUrl" alt="img" /></td>
                 <td>@participant.Character.ItemLevel</td>
@@ -149,7 +166,10 @@
                 {
                     <td>
                         <div class="col">
-                            <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
+                            @if(participant.AcceptanceStatus == AcceptanceStatus.Waiting)
+                            {
+                                <i class="fa-solid fa-check" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Accepted)"></i>
+                            }
                             @if (UserId != participant.Character.UserId)
                             {
                                 <i class="fa-solid fa-xmark" @onclick="()=>OpenAcceptDialog(participant.CharacterId, AcceptanceStatus.Rejected)"></i>

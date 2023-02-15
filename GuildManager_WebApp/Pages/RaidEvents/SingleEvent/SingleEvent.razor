@@ -178,6 +178,7 @@ else
         }
         await _notificationHelper.ShowSuccessNotification(inviteResult.Message);
         inviteModalVisible = false;
+        await LoadData();
         StateHasChanged();
     }
 

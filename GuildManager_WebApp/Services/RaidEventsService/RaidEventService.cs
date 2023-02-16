@@ -16,15 +16,6 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             _httpClient = httpClient;
         }
 
-        public async Task<ServiceResponse<bool?>> CancelApplicationForRaidEvent(int eventId, int characterId)
-        {
-            var response = await _httpClient.DeleteAsync($"/api/raid-events/{eventId}/remove-application?characterId={characterId}");
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ServiceResponse<bool?>>(responseContent);
-
-            return result;
-        }
-
         public async Task<ServiceResponse<int?>> CreateCommentForRaidEvent(int eventId, string message)
         {
             var content = JsonConvert.SerializeObject(message);
@@ -126,17 +117,6 @@ namespace GuildManager_WebApp.Services.RaidEventsService
             var response = await _httpClient.PostAsync($"api/raid-events/join/{eventId}?characterId={characterId}", null);
             var responseContent = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ServiceResponse<bool?>>(responseContent);
-
-            return result;
-        }
-
-        public async Task<ServiceResponse<RaidEventCharacterDto>> UpdateCharacterAcceptanceStatus(UpdateRaidEventCharacterDto dto)
-        {
-            var content = JsonConvert.SerializeObject(dto);
-            var bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PutAsync($"api/raid-events/participants/update-status", bodyContent);
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<ServiceResponse<RaidEventCharacterDto>>(responseContent);
 
             return result;
         }

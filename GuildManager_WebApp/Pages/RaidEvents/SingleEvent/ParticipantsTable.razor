@@ -1,4 +1,4 @@
-﻿@inject IRaidEventService _raidEventService
+﻿@inject IRaidEventParticipationService _participationService
 @inject INotificationHelper _notificationHelper;
 
 <table class="table table-sm table-responsive table-hover table-bordered table-dark mt-3">
@@ -225,7 +225,7 @@
     {
         if (accepted)
         {
-            var updateResult = await _raidEventService.UpdateCharacterAcceptanceStatus(new UpdateRaidEventCharacterDto
+            var updateResult = await _participationService.UpdateCharacterAcceptanceStatus(new UpdateRaidEventCharacterDto
                 {
                     CharacterId = charIdToUpdateStatus,
                     RaidEventId = RaidEvent.Id,
@@ -262,7 +262,7 @@
         if (accepted)
         {
             var cancelApplicationResult =
-                await _raidEventService.CancelApplicationForRaidEvent(RaidEvent.Id, charIdToUpdateStatus);
+                await _participationService.CancelApplicationForRaidEvent(RaidEvent.Id, charIdToUpdateStatus);
 
             if (!cancelApplicationResult.Success)
             {

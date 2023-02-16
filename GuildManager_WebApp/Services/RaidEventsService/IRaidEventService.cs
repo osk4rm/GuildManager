@@ -14,9 +14,7 @@ namespace GuildManager_WebApp.Services.RaidEventsService
         Task<ServiceResponse<RaidEventDto>> UpdateRaidEvent(UpsertRaidEventDto dto, int id);
         Task<ServiceResponse<bool?>> DeleteRaidEvent(int id);
         Task<ServiceResponse<bool?>> JoinRaidEvent(int eventId, int characterId);
-        Task<ServiceResponse<bool?>> CancelApplicationForRaidEvent(int eventId, int characterId);
         Task<ServiceResponse<List<RaidEventCharacterDto>>> GetParticipants(int eventId);
-        Task<ServiceResponse<RaidEventCharacterDto>> UpdateCharacterAcceptanceStatus(UpdateRaidEventCharacterDto dto);
         Task<ServiceResponse<List<CommentDto>>> GetCommentsForRaidEvent(int eventId);
         Task<ServiceResponse<int?>> CreateCommentForRaidEvent(int eventId, string message);
         Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message);

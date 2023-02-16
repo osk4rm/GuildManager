@@ -19,5 +19,6 @@ namespace GuildManager_Models.RaidEventParticipantsOperations
         public string HostName { get; set; }
         public byte[] HostAvatar { get; set; }
         public string InvitedCharacterName { get; set; }
+        public int InvitedCharacterId { get; set; }
     }
 }

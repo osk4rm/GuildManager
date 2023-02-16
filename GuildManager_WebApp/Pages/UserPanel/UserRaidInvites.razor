@@ -25,12 +25,16 @@ else
                                     <p><b>@invite.HostName</b> invited your character @invite.InvitedCharacterName for his @invite.RaidLocation (@invite.RaidDifficulty) event on @invite.RaidStartDate.</p>
                                 </div>
                                 <div class="confirmation-buttons">
-                                    <button class="btn btn-success">Accept <i class="fa-solid fa-check"></i></button>
-                                    <button class="btn btn-danger">Reject <i class="fa-solid fa-xmark"></i></button>
-                                    <button class="btn btn-primary ms-3">Details</button>
+                                    <button class="btn btn-success" @onclick="(()=>OpenAcceptDialog(invite.RaidEventId, invite.InvitedCharacterId))">
+                                        Accept <i class="fa-solid fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-danger" @onclick="(()=>OpenRejectDialog(invite.RaidEventId, invite.InvitedCharacterId))">
+                                        Reject <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <NavLink class="btn btn-primary ms-3" href="@("/raid-events/" + invite.RaidEventId)">Details</NavLink>
                                 </div>
                             </div>
-                           
+
                         </div>
 
                         <div class="notification-list_feature-img">
@@ -48,11 +52,27 @@ else
 
         </div>
     </section>
+
+    @if (IsAcceptModalOpen)
+    {
+        <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.OkCancel" Title="Accept raid invite"
+                    Text="Do you really want to accept this raid invite?" OnClose="AcceptInviteDialogClosed" />
+    }
+
+    @if (IsRejectModalOpen)
+    {
+        <ConfirmationDialog DialogType="ConfirmationDialog.ModalDialogType.OkCancel" Title="Reject raid invite"
+                    Text="Do you really want to reject this raid invite?" OnClose="RejectInviteDialogClosed" />
+    }
 }
 
 
 @code {
+    private int RaidEventIdToConfirm { get; set; }
+    private int CharacterIdToConfirm { get; set; }
     bool IsLoading { get; set; } = true;
+    private bool IsAcceptModalOpen { get; set; } = false;
+    private bool IsRejectModalOpen { get; set; } = false;
     List<RaidInviteDto> Invites { get; set; } = new();
     SieveModel SieveModel { get; set; } = new()
         {
@@ -64,13 +84,75 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
+        await LoadData();
+        IsLoading = false;
+    }
+    private async Task LoadData()
+    {
         var getInvitesResult = await _participationService.GetUserRaidInvites(SieveModel);
         if (!getInvitesResult.Success)
         {
             await _notificationHelper.ShowErrorNotification(getInvitesResult.Message);
         }
         Invites = getInvitesResult.Data;
-        IsLoading = false;
+    }
+    public void OpenAcceptDialog(int eventId, int characterId)
+    {
+        RaidEventIdToConfirm = eventId;
+        CharacterIdToConfirm = characterId;
+        IsAcceptModalOpen = true;
+        StateHasChanged();
+    }
+    public async Task AcceptInviteDialogClosed(bool accepted)
+    {
+        if (accepted)
+        {
+            UpdateRaidEventCharacterDto dto = new()
+                {
+                    CharacterId = CharacterIdToConfirm,
+                    RaidEventId = RaidEventIdToConfirm,
+                    AcceptanceStatus = AcceptanceStatus.Accepted
+                };
+            var acceptInviteResult = await _participationService.UpdateCharacterAcceptanceStatus(dto);
+
+            if (!acceptInviteResult.Success)
+            {
+                await _notificationHelper.ShowErrorNotification(acceptInviteResult.Message);
+            }
+            else
+            {
+                await _notificationHelper.ShowSuccessNotification(acceptInviteResult.Message);
+                await LoadData();
+            }
+        }
+        IsAcceptModalOpen = false;
+        StateHasChanged();
+    }
+    public void OpenRejectDialog(int eventId, int characterId)
+    {
+        RaidEventIdToConfirm = eventId;
+        CharacterIdToConfirm = characterId;
+        IsRejectModalOpen = true;
+        StateHasChanged();
+    }
+    public async Task RejectInviteDialogClosed(bool accepted)
+    {
+        if (accepted)
+        {
+            var cancelApplicationResult =
+                await _participationService.CancelApplicationForRaidEvent(RaidEventIdToConfirm, CharacterIdToConfirm);
+
+            if (!cancelApplicationResult.Success)
+            {
+                await _notificationHelper.ShowErrorNotification(cancelApplicationResult.Message);
+            }
+            else
+            {
+                await _notificationHelper.ShowSuccessNotification(cancelApplicationResult.Message);
+                await LoadData();
+            }
+        }
+        IsRejectModalOpen = false;
+        StateHasChanged();
     }
 }

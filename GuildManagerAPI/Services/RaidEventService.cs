@@ -439,8 +439,8 @@ namespace GuildManagerAPI.Services
                 .AsQueryable();
 
             var result = await _sieveProcessor.Apply(sieveModel, query).ToListAsync();
-            var total = await query.CountAsync();
-
+            var total = await _sieveProcessor.Apply(sieveModel, query, applyPagination: false, applySorting: false)
+                .CountAsync();
             var dtos = _mapper.Map<List<RaidEventDto>>(result);
 
             return new PagedServiceResponse<List<RaidEventDto>>(dtos, total, sieveModel.PageSize.GetValueOrDefault(), sieveModel.Page.GetValueOrDefault());

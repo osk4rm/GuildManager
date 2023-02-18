@@ -1,4 +1,5 @@
 ﻿@page "/raid-events"
+@page "/raid-events/{Filters?}"
 @using Microsoft.AspNetCore.Components.Web.Infrastructure
 @inject AuthenticationStateProvider _authStateProvider;
 @inject IRaidEventService _raidEventService;
@@ -121,7 +122,8 @@ else
     private int PageSize => 10;
     private int TotalPages { get; set; }
     private int TotalItems { get; set; }
-    private string Filters { get; set; } = string.Empty;
+    [Parameter]
+    public string? Filters { get; set; } = string.Empty;
     private string Sorts { get; set; } = "-StartDate";
 
     private bool IsOwnRaid(RaidEventDto dto)

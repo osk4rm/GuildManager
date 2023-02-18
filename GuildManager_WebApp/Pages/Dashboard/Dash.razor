@@ -2,6 +2,7 @@
 @inject IStatsService _statsService
 @inject INotificationHelper _notifications
 @inject IRaidEventService _raidEventService
+@inject NavigationManager _navManager
 
 @if (!IsLoaded)
 {
@@ -14,19 +15,19 @@ else
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel Column="0" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
-                        <div class="root-container">
-                            <div class="item-container income">
-                                <p>@GuildMembers</p>
+                        <div class="root-container" @onclick="(()=>_navManager.NavigateTo(MembersUrl))">
+                                <div class="item-container income">
+                                    <p>@GuildMembers</p>
+                                </div>
+                                <div class="bottom-container">
+                                    <p>Guild members <i class="fa-solid fa-user"></i></p>
+                                </div>
                             </div>
-                            <div class="bottom-container">
-                                <p>Guild members <i class="fa-solid fa-user"></i></p>
-                            </div>
-                        </div>
                     </ContentTemplate>
                 </DashboardLayoutPanel>
                 <DashboardLayoutPanel Column="2" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
-                        <div class="root-container">
+                        <div class="root-container" @onclick="(()=>_navManager.NavigateTo(RaidEventsUrl))">
                             <div class="item-container expense">
                                 <p>@RaidsThisWeek</p>
                             </div>
@@ -38,7 +39,7 @@ else
                 </DashboardLayoutPanel>
                 <DashboardLayoutPanel Column="4" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
-                        <div class="root-container">
+                        <div class="root-container" @onclick="(()=>_navManager.NavigateTo(PendingInvitesUrl))">
                             <div class="item-container balance">
                                 <p>@PendingInvites</p>
                             </div>
@@ -50,7 +51,7 @@ else
                 </DashboardLayoutPanel>
                 <DashboardLayoutPanel Column="6" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
-                        <div class="root-container">
+                        <div class="root-container" @onclick="(()=>NavigateToRaidEvent(UpcomingEvent.Id))">
                             <div class="item-container upcoming">
                                 <p>@UpcomingEvent.RaidLocation.Name <br /> @UpcomingEvent.StartDate.ToString("dd-MM-yyyy HH:mm")</p>
                             </div>
@@ -66,8 +67,8 @@ else
                     </HeaderTemplate>
                     <ContentTemplate>
                         <div class="chart-container">
-                            <SfAccumulationChart EnableAnimation="true" EnableBorderOnMouseMove="false" 
-                                EnableSmartLabels="true" Background="transparent">
+                            <SfAccumulationChart EnableAnimation="true" EnableBorderOnMouseMove="false"
+                                             EnableSmartLabels="true" Background="transparent">
                                 <AccumulationChartBorder Color="transparent"></AccumulationChartBorder>
                                 <AccumulationChartTooltipSettings Enable="true" Format="${point.x}">
                                     <AccumulationChartTooltipTextStyle Color="white" Size="10"></AccumulationChartTooltipTextStyle>
@@ -121,14 +122,14 @@ else
                         <span class="title">Upcoming Raids</span>
                     </HeaderTemplate>
                     <ContentTemplate>
-                        <DashEvents/>
+                        <DashEvents />
                     </ContentTemplate>
                 </DashboardLayoutPanel>
             </DashboardLayoutPanels>
         </SfDashboardLayout>
     </div>
 
-   
+
 }
 
 
@@ -141,11 +142,16 @@ else
     public int? RaidsThisWeek { get; set; }
     public int? PendingInvites { get; set; }
     public RaidEventDto UpcomingEvent { get; set; } = new();
+    private string thisWeeksFilter = string.Empty;
+    private string PendingInvitesUrl => "/user-panel/raid-invites";
+    private string RaidEventsUrl => $"/raid-events/{thisWeeksFilter}";
+    private string MembersUrl => "/members";
 
 
     protected override async Task OnInitializedAsync()
     {
         IsLoaded = false;
+        thisWeeksFilter = CalculateThisWeekFilter();
         await LoadData();
         StateHasChanged();
     }
@@ -174,6 +180,21 @@ else
         }
 
         return result.Data;
+    }
+
+    private void NavigateToRaidEvent(int id)
+    {
+        _navManager.NavigateTo($"/raid-events/{id}");
+    }
+
+    private string CalculateThisWeekFilter()
+    {
+        var now = DateTime.Now;
+        var daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)now.DayOfWeek + 7) % 7;
+        var startOfWeek = now.AddDays(daysUntilWednesday - 7).Date;
+        var endOfWeek = startOfWeek.AddDays(7).Date;
+
+        return $"StartDate>{startOfWeek.ToString("yyyy-MM-dd")},StartDate<{endOfWeek.ToString("yyyy-MM-dd")}";
     }
 
 }

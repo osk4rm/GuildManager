@@ -1,4 +1,5 @@
 ﻿@inject IClassService _classService
+@inject IStatsService _statsService
 @inject INotificationHelper _notifications
 @inject IRaidEventService _raidEventService
 
@@ -9,13 +10,13 @@
 else
 {
     <div class="control-section overflow-hidden">
-        <SfDashboardLayout Columns="8">
+        <SfDashboardLayout Columns="8" AllowDragging="false">
             <DashboardLayoutPanels>
                 <DashboardLayoutPanel Column="0" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
                         <div class="root-container">
                             <div class="item-container income">
-                                <p>42</p>
+                                <p>@GuildMembers</p>
                             </div>
                             <div class="bottom-container">
                                 <p>Guild members <i class="fa-solid fa-user"></i></p>
@@ -27,7 +28,7 @@ else
                     <ContentTemplate>
                         <div class="root-container">
                             <div class="item-container expense">
-                                <p>7</p>
+                                <p>@RaidsThisWeek</p>
                             </div>
                             <div class="bottom-container">
                                 <p>Raids this week <i class="fa-solid fa-headphones"></i></p>
@@ -39,7 +40,7 @@ else
                     <ContentTemplate>
                         <div class="root-container">
                             <div class="item-container balance">
-                                <p>2</p>
+                                <p>@PendingInvites</p>
                             </div>
                             <div class="bottom-container">
                                 <p>Pending invites <i class="fa-solid fa-bell"></i></p>
@@ -50,8 +51,8 @@ else
                 <DashboardLayoutPanel Column="6" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
                         <div class="root-container">
-                            <div class="item-container transaction">
-                                <p>3</p>
+                            <div class="item-container upcoming">
+                                <p>@UpcomingEvent.RaidLocation.Name <br /> @UpcomingEvent.StartDate.ToString("dd-MM-yyyy HH:mm")</p>
                             </div>
                             <div class="bottom-container">
                                 <p>Your next event <i class="fa-regular fa-calendar"></i></p>
@@ -136,10 +137,10 @@ else
     private bool IsLoaded { get; set; } = false;
     List<ClassCountDto> ClassCountData { get; set; } = new();
     List<RoleCountDto> RoleCountData { get; set; } = new();
-    public int GuildMembers { get; set; }
-    public int RaidsThisWeek { get; set; }
-    public int PendingInvites { get; set; }
-    public int UsersOnline { get; set; }
+    public int? GuildMembers { get; set; }
+    public int? RaidsThisWeek { get; set; }
+    public int? PendingInvites { get; set; }
+    public RaidEventDto UpcomingEvent { get; set; } = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -152,24 +153,27 @@ else
     private async Task LoadData()
     {
         IsLoaded = false;
-        var getClassCountResult = await _classService.GetClassCount();
 
-        if (!getClassCountResult.Success)
-        {
-            await _notifications.ShowSuccessNotification(getClassCountResult.Message);
-        }
+        ClassCountData = await GetDataAsync(_classService.GetClassCount());
+        RoleCountData = await GetDataAsync(_classService.GetRoleCount());
+        GuildMembers = await GetDataAsync(_statsService.GetGuildMembersCount());
+        RaidsThisWeek = await GetDataAsync(_statsService.GetRaidsThisWeekCount());
+        PendingInvites = await GetDataAsync(_statsService.GetPendingInvitesCount());
+        UpcomingEvent = await GetDataAsync(_statsService.GetUpcomingEvent());
 
-        ClassCountData = getClassCountResult.Data;
-
-        var getRoleCountResult = await _classService.GetRoleCount();
-
-        if (!getRoleCountResult.Success)
-        {
-            await _notifications.ShowSuccessNotification(getRoleCountResult.Message);
-        }
-
-        RoleCountData = getRoleCountResult.Data;
         IsLoaded = true;
+    }
+
+    private async Task<T> GetDataAsync<T>(Task<ServiceResponse<T>> serviceCall)
+    {
+        var result = await serviceCall;
+
+        if (!result.Success)
+        {
+            await _notifications.ShowErrorNotification(result.Message);
+        }
+
+        return result.Data;
     }
 
 }

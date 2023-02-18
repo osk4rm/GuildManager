@@ -511,6 +511,7 @@ namespace GuildManagerAPI.Services
 
             var nextRaidEvent = await _dbContext.RaidEventCharacter
                 .Include(rec => rec.RaidEvent)
+                .ThenInclude(r=>r.RaidLocation)
                 .Where(rec => rec.AcceptanceStatus == GuildManager_DataAccess.Enum.AcceptanceStatus.Accepted)
                 .Where(rec => characterIds.Contains(rec.CharacterId))
                 .Select(rec => rec.RaidEvent)

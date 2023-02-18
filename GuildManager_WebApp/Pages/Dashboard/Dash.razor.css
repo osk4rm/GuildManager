@@ -38,7 +38,10 @@
         color: #008cff;
     }
 
-    .item-container.transaction {
+    .item-container.upcoming {
+        padding: 0.5rem;
+        font-weight: 400;
+        font-size:2rem;
         color: #f41127;
     }
 

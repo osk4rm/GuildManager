@@ -12,6 +12,7 @@
             app.RegisterRaidLocationsEndpoints();
             app.RegisterRaidEventsEndpoints();
             app.RegisterRaidEventsParticipationEndpoints();
+            app.RegisterStatisticsEndpoint();
 
             return app;
         }

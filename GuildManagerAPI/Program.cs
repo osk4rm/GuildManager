@@ -82,6 +82,7 @@ builder.Services.AddScoped<IRaidExpansionsService, RaidExpansionsService>();
 builder.Services.AddScoped<IRaidLocationService, RaidLocationService>();
 builder.Services.AddScoped<IRaidEventService, RaidEventService>();
 builder.Services.AddScoped<IRaidEventParticipationService, RaidEventParticipationService>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 builder.Services.AddScoped<Seeder>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();

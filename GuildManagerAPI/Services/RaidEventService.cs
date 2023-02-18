@@ -496,5 +496,41 @@ namespace GuildManagerAPI.Services
                 Message = $"Character {character.Name} has been invited."
             };
         }
+
+        public async Task<ServiceResponse<RaidEventDto>> GetUserNextEvent()
+        {
+            var user = await _dbContext.Users
+                .Include(u=>u.Characters)
+                .FirstOrDefaultAsync(u => u.Id == _userContextService.Id);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Unauthorized.");
+            }
+            var characterIds = user.Characters.Select(c => c.Id).ToList();
+
+            var nextRaidEvent = await _dbContext.RaidEventCharacter
+                .Include(rec => rec.RaidEvent)
+                .Where(rec => rec.AcceptanceStatus == GuildManager_DataAccess.Enum.AcceptanceStatus.Accepted)
+                .Where(rec => characterIds.Contains(rec.CharacterId))
+                .Select(rec => rec.RaidEvent)
+                .AsNoTracking()
+                .OrderBy(r=>r.StartDate)
+                .FirstOrDefaultAsync(r=>r.StartDate > DateTime.Now);
+
+            if(nextRaidEvent == null)
+            {
+                return new ServiceResponse<RaidEventDto>
+                {
+                    Data = null,
+                    Success = true,
+                    Message = "You have not been accepted for any raid events :("
+                };
+            }
+
+            var dto = _mapper.Map<RaidEventDto>(nextRaidEvent);
+
+            return new ServiceResponse<RaidEventDto> { Data = dto, Success = true };
+        }
     }
 }

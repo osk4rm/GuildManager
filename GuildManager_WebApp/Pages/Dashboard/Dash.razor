@@ -54,7 +54,7 @@ else
                                 <p>3</p>
                             </div>
                             <div class="bottom-container">
-                                <p>Users online <i class="fa-regular fa-user"></i></p>
+                                <p>Your next event <i class="fa-regular fa-calendar"></i></p>
                             </div>
                         </div>
                     </ContentTemplate>
@@ -136,7 +136,11 @@ else
     private bool IsLoaded { get; set; } = false;
     List<ClassCountDto> ClassCountData { get; set; } = new();
     List<RoleCountDto> RoleCountData { get; set; } = new();
-    
+    public int GuildMembers { get; set; }
+    public int RaidsThisWeek { get; set; }
+    public int PendingInvites { get; set; }
+    public int UsersOnline { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {

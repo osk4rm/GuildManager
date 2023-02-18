@@ -1,4 +1,5 @@
 ﻿using Azure;
+using GuildManager_DataAccess.Entities;
 using GuildManager_Models.Characters;
 using GuildManager_Models.RaidEvents;
 using GuildManagerAPI.Services.Interfaces;
@@ -15,6 +16,9 @@ namespace GuildManagerAPI.Requests
         {
 
             app.MapGet("/api/raid-events/getall", RaidEventsRequests.GetAll)
+                .RequireAuthorization();
+
+            app.MapGet("/api/raid-events/upcoming-event",RaidEventsRequests.GetUserNextEvent)
                 .RequireAuthorization();
 
             app.MapGet("/api/raid-events/get/{id}", RaidEventsRequests.GetById)
@@ -69,6 +73,13 @@ namespace GuildManagerAPI.Requests
                 .RequireAuthorization();
 
             return app;
+        }
+
+        private static async Task<IResult> GetUserNextEvent(IRaidEventService service)
+        {
+            var response = await service.GetUserNextEvent();
+
+            return Results.Ok(response);
         }
 
         private static async Task<IResult> InviteForRaidEvent(IRaidEventService service, [FromRoute]int eventId, [FromQuery]int characterId)

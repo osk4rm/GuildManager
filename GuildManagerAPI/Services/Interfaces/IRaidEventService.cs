@@ -24,6 +24,7 @@ namespace GuildManagerAPI.Services.Interfaces
         Task<ServiceResponse<CommentDto>> UpdateCommentForRaidEvent(int commentId, string message);
         Task<ServiceResponse<bool>> DeleteCommentForRaidEvent(int commentId);
         Task<PagedServiceResponse<List<RaidEventDto>>> GetPagedRaidEvents(SieveModel sieveModel);
+        Task<ServiceResponse<RaidEventDto>> GetUserNextEvent();
 
     }
 }

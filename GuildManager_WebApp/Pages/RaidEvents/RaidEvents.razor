@@ -15,18 +15,39 @@
 }
 else
 {
-    <div class="row mt-5">
+    <div class="row mt-5 justify-content-between">
         <div class="col-2">
             <button class="btn btn-primary" @onclick="@OpenAddDialog">Add new event!</button>
         </div>
-        <div class="col-4">
-
+        <div class="col-2">
+            <div class="d-flex justify-content-center align-items-end">
+                <button class="btn btn-secondary" @onclick="ShowFilters">
+                    Filters <i class="fa-solid fa-filter"></i>
+                </button>
+            </div>
         </div>
     </div>
+    @if (FiltersVisible)
+    {
+        <hr/>
+        <div class="row justify-content-start mt-2">
+            <div class="col-3">
+                <label>Raid difficulty</label>
+                <SfMultiSelect TValue="string[]" TItem="string" AllowFiltering="false" Placeholder="pick difficulty..."
+                       @bind-Value="@RaidDifficultiesFilter" ShowDropDownIcon="true"
+                       Mode="@VisualMode.CheckBox" DataSource="@RaidDifficultiesValues" PopupHeight="350px">
+                    <MultiSelectEvents TItem="string" TValue="string[]" ValueChange="@FilterEvents"></MultiSelectEvents>
+
+                </SfMultiSelect>
+            </div>
+
+        </div>
+    }
     
-    
+
+
     <div class="container w-100 mt-2">
-        
+
         <table class="table table-striped table-bordered table-hover table-dark">
             <thead class="table-primary">
                 <tr>
@@ -37,7 +58,6 @@ else
                     <th scope="col">Leader</th>
                     <th scope="col">Status</th>
                     <th scope="col"></th>
-
                 </tr>
             </thead>
             <tbody>
@@ -53,15 +73,15 @@ else
                         <td>@raid.Status</td>
                         <td>
                             <div class="d-flex justify-content-evenly">
-                            <NavLink href="@($"raid-events/{raid.Id}")" class="btn-primary btn">Details</NavLink>
-                            @if (IsOwnRaid(raid))
-                            {
+                                <NavLink href="@($"raid-events/{raid.Id}")" class="btn-primary btn">Details</NavLink>
+                                @if (IsOwnRaid(raid))
+                                {
                                     <button class="btn btn-info" @onclick="()=>OpenUpdateDialog(raid)"><i class="fa-solid fa-pen-to-square"></i></button>
                                     <button class="btn btn-danger" @onclick="()=>OpenDeleteDialog(raid.Id)">
                                         <i class=" fa-solid fa-xmark"></i>
 
                                     </button>
-                            }
+                                }
                             </div>
                         </td>
                     </tr>
@@ -115,6 +135,9 @@ else
     [Parameter]
     public string? Filters { get; set; } = string.Empty;
     private string Sorts { get; set; } = "-StartDate";
+    private bool FiltersVisible { get; set; } = false;
+    public string[] RaidDifficultiesValues => Enum.GetNames(typeof(RaidDifficulty));
+    public string[]? RaidDifficultiesFilter { get; set; }
 
     private bool IsOwnRaid(RaidEventDto dto)
     {
@@ -179,12 +202,12 @@ else
     private async Task LoadData()
     {
         SieveModel model = new SieveModel
-        {
-            Page = this.Page,
-            PageSize = this.PageSize,
-            Filters = this.Filters,
-            Sorts = this.Sorts
-        };
+            {
+                Page = this.Page,
+                PageSize = this.PageSize,
+                Filters = this.Filters,
+                Sorts = this.Sorts
+            };
         var getAllResult = await _raidEventService.GetPagedRaidEvents(model);
         if (!getAllResult.Success)
         {
@@ -230,16 +253,16 @@ else
     {
         _raidEventToUpdate = raidEvent.Id;
         RaidToUpdate = new UpsertRaidEventDto
-        {
-            RaidLocationId = raidEvent.RaidLocation.Id,
-            StartDate = raidEvent.StartDate,
-            EndDate = raidEvent.EndDate,
-            Description = raidEvent.Description,
-            AutoAccept = raidEvent.AutoAccept,
-            RaidDifficulty = raidEvent.RaidDifficulty,
-            Status = raidEvent.Status
+            {
+                RaidLocationId = raidEvent.RaidLocation.Id,
+                StartDate = raidEvent.StartDate,
+                EndDate = raidEvent.EndDate,
+                Description = raidEvent.Description,
+                AutoAccept = raidEvent.AutoAccept,
+                RaidDifficulty = raidEvent.RaidDifficulty,
+                Status = raidEvent.Status
 
-        };
+            };
         UpdateDialogOpen = true;
         StateHasChanged();
     }
@@ -284,5 +307,33 @@ else
     public async void PagerClick(PagerItemClickEventArgs args)
     {
         await GetPagedData(args.CurrentPage);
+    }
+
+    private void ShowFilters()
+    {
+        FiltersVisible = !FiltersVisible;
+        StateHasChanged();
+    }
+
+    public async Task FilterEvents()
+    {
+        Filters = string.Join(",", FiltersArray());
+        await LoadData();
+        StateHasChanged();
+    }
+    private string GetDifficultyFilter()
+    {
+        if(RaidDifficultiesFilter != null && RaidDifficultiesFilter.Length > 0)
+        {
+            return $"RaidDifficulty=={string.Join("|", RaidDifficultiesFilter)}";
+        }
+        return string.Empty;
+    }
+    private string[] FiltersArray()
+    {
+        return new string[]
+        {
+            GetDifficultyFilter()
+        };
     }
 }

@@ -29,19 +29,29 @@ else
     </div>
     @if (FiltersVisible)
     {
-        <hr/>
-        <div class="row justify-content-start mt-2">
-            <div class="col-3">
-                <label>Raid difficulty</label>
-                <SfMultiSelect TValue="string[]" TItem="string" AllowFiltering="false" Placeholder="pick difficulty..."
-                       @bind-Value="@RaidDifficultiesFilter" ShowDropDownIcon="true"
-                       Mode="@VisualMode.CheckBox" DataSource="@RaidDifficultiesValues" PopupHeight="350px">
-                    <MultiSelectEvents TItem="string" TValue="string[]" ValueChange="@FilterEvents"></MultiSelectEvents>
+        <div class="slide-down">
+            <hr />
+            <div class="row justify-content-start mt-2">
+                <div class="col-3">
+                    <label>Raid difficulty</label>
+                    <SfMultiSelect TValue="string[]" TItem="string" AllowFiltering="false" Placeholder="pick difficulty..."
+                           @bind-Value="@RaidDifficultiesFilter" ShowDropDownIcon="true"
+                           Mode="@VisualMode.CheckBox" DataSource="@RaidDifficultiesValues" PopupHeight="350px">
+                        <MultiSelectEvents TItem="string" TValue="string[]" ValueChange="@FilterEvents"></MultiSelectEvents>
 
-                </SfMultiSelect>
+                    </SfMultiSelect>
+                </div>
+                <div class="col-3">
+                    <label class="mb-1">Start date</label>
+                    <SfDateRangePicker TValue="DateTime?" Placeholder="Choose a range"
+                               ShowClearButton="true">
+                        <DateRangePickerEvents TValue="DateTime?" ValueChange="GetStartDateFilter"></DateRangePickerEvents>
+                    </SfDateRangePicker>
+                </div>
+
             </div>
-
         </div>
+        
     }
     
 
@@ -138,6 +148,10 @@ else
     private bool FiltersVisible { get; set; } = false;
     public string[] RaidDifficultiesValues => Enum.GetNames(typeof(RaidDifficulty));
     public string[]? RaidDifficultiesFilter { get; set; }
+    //public DateTime? StartDateFilterFrom { get; set; }
+    //public DateTime? StartDateFilterTo { get; set; }
+    public string StartDateFilter { get; set; } = string.Empty;
+
 
     private bool IsOwnRaid(RaidEventDto dto)
     {
@@ -321,6 +335,18 @@ else
         await LoadData();
         StateHasChanged();
     }
+    public async void GetStartDateFilter(RangePickerEventArgs<DateTime?> args)
+    {
+        if(args.EndDate == null)
+        {
+            StartDateFilter = $"StartDate>{args.StartDate}";
+        }
+        else
+        {
+            StartDateFilter = $"StartDate>{args.StartDate},StartDate<{args.EndDate}";
+        }
+        await FilterEvents();
+    }
     private string GetDifficultyFilter()
     {
         if(RaidDifficultiesFilter != null && RaidDifficultiesFilter.Length > 0)
@@ -333,7 +359,8 @@ else
     {
         return new string[]
         {
-            GetDifficultyFilter()
+            GetDifficultyFilter(),
+            StartDateFilter
         };
     }
 }

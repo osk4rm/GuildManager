@@ -151,7 +151,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         IsLoaded = false;
-        thisWeeksFilter = CalculateThisWeekFilter();
+        thisWeeksFilter = CalculateThisWeekFilter(DateTime.Now);
         await LoadData();
         StateHasChanged();
     }
@@ -187,11 +187,19 @@ else
         _navManager.NavigateTo($"/raid-events/{id}");
     }
 
-    public string CalculateThisWeekFilter()
+    public string CalculateThisWeekFilter(DateTime now)
     {
-        var now = DateTime.Now;
+        DateTime startOfWeek;
         var daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)now.DayOfWeek + 7) % 7;
-        var startOfWeek = now.AddDays(daysUntilWednesday - 7).Date;
+        if(now.DayOfWeek == DayOfWeek.Wednesday)
+        {
+            startOfWeek = now.Date;
+        }
+        else
+        {
+            startOfWeek = now.AddDays(daysUntilWednesday - 7).Date;
+        }
+        
         var endOfWeek = startOfWeek.AddDays(7).Date;
 
         return $"StartDate>{startOfWeek.ToString("yyyy-MM-dd")},StartDate<{endOfWeek.ToString("yyyy-MM-dd")}";

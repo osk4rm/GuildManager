@@ -10,17 +10,20 @@ namespace GuildManager_UnitTests
 {
     public class DashTests
     {
-        [Fact]
-        public void CalculateThisWeekFilter_ReturnsCorrectFilter()
+        [Theory]
+        [InlineData("2023-02-20", "StartDate>2023-02-15,StartDate<2023-02-22")]
+        [InlineData("2023-02-22", "StartDate>2023-02-22,StartDate<2023-03-01")]
+        [InlineData("2023-02-24", "StartDate>2023-02-22,StartDate<2023-03-01")]
+        [InlineData("2023-02-25", "StartDate>2023-02-22,StartDate<2023-03-01")]
+        [InlineData("2023-02-26", "StartDate>2023-02-22,StartDate<2023-03-01")]
+        public void CalculateThisWeekFilter_ReturnsCorrectFilter(string currentDate, string expectedFilter)
         {
             // Arrange
-            var expectedStartDate = DateTime.Now.AddDays(((int)DayOfWeek.Wednesday - (int)DateTime.Now.DayOfWeek + 7) % 7 - 7).Date;
-            var expectedEndDate = expectedStartDate.AddDays(7).Date;
-            var expectedFilter = $"StartDate>{expectedStartDate.ToString("yyyy-MM-dd")},StartDate<{expectedEndDate.ToString("yyyy-MM-dd")}";
+            var now = DateTime.Parse(currentDate);
 
             // Act
-            Dash dash = new Dash();
-            var result = dash.CalculateThisWeekFilter();
+            var dash = new Dash();
+            var result = dash.CalculateThisWeekFilter(now);
 
             // Assert
             result.Should().Be(expectedFilter);

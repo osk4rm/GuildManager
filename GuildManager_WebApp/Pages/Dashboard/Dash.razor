@@ -187,7 +187,7 @@ else
         _navManager.NavigateTo($"/raid-events/{id}");
     }
 
-    private string CalculateThisWeekFilter()
+    public string CalculateThisWeekFilter()
     {
         var now = DateTime.Now;
         var daysUntilWednesday = ((int)DayOfWeek.Wednesday - (int)now.DayOfWeek + 7) % 7;

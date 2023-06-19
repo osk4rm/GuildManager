@@ -1,6 +1,7 @@
 ﻿using GuildManager_Models;
 using GuildManager_Models.CharacterClassesAndSpecs;
 using GuildManagerAPI.Services.Interfaces;
+using System.Net;
 
 namespace GuildManagerAPI.Requests
 {
@@ -11,8 +12,13 @@ namespace GuildManagerAPI.Requests
             app.MapGet("/api/classes", ClassesRequests.GetAllClasses);
             app.MapGet("/api/classes/classcount", ClassesRequests.GetClassCount);
             app.MapGet("/api/classes/rolecount", ClassesRequests.GetRoleCount);
-
+            app.MapGet("/", Hello);
             return app;
+        }
+
+        private static string Hello()
+        {
+            return "Hello World!";
         }
 
         private static async Task<IResult> GetRoleCount(IClassesService service)

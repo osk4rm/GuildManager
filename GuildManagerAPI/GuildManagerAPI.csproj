@@ -32,5 +32,7 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+	<ItemGroup>
+	</ItemGroup>
 
 </Project>

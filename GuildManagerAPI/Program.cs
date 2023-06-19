@@ -119,5 +119,8 @@ app.UseHttpsRedirection();
 app.RegisterEndpoints();
 app.UseCors("FrontEndClient");
 
+
+
 app.Run();
 
+public partial class Program { }

@@ -51,14 +51,30 @@ else
                 </DashboardLayoutPanel>
                 <DashboardLayoutPanel Column="6" Row="0" SizeX="2" SizeY="1">
                     <ContentTemplate>
-                        <div class="root-container" @onclick="(()=>NavigateToRaidEvent(UpcomingEvent.Id))">
-                            <div class="item-container upcoming">
-                                <p>@UpcomingEvent.RaidLocation.Name <br /> @UpcomingEvent.StartDate.ToString("dd-MM-yyyy HH:mm")</p>
+                        @if(UpcomingEvent == null)
+                        {
+                            <div class="root-container" @onclick="(()=>NavigateToRaidEvent(UpcomingEvent.Id))">
+                                <div class="item-container upcoming">
+                                    <p>You have 0 upcoming raid events :(</p>
+                                </div>
+                                <div class="bottom-container">
+                                    <p>Your next event <i class="fa-regular fa-calendar"></i></p>
+                                </div>
                             </div>
-                            <div class="bottom-container">
-                                <p>Your next event <i class="fa-regular fa-calendar"></i></p>
+                        }
+                        else
+                        {
+                            <div class="root-container" @onclick="(()=>NavigateToRaidEvent(UpcomingEvent.Id))">
+                                <div class="item-container upcoming">
+                                    <p class="para">@UpcomingEvent.RaidLocation.Name  </p><br />
+                                    <p class="para">@UpcomingEvent.StartDate.ToString("dd-MM-yyyy HH:mm")</p>
+                                </div>
+                                <div class="bottom-container">
+                                    <p>Your next event <i class="fa-regular fa-calendar"></i></p>
+                                </div>
                             </div>
-                        </div>
+                        }
+                        
                     </ContentTemplate>
                 </DashboardLayoutPanel>
                 <DashboardLayoutPanel Column="0" Row="1" SizeX="4" SizeY="2">

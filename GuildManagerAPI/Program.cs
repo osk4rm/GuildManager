@@ -10,6 +10,7 @@ using GuildManagerAPI.Requests.Extension;
 using GuildManagerAPI.Services;
 using GuildManagerAPI.Services.Interfaces;
 using GuildManagerAPI.Sieve;
+using GuildManagerAPI.Utils.ServicesExtensions;
 using GuildManagerAPI.Validation;
 using GuildManagerAPI.Validation.CharactersOperations;
 using Microsoft.AspNetCore.Authorization;
@@ -70,26 +71,12 @@ builder.Services.Configure<JsonOptions>(options =>
 {
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
-builder.Services.AddScoped<ISieveProcessor, ApplicationSieveProcessor>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<ICharacterService, CharacterService>();
-builder.Services.AddScoped<IClassesService, ClassesService>();
-builder.Services.AddScoped<IUserContextService, UserContextService>();
-builder.Services.AddScoped<IMembersService, MembersService>();
-builder.Services.AddScoped<IRaidExpansionsService, RaidExpansionsService>();
-builder.Services.AddScoped<IRaidLocationService, RaidLocationService>();
-builder.Services.AddScoped<IRaidEventService, RaidEventService>();
-builder.Services.AddScoped<IRaidEventParticipationService, RaidEventParticipationService>();
-builder.Services.AddScoped<IStatisticsService, StatisticsService>();
-builder.Services.AddScoped<Seeder>();
+
+builder.Services.AddApplicationServices();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(LoginValidator));
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(RegisterUserValidator));
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreateCharacterDtoValidator));
-builder.Services.AddValidatorsFromAssemblyContaining(typeof(UpdateCharacterDtoValidator));
+builder.Services.RegisterValidators();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontEndClient", corsBuilder =>

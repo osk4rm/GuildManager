@@ -20,7 +20,7 @@ namespace GuildManager_IntegrationTests
             var expectedStatusCode = HttpStatusCode.OK;
 
             // Act
-            var response = await client.GetAsync("/api/classes");
+            var response = await client.GetAsync("/api/v2/Classes/GetAll");
 
             // Assert
             Assert.Equal(expectedStatusCode, response.StatusCode);
@@ -31,21 +31,11 @@ namespace GuildManager_IntegrationTests
             var application = new WebApplicationFactory<Program>();
             var client = application.CreateClient();
 
-            var response = await client.GetAsync("/api/classes");
+            var response = await client.GetAsync("/api/v2/Classes/GetAll");
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
-        [Fact]
-        public async Task TestRootEndpoint()
-        {
-            await using var application = new WebApplicationFactory<Program>();
-            using var client = application.CreateClient();
-
-            var response = await client.GetStringAsync("/");
-
-            response.Should().Be("Hello World!");
-        }
     }
 }

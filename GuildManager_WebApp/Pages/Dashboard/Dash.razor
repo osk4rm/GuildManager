@@ -55,7 +55,7 @@ else
                         {
                             <div class="root-container" @onclick="(()=>NavigateToRaidEvent(UpcomingEvent.Id))">
                                 <div class="item-container upcoming">
-                                    <p>You have 0 upcoming raid events :(</p>
+                                    <p>You have no upcoming raid events :(</p>
                                 </div>
                                 <div class="bottom-container">
                                     <p>Your next event <i class="fa-regular fa-calendar"></i></p>
@@ -66,7 +66,7 @@ else
                         {
                             <div class="root-container" @onclick="(()=>NavigateToRaidEvent(UpcomingEvent.Id))">
                                 <div class="item-container upcoming">
-                                    <p class="para">@UpcomingEvent.RaidLocation.Name  </p><br />
+                                    <p class="para">@UpcomingEvent.RaidLocation.Name  </p>
                                     <p class="para">@UpcomingEvent.StartDate.ToString("dd-MM-yyyy HH:mm")</p>
                                 </div>
                                 <div class="bottom-container">

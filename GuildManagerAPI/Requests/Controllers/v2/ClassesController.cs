@@ -4,6 +4,9 @@ using GuildManagerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GuildManager_Models.CharacterClassesAndSpecs;
+using MediatR;
+using GuildManagerAPI.Queries;
+using GuildManagerAPI.Queries.CharacterClasses;
 
 namespace GuildManagerAPI.Requests.Controllers.v2
 {
@@ -12,18 +15,19 @@ namespace GuildManagerAPI.Requests.Controllers.v2
     [ApiVersion("2.0")]
     public class ClassesController : ControllerBase
     {
-        private readonly IClassesService _classesService;
+        private readonly IMediator _mediator;
 
-        public ClassesController(IClassesService classesService)
+        public ClassesController(IMediator mediator)
         {
-            _classesService = classesService;
+            _mediator = mediator;
         }
 
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult<ServiceResponse<List<RoleCountDto>>>> GetRoleCount()
         {
-            var response = await _classesService.GetRoleCount();
+            var query = new GetRoleCountQuery();
+            var response = await _mediator.Send(query);
 
             return Ok(response);
         }
@@ -32,7 +36,8 @@ namespace GuildManagerAPI.Requests.Controllers.v2
         [Route("[action]")]
         public async Task<ActionResult<ServiceResponse<List<ClassCountDto>>>> GetClassCount()
         {
-            var response = await _classesService.GetClassCount();
+            var query = new GetClassCountQuery();
+            var response = _mediator.Send(query);
 
             return Ok(response);
         }
@@ -41,9 +46,9 @@ namespace GuildManagerAPI.Requests.Controllers.v2
         [Route("[action]")]
         public async Task<ActionResult<ServiceResponse<List<CharacterClassDto>>>> GetAll()
         {
-            var response = await _classesService.GetClasses();
-
-            return Ok(response);
+            var query = new GetAllCharacterClassesQuery();
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
     }
 }

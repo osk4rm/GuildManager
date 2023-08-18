@@ -22,6 +22,7 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.1" />
     <PackageReference Include="Sieve" Version="2.5.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
 
   <ItemGroup>

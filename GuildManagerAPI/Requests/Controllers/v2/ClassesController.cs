@@ -37,7 +37,7 @@ namespace GuildManagerAPI.Requests.Controllers.v2
         public async Task<ActionResult<ServiceResponse<List<ClassCountDto>>>> GetClassCount()
         {
             var query = new GetClassCountQuery();
-            var response = _mediator.Send(query);
+            var response = await _mediator.Send(query);
 
             return Ok(response);
         }

@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildManager_UnitTests", "G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuildManager_IntegrationTests", "GuildManager_IntegrationTests\GuildManager_IntegrationTests.csproj", "{541F7EA1-CCA6-49B8-ADE0-42D9BB04975B}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "NGuildManager", "NGuildManager\NGuildManager.esproj", "{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,12 @@ Global
 		{541F7EA1-CCA6-49B8-ADE0-42D9BB04975B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{541F7EA1-CCA6-49B8-ADE0-42D9BB04975B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{541F7EA1-CCA6-49B8-ADE0-42D9BB04975B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1CA6EAF-8AC1-4020-ACA1-F081EB61FA77}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

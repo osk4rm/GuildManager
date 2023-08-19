@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using System.Security.Claims;
 
-namespace GuildManager_IntegrationTests
+namespace GuildManager_IntegrationTests.Helpers
 {
     public class FakePolicyEvaluator : IPolicyEvaluator
     {

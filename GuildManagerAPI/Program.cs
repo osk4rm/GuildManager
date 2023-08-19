@@ -1,4 +1,5 @@
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using GuildManager_DataAccess;
 using GuildManager_DataAccess.Entities;
 using GuildManagerAPI.Authentication;
@@ -101,6 +102,8 @@ builder.Services.Configure<JsonOptions>(options =>
 
 builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
+//TODO: WY£¥CZYÆ PO STWORZENIU PIPELINE BEHAVIOR
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.RegisterValidators();

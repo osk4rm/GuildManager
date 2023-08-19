@@ -11,35 +11,10 @@ using System.Text;
 
 namespace GuildManager_IntegrationTests
 {
-    public class CharactersTests : IClassFixture<WebApplicationFactory<Program>>
+    public class CharactersControllerTests : BaseControllerTests
     {
-        private HttpClient _httpClient;
-        private TestSeeder _seeder;
-        private readonly WebApplicationFactory<Program> _factory;
-
-        public CharactersTests(WebApplicationFactory<Program> factory)
+        public CharactersControllerTests(WebApplicationFactory<Program> factory) : base(factory)
         {
-            _factory = factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureServices(services =>
-                    {
-                        var dbContextOptions = services.SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<GuildManagerDbContext>));
-
-                        services.Remove(dbContextOptions);
-                        services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
-
-                        services.AddMvc(opts => opts.Filters.Add(new FakeUserFilter()));
-
-                        services.AddDbContext<GuildManagerDbContext>(options =>
-                        {
-                            options.UseInMemoryDatabase("GMTestDB");
-                        });
-                    });
-                });
-
-            _httpClient = _factory.CreateClient();
-            _seeder = new TestSeeder(_factory);
         }
 
         [Fact]
@@ -49,13 +24,12 @@ namespace GuildManager_IntegrationTests
             
 
             //act
-            var response = await _httpClient.GetAsync("/api/v2/Characters/GetUserCharacters");
+            var response = await _unAuthorizedHttpClient.GetAsync("/api/v2/Characters/GetUserCharacters");
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
 
-        //ZWRACA USER NOT FOUND (404), TODO: zrobić seedowanie fake'owej bazy
         [Fact]
         public async Task Create_WithValidModel_ReturnsOkWithResultId()
         {
@@ -68,16 +42,6 @@ namespace GuildManager_IntegrationTests
                 ClassId = 1
             };
 
-            var user = new User()
-            {
-                Id = 1,
-                Email = "test@user.com",
-                Nickname = "testuser",
-                PasswordHash = "mysecretpassword"
-            };
-
-            await _seeder.SeedEntityAsync(user);
-
             //act
             var response = await _httpClient.PostAsync("/api/v2/Characters/Create", model.ToJsonHttpContent());
             var contentString = await response.Content.ReadAsStringAsync();
@@ -88,7 +52,7 @@ namespace GuildManager_IntegrationTests
             content.Data.Should().NotBeNull();
         }
 
-        //ZWRACA USER NOT FOUND (404), TODO: zrobić seedowanie fake'owej bazy
+        //nie wchodzi do walidatora, zadziała po zaimplementowaniu mediatora
         [Fact]
         public async Task Create_WithInvalidModel_ReturnsBadRequest()
         {
@@ -98,17 +62,8 @@ namespace GuildManager_IntegrationTests
                 Name = "TestCharacter",
                 ItemLevel = 350,
                 ClassSpecializationId = 1,
-                ClassId = 1
+                ClassId = -1
             };
-            var user = new User()
-            {
-                Id = 1,
-                Email = "test@user.com",
-                Nickname = "testuser",
-                PasswordHash = "mysecretpassword"
-            };
-
-            await _seeder.SeedEntityAsync(user);
             
             //act
             var response = await _httpClient.PostAsync("/api/v2/Characters/Create", model.ToJsonHttpContent());
@@ -150,5 +105,7 @@ namespace GuildManager_IntegrationTests
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
+        
     }
 }

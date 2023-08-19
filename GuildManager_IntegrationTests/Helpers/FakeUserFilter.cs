@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
-namespace GuildManager_IntegrationTests
+namespace GuildManager_IntegrationTests.Helpers
 {
     public class FakeUserFilter : IAsyncActionFilter
     {

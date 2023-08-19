@@ -4,11 +4,11 @@ using System.Net;
 
 namespace GuildManager_IntegrationTests
 {
-    public class ClassesTests : IClassFixture<WebApplicationFactory<Program>>
+    public class ClassesControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private HttpClient _client;
 
-        public ClassesTests(WebApplicationFactory<Program> factory)
+        public ClassesControllerTests(WebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
         }

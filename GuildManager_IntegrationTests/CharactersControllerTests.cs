@@ -18,6 +18,15 @@ namespace GuildManager_IntegrationTests
         }
 
         [Fact]
+        public async Task GetUserCharacters_WithCorrectAuthentication_ReturnsOk()
+        {
+            //act
+            var response = await _httpClient.GetAsync("/api/v2/Characters/GetUserCharacters");
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+        [Fact]
         public async Task GetUserCharacters_WithNoAuthentication_ReturnsUnauthorizedResult()
         {
             //arrange

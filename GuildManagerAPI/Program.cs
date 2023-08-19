@@ -5,6 +5,7 @@ using GuildManagerAPI.Authentication;
 using GuildManagerAPI.Authentication.UserContext;
 using GuildManagerAPI.Authorization;
 using GuildManagerAPI.Middleware;
+using GuildManagerAPI.PipelineBehaviors;
 using GuildManagerAPI.Requests;
 using GuildManagerAPI.Requests.Extension;
 using GuildManagerAPI.Services;
@@ -14,6 +15,7 @@ using GuildManagerAPI.Utils.ServicesExtensions;
 using GuildManagerAPI.Validation;
 using GuildManagerAPI.Validation.CharactersOperations;
 using GuildManagerDataAccess.Migrations;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
@@ -111,6 +113,8 @@ builder.Services.AddCors(options =>
             .WithOrigins(builder.Configuration["AllowedOrigins"])
         );
 });
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 var app = builder.Build();
 

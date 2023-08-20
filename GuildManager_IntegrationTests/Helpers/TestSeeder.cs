@@ -18,5 +18,15 @@ namespace GuildManager_IntegrationTests.Helpers
             dbContext.Add(entity);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task SeedEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetService<GuildManagerDbContext>();
+            dbContext.AddRange(entities);
+            await dbContext.SaveChangesAsync();
+        }
+
     }
 }

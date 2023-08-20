@@ -7,17 +7,10 @@ using Microsoft.EntityFrameworkCore.Proxies.Internal;
 
 namespace GuildManager_IntegrationTests.Validators
 {
-    public class CreateCharacterDtoValidatorTests
+    public class CreateCharacterDtoValidatorTests : ValidatorsTestsBase
     {
-        private GuildManagerDbContext _dbContext;
-
-        public CreateCharacterDtoValidatorTests()
+        public CreateCharacterDtoValidatorTests() : base()
         {
-            var builder = new DbContextOptionsBuilder<GuildManagerDbContext>();
-            builder.UseInMemoryDatabase("TestDB");
-            _dbContext = new GuildManagerDbContext(builder.Options);
-            Seed();
-
         }
         [Fact]
         public void Validate_ForValidModel_ReturnsSuccess()
@@ -63,10 +56,6 @@ namespace GuildManager_IntegrationTests.Validators
             result.ShouldHaveAnyValidationError();
         }
 
-        public void Seed()
-        {
-            Seeder seeder = new Seeder(_dbContext);
-            seeder.Seed();
-        }
+        
     }
 }

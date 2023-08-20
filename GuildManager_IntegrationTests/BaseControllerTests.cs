@@ -13,6 +13,9 @@ namespace GuildManager_IntegrationTests
         protected HttpClient _httpClient;
         protected HttpClient _unAuthorizedHttpClient;
 
+        private static bool _seeded = false; // Initialization flag
+        private static readonly object _seedLock = new object(); // Lock for thread-safety
+
         public BaseControllerTests(WebApplicationFactory<Program> factory)
         {
             _unAuthorizedHttpClient = factory.CreateClient();
@@ -25,9 +28,7 @@ namespace GuildManager_IntegrationTests
 
                         services.Remove(dbContextOptions);
                         services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
-
                         services.AddMvc(opts => opts.Filters.Add(new FakeUserFilter()));
-
                         services.AddDbContext<GuildManagerDbContext>(options =>
                         {
                             options.UseInMemoryDatabase("GMTestDB");
@@ -40,16 +41,27 @@ namespace GuildManager_IntegrationTests
             SeedUserOnce();
         }
 
-        private async void SeedUserOnce()
+        private void SeedUserOnce()
         {
-            var user = new User()
+            if (!_seeded)
             {
-                Id = 1,
-                Email = "test@user.com",
-                Nickname = "testuser",
-                PasswordHash = "mysecretpassword"
-            };
-            await _seeder.SeedEntityAsync(user);
+                lock (_seedLock)
+                {
+                    if (!_seeded)
+                    {
+                        var user = new User()
+                        {
+                            Id = 1,
+                            Email = "test@user.com",
+                            Nickname = "testuser",
+                            PasswordHash = "mysecretpassword"
+                        };
+                        _seeder.SeedEntityAsync(user).Wait(); // Wait is used to ensure the async method completes
+                        _seeded = true;
+                    }
+                }
+            }
         }
     }
+
 }

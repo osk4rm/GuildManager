@@ -61,7 +61,6 @@ namespace GuildManager_IntegrationTests
             content.Data.Should().NotBeNull();
         }
 
-        //nie wchodzi do walidatora, zadziała po zaimplementowaniu mediatora
         [Fact]
         public async Task Create_WithInvalidModel_ReturnsBadRequest()
         {

@@ -9,10 +9,19 @@ namespace GuildManager_IntegrationTests.Validators
 
         public ValidatorsTestsBase()
         {
+            
+        }
+
+        protected void CreateDbContextAndSeed()
+        {
             var builder = new DbContextOptionsBuilder<GuildManagerDbContext>();
             builder.UseInMemoryDatabase("TestDB");
-            _dbContext = new GuildManagerDbContext(builder.Options);
-            Seed();
+            if(_dbContext is null)
+            {
+                _dbContext = new GuildManagerDbContext(builder.Options);
+            }
+            if (_dbContext.CharacterClasses.Count() == 0)
+                Seed();
         }
 
         protected void Seed()

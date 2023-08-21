@@ -16,9 +16,10 @@ namespace GuildManager_IntegrationTests.Validators
 
         [Theory]
         [MemberData(nameof(CreateCharacterDtoValidatorTestingData.GetSampleValidData), MemberType = typeof(CreateCharacterDtoValidatorTestingData))]
-        public void Validate_ForValidModel_ReturnsSuccess(CreateCharacterDto dto)
+        public async Task Validate_ForValidModel_ReturnsSuccess(CreateCharacterDto dto)
         {
-
+            CreateDbContextAndSeed();
+            
             var validator = new CreateCharacterDtoValidator(_dbContext);
 
             //act
@@ -30,9 +31,11 @@ namespace GuildManager_IntegrationTests.Validators
 
         [Theory]
         [MemberData(nameof(CreateCharacterDtoValidatorTestingData.GetSampleInvalidData), MemberType = typeof(CreateCharacterDtoValidatorTestingData))]
-        public void Validate_ForInvalidModel_ReturnsFailure(CreateCharacterDto dto)
+        public async Task Validate_ForInvalidModel_ReturnsFailure(CreateCharacterDto dto)
         {
             //arrange
+            CreateDbContextAndSeed();
+
             var model = new CreateCharacterDto
             {
                 ClassId = 1,
@@ -48,6 +51,7 @@ namespace GuildManager_IntegrationTests.Validators
 
             //assert
             result.ShouldHaveAnyValidationError();
+            
         }
 
         

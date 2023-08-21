@@ -17,15 +17,15 @@ namespace GuildManager_IntegrationTests.Validators.SampleTestingData
                 },
                 new CreateCharacterDto
                 {
-                    ClassSpecializationId = 2,
-                    ClassId = 4,
+                    ClassSpecializationId = 4,
+                    ClassId = 2,
                     ItemLevel = 333,
                     Name = "Iamvalid"
                 },
                 new CreateCharacterDto
                 {
-                    ClassSpecializationId = 3,
-                    ClassId = 9,
+                    ClassSpecializationId = 9,
+                    ClassId = 3,
                     ItemLevel = 333,
                     Name = "Iamvalid"
                 },
